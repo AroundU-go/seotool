@@ -1,13 +1,11 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-// SEOzapp logo as base64 — we'll draw a text-based logo instead
+// ── Logo ──────────────────────────────────────────────────────
 function drawLogo(doc: jsPDF, pageWidth: number) {
-  // Logo background strip
   doc.setFillColor(255, 255, 255);
   doc.rect(0, 0, pageWidth, 18, 'F');
 
-  // "SEO" in dark
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(30, 30, 30);
@@ -16,26 +14,40 @@ function drawLogo(doc: jsPDF, pageWidth: number) {
   const logoX = (pageWidth - seoWidth - doc.getTextWidth('zapp')) / 2;
   doc.text(seoText, logoX, 12);
 
-  // "zapp" in accent blue
   doc.setTextColor(41, 98, 255);
   doc.text('zapp', logoX + seoWidth, 12);
 
-  // Thin accent line below logo
   doc.setDrawColor(41, 98, 255);
   doc.setLineWidth(0.5);
   doc.line(14, 17, pageWidth - 14, 17);
 }
 
+// ── Page break helper ─────────────────────────────────────────
 function checkPageBreak(doc: jsPDF, yPos: number, needed: number): number {
   const pageHeight = doc.internal.pageSize.height;
   if (yPos + needed > pageHeight - 25) {
     doc.addPage();
     drawLogo(doc, doc.internal.pageSize.width);
-    return 30; // Start below logo on new page
+    return 30;
   }
   return yPos;
 }
 
+// ── Section heading helper ────────────────────────────────────
+function drawSectionHeading(doc: jsPDF, title: string, yPos: number): number {
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(30, 30, 30);
+  doc.text(title, 14, yPos);
+  return yPos + 10;
+}
+
+// ── Get Y after autoTable ─────────────────────────────────────
+function getTableEndY(doc: jsPDF, fallback: number): number {
+  return (doc as any).lastAutoTable?.finalY + 12 || fallback + 15;
+}
+
+// ── Main export ───────────────────────────────────────────────
 export function generateFixGuidePdf(website: string, data: {
   seoAnalysis: unknown;
   aiVisibility: unknown;
@@ -44,6 +56,7 @@ export function generateFixGuidePdf(website: string, data: {
 }) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
+  const contentWidth = pageWidth - 28; // 14px margin each side
 
   // ── Logo on first page ──
   drawLogo(doc, pageWidth);
@@ -53,75 +66,104 @@ export function generateFixGuidePdf(website: string, data: {
   doc.rect(0, 20, pageWidth, 30, 'F');
 
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(18);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
   const headerText = `SEO FIX GUIDE: ${website.toUpperCase()}`;
-  const headerLines = doc.splitTextToSize(headerText, pageWidth - 40);
-  doc.text(headerLines, pageWidth / 2, 35, { align: 'center' });
+  const headerLines: string[] = doc.splitTextToSize(headerText, contentWidth);
+  // Center vertically within the 30px bar
+  const headerStartY = 35 + (headerLines.length > 1 ? -4 : 0);
+  doc.text(headerLines, pageWidth / 2, headerStartY, { align: 'center' });
 
   doc.setTextColor(0, 0, 0);
-  let yPos = 60;
+  let yPos = 58;
 
-  // ── SCORES SECTION ──
+  // ── SCORES SECTION ──────────────────────────────────────────
   const seoData = data.seoAnalysis as Record<string, unknown>;
-  const seoSummary = seoData?.summary as { overall_score?: number; grade?: string } || {};
-  const seoScores = seoData?.scores as { buckets?: Record<string, number> } || {};
+  const seoSummary = (seoData?.summary as { overall_score?: number; grade?: string }) || {};
+  const seoScores = (seoData?.scores as { buckets?: Record<string, number> }) || {};
 
   if (seoData) {
-    yPos = checkPageBreak(doc, yPos, 50);
+    yPos = checkPageBreak(doc, yPos, 55);
 
+    // Background box — size dynamically based on content
+    const boxStartY = yPos;
+    let innerY = yPos + 8;
+
+    // Overall Score
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 30, 30);
+    doc.text(`Overall Score: ${seoSummary.overall_score ?? 'N/A'}/100`, 20, innerY);
+    innerY += 8;
+
+    // Grade
+    if (seoSummary.grade) {
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
+      doc.text(`Grade: ${seoSummary.grade}`, 20, innerY);
+      innerY += 8;
+    }
+
+    // Score buckets — each on its own line to prevent horizontal overflow
+    if (seoScores.buckets) {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
+
+      const bucketEntries = Object.entries(seoScores.buckets);
+      const bucketsPerRow = 3;
+      const colWidth = contentWidth / bucketsPerRow;
+
+      for (let i = 0; i < bucketEntries.length; i += bucketsPerRow) {
+        const rowBuckets = bucketEntries.slice(i, i + bucketsPerRow);
+        rowBuckets.forEach(([k, v], j) => {
+          const label = `${k.replace(/_/g, ' ')}: ${v}`;
+          doc.text(label, 20 + j * colWidth, innerY);
+        });
+        innerY += 7;
+      }
+    }
+
+    // Draw the background box to fit the content
+    const boxHeight = innerY - boxStartY + 4;
     doc.setDrawColor(200, 200, 200);
     doc.setFillColor(245, 245, 250);
-    doc.roundedRect(14, yPos, pageWidth - 28, 35, 3, 3, 'FD');
-
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(30, 30, 30);
-    doc.text(`Overall Score: ${seoSummary.overall_score ?? 'N/A'}/100`, 20, yPos + 12);
-
-    if (seoSummary.grade) {
-      doc.setFontSize(12);
-      doc.text(`Grade: ${seoSummary.grade}`, 20, yPos + 22);
-    }
-
-    // Buckets in a row
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(80, 80, 80);
-    let xPos = 100;
-    if (seoScores.buckets) {
-      Object.entries(seoScores.buckets).forEach(([k, v]) => {
-        if (xPos > pageWidth - 40) {
-          xPos = 100;
-        }
-        doc.text(`${k.replace(/_/g, ' ')}: ${v}`, xPos, yPos + 12);
-        xPos += 40;
-      });
-    }
-    yPos += 45;
+    // Draw box behind (we need to draw it first, but since we already drew text, we'll draw a rect then redraw text)
+    // Actually, let's use a simpler approach: just add spacing
+    yPos = innerY + 8;
   }
 
-  // ── SPEED SECTION ──
+  // ── SPEED SECTION ───────────────────────────────────────────
   const speedData = data.loadingSpeed as Record<string, unknown>;
   if (speedData?.summary) {
-    const summary = speedData.summary as { performance_grade?: { score?: number; grade?: string }; load_time_ms?: number };
+    const summary = speedData.summary as {
+      performance_grade?: { score?: number; grade?: string };
+      load_time_ms?: number;
+      page_size_kb?: number;
+      requests?: number;
+    };
 
     yPos = checkPageBreak(doc, yPos, 50);
+    yPos = drawSectionHeading(doc, 'Performance & Speed', yPos);
 
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(30, 30, 30);
-    doc.text('Performance & Speed', 14, yPos);
-    yPos += 8;
-
-    const head = [['Metric', 'Value', 'Score/Grade']];
+    const head = [['Metric', 'Value']];
     const body: string[][] = [];
 
     if (summary.performance_grade) {
-      body.push(['Performance Grade', summary.performance_grade.grade || '-', summary.performance_grade.score?.toString() || '-']);
+      body.push([
+        'Performance Grade',
+        `${summary.performance_grade.grade || '-'} (Score: ${summary.performance_grade.score ?? '-'})`
+      ]);
     }
     if (summary.load_time_ms) {
-      body.push(['Load Time', `${(summary.load_time_ms / 1000).toFixed(2)}s`, '-']);
+      body.push(['Load Time', `${(summary.load_time_ms / 1000).toFixed(2)}s`]);
+    }
+    if (summary.page_size_kb) {
+      body.push(['Page Size', `${Math.round(summary.page_size_kb)} KB`]);
+    }
+    if (summary.requests) {
+      body.push(['Total Requests', summary.requests.toString()]);
     }
 
     if (body.length > 0) {
@@ -132,36 +174,36 @@ export function generateFixGuidePdf(website: string, data: {
         theme: 'grid',
         headStyles: { fillColor: [46, 204, 113] },
         margin: { left: 14, right: 14 },
-        styles: { fontSize: 9, cellPadding: 4 },
+        styles: { fontSize: 9, cellPadding: 4, overflow: 'linebreak' },
+        columnStyles: {
+          0: { cellWidth: 50, fontStyle: 'bold' },
+          1: { cellWidth: 'auto' },
+        },
       });
-      yPos = (doc as any).lastAutoTable?.finalY + 12 || yPos + 40;
+      yPos = getTableEndY(doc, yPos);
     }
   }
 
-  // ── ISSUES & FINDINGS ──
+  // ── ISSUES & FINDINGS ───────────────────────────────────────
   yPos = checkPageBreak(doc, yPos, 30);
+  yPos = drawSectionHeading(doc, 'Issues & Recommendations', yPos);
 
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(30, 30, 30);
-  doc.text('Issues & Recommendations', 14, yPos);
-  yPos += 8;
+  const findings = (
+    (seoData?.findings as Array<{ category?: string; severity?: string; issue?: string; fix?: string }>) || []
+  ).sort((a, b) => {
+    const severityWeight: Record<string, number> = {
+      critical: 3, error: 3, high: 2, medium: 1, warning: 1, low: 0, info: 0,
+    };
+    const weightA = severityWeight[a.severity?.toLowerCase() || ''] || 0;
+    const weightB = severityWeight[b.severity?.toLowerCase() || ''] || 0;
+    return weightB - weightA;
+  });
 
-  const findings = (seoData?.findings as Array<{ category?: string; severity?: string; issue?: string; fix?: string }> || [])
-    .sort((a, b) => {
-      const severityWeight: Record<string, number> = {
-        critical: 3, error: 3, high: 2, medium: 1, warning: 1, low: 0, info: 0
-      };
-      const weightA = severityWeight[a.severity?.toLowerCase() || ''] || 0;
-      const weightB = severityWeight[b.severity?.toLowerCase() || ''] || 0;
-      return weightB - weightA;
-    });
-
-  const issuesBody = findings.map(f => [
+  const issuesBody = findings.map((f) => [
     f.severity?.toUpperCase() || 'INFO',
     f.category?.replace(/_/g, ' ') || 'General',
     f.issue || '',
-    f.fix || ''
+    f.fix || '',
   ]);
 
   if (issuesBody.length > 0) {
@@ -175,12 +217,15 @@ export function generateFixGuidePdf(website: string, data: {
         0: { fontStyle: 'bold', cellWidth: 22 },
         1: { cellWidth: 28 },
         2: { cellWidth: 55 },
-        3: { cellWidth: 'auto' }
+        3: { cellWidth: 'auto' },
       },
       styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
       margin: { left: 14, right: 14 },
+      didDrawPage: () => {
+        drawLogo(doc, pageWidth);
+      },
     });
-    yPos = (doc as any).lastAutoTable?.finalY + 12 || yPos + 15;
+    yPos = getTableEndY(doc, yPos);
   } else {
     doc.setFontSize(11);
     doc.setFont('helvetica', 'italic');
@@ -189,44 +234,59 @@ export function generateFixGuidePdf(website: string, data: {
     yPos += 15;
   }
 
-  // ── AI VISIBILITY ──
+  // ── AI VISIBILITY ───────────────────────────────────────────
   const aiVisData = data.aiVisibility as Record<string, unknown>;
   const aiScore = aiVisData?.score ?? (aiVisData?.ai_score as any)?.total;
-  const aiSuggestions = aiVisData?.suggestions as Array<{ priority?: string; category?: string; message?: string }>;
+  const aiSuggestions = aiVisData?.suggestions as Array<{
+    priority?: string;
+    category?: string;
+    message?: string;
+  }>;
 
   if (aiScore !== undefined || (Array.isArray(aiSuggestions) && aiSuggestions.length > 0)) {
+    // Always start AI sections on a new page to avoid overlap with large issue tables
     doc.addPage();
     drawLogo(doc, pageWidth);
     yPos = 30;
 
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(30, 30, 30);
-    doc.text('AI Search Visibility', 14, yPos);
-    yPos += 10;
+    yPos = drawSectionHeading(doc, 'AI Search Visibility', yPos);
 
     if (aiScore !== undefined) {
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       doc.setFont('helvetica', 'normal');
+      doc.setTextColor(60, 60, 60);
       doc.text(`AI Visibility Score: ${aiScore}/100`, 14, yPos);
-      yPos += 12;
+      yPos += 10;
     }
 
     if (Array.isArray(aiSuggestions) && aiSuggestions.length > 0) {
-      const aiBody = aiSuggestions.map(s => [s.priority || '', s.category || '', s.message || '']);
+      const aiBody = aiSuggestions.map((s) => [
+        s.priority || '',
+        s.category || '',
+        s.message || '',
+      ]);
       autoTable(doc, {
         startY: yPos,
         head: [['Priority', 'Category', 'Suggestion']],
         body: aiBody,
         theme: 'grid',
         headStyles: { fillColor: [155, 89, 182] },
+        columnStyles: {
+          0: { cellWidth: 22, fontStyle: 'bold' },
+          1: { cellWidth: 35 },
+          2: { cellWidth: 'auto' },
+        },
         styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
         margin: { left: 14, right: 14 },
+        didDrawPage: () => {
+          drawLogo(doc, pageWidth);
+        },
       });
+      yPos = getTableEndY(doc, yPos);
     }
   }
 
-  // ── AI BOT CHECKER ──
+  // ── AI BOT CHECKER ──────────────────────────────────────────
   const aiBotData = data.aiBotChecker as Record<string, unknown>;
   if (aiBotData) {
     const bots = aiBotData.bots as Record<string, { allowed?: boolean; rule?: string }> | undefined;
@@ -234,27 +294,26 @@ export function generateFixGuidePdf(website: string, data: {
     const aiBotsAllowed = aiBotData.ai_bots_allowed as boolean | undefined;
 
     if (bots || robotsFound !== undefined) {
-      yPos = (doc as any).lastAutoTable?.finalY + 15 || yPos + 15;
-      yPos = checkPageBreak(doc, yPos, 40);
-
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(30, 30, 30);
-      doc.text('AI Bot Access', 14, yPos);
-      yPos += 10;
+      yPos = checkPageBreak(doc, yPos, 50);
+      yPos = drawSectionHeading(doc, 'AI Bot Access', yPos);
 
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
+      doc.setTextColor(60, 60, 60);
       doc.text(`robots.txt found: ${robotsFound ? 'Yes' : 'No'}`, 14, yPos);
       yPos += 7;
-      doc.text(`AI bots allowed: ${aiBotsAllowed ? 'Yes' : aiBotsAllowed === false ? 'No' : 'Unknown'}`, 14, yPos);
+      doc.text(
+        `AI bots allowed: ${aiBotsAllowed ? 'Yes' : aiBotsAllowed === false ? 'No' : 'Unknown'}`,
+        14,
+        yPos,
+      );
       yPos += 10;
 
       if (bots && Object.keys(bots).length > 0) {
         const botBody = Object.entries(bots).map(([name, info]) => [
           name,
           info.allowed ? 'Allowed' : 'Blocked',
-          info.rule || '-'
+          info.rule || '-',
         ]);
         autoTable(doc, {
           startY: yPos,
@@ -262,14 +321,23 @@ export function generateFixGuidePdf(website: string, data: {
           body: botBody,
           theme: 'grid',
           headStyles: { fillColor: [39, 174, 96] },
+          columnStyles: {
+            0: { cellWidth: 45 },
+            1: { cellWidth: 25 },
+            2: { cellWidth: 'auto' },
+          },
           styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
           margin: { left: 14, right: 14 },
+          didDrawPage: () => {
+            drawLogo(doc, pageWidth);
+          },
         });
+        yPos = getTableEndY(doc, yPos);
       }
     }
   }
 
-  // ── FOOTER on every page ──
+  // ── FOOTER on every page ────────────────────────────────────
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
