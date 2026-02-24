@@ -73,7 +73,6 @@ export default function SeoToolPage() {
         navigate('/');
     };
     const [loading, setLoading] = useState(false);
-    const [auditLoading, setAuditLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [website, setWebsite] = useState('');
     const [activeTab, setActiveTab] = useState<'dashboard' | 'history'>('dashboard');
@@ -124,10 +123,29 @@ export default function SeoToolPage() {
         setHistoryError(null);
         try {
             let remoteData: SeoAnalysisRecord[] = [];
-            if (user?.id || guestEmail) {
-                remoteData = user?.id
-                    ? await getUserAnalyses(user.id)
-                    : await getUserAnalysesByEmail(guestEmail!);
+
+            // Try fetching from Supabase - query by both user_id AND email
+            // because past analyses may have been saved under guest_email
+            try {
+                if (user?.id) {
+                    const byId = await getUserAnalyses(user.id);
+                    remoteData = [...byId];
+                }
+                // Also fetch by email (covers guest analyses before signup)
+                const email = user?.email || guestEmail;
+                if (email) {
+                    const byEmail = await getUserAnalysesByEmail(email);
+                    // Merge without duplicates
+                    const existingIds = new Set(remoteData.map(r => r.id));
+                    for (const r of byEmail) {
+                        if (!existingIds.has(r.id)) {
+                            remoteData.push(r);
+                        }
+                    }
+                }
+            } catch (supabaseErr) {
+                console.error('[History] Supabase fetch error:', supabaseErr);
+                // Continue with local data only
             }
 
             // Merge with local history
@@ -156,7 +174,7 @@ export default function SeoToolPage() {
         } finally {
             setHistoryLoading(false);
         }
-    }, [user?.id, guestEmail]);
+    }, [user?.id, user?.email, guestEmail]);
 
     useEffect(() => {
         fetchHistory();
@@ -253,10 +271,11 @@ export default function SeoToolPage() {
                 }
 
                 // Save to localStorage immediately (always works)
+                const emailForSave = user?.email || guestEmail || undefined;
                 const localRecord: SeoAnalysisRecord = {
                     id: `local_${Date.now()}`,
                     user_id: user?.id,
-                    guest_email: !user?.id ? (guestEmail || undefined) : undefined,
+                    guest_email: emailForSave,
                     website: url,
                     seo_data: newResults.seoAnalysis,
                     ai_visibility_data: newResults.aiVisibility,
@@ -269,7 +288,7 @@ export default function SeoToolPage() {
                 // Also try Supabase (best-effort)
                 saveAnalysis({
                     user_id: user?.id,
-                    guest_email: !user?.id ? (guestEmail || undefined) : undefined,
+                    guest_email: emailForSave,
                     website: url,
                     seo_data: newResults.seoAnalysis,
                     ai_visibility_data: newResults.aiVisibility,
