@@ -49,7 +49,7 @@ const tiers: PricingTier[] = [
         icon: <Sparkles className="w-6 h-6" />,
         badge: 'Most Popular',
         cta: 'Upgrade to Pro',
-        href: `https://test.checkout.dodopayments.com/buy/pdt_0NYsnZquqsrqDi9SW9pHT?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`,
+        href: `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`,
     },
     {
         name: 'Agency',

@@ -51,7 +51,7 @@ export default function SeoToolPage() {
     const hasProAccess = (isPro && !proExpired) || isAdmin;
 
     // Build checkout URL with user email for payment tracking
-    const checkoutUrl = `https://test.checkout.dodopayments.com/buy/pdt_0NYsnZquqsrqDi9SW9pHT?quantity=1${displayEmail ? `&customer[email]=${encodeURIComponent(displayEmail)}` : ''}&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+    const checkoutUrl = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1${displayEmail ? `&customer[email]=${encodeURIComponent(displayEmail)}` : ''}&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
 
     // Pro activation popup state
     const [showProActivated, setShowProActivated] = useState(false);
