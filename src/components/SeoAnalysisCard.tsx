@@ -13,7 +13,7 @@ export default function SeoAnalysisCard({ data }: SeoAnalysisCardProps) {
   const basic = d.basic as { title?: string; final_url?: string; http_code?: number; canonical?: string | null; favicon?: string } | undefined;
   const headings = d.headings as { counts?: Record<string, number>; data?: Record<string, string[]> } | undefined;
   const links = d.links as { total?: number; internal?: number; external?: number; nofollow?: number } | undefined;
-  const images = d.images as { total?: number; missing_alt?: number; alt_rate_pct?: number } | undefined;
+  const images = d.images as { total?: number; missing_alt?: number; without_alt?: number; images_without_alt?: number; alt_rate_pct?: number } | undefined;
   const findings = d.findings as Array<{ category?: string; severity?: string; issue?: string; fix?: string }> | undefined;
   const structured = d.structured_data as { json_ld_count?: number; types?: string[] } | undefined;
   const security = d.security as { ssl_valid?: boolean; hsts?: boolean; http_code?: number } | undefined;
@@ -161,11 +161,17 @@ export default function SeoAnalysisCard({ data }: SeoAnalysisCardProps) {
             </div>
             <div className="space-y-1">
               {images?.total !== undefined && <p className="text-sm text-gray-700">Total: {images.total}</p>}
-              {accessibility?.images_missing_alt !== undefined && (
-                <p className={`text-sm ${accessibility.images_missing_alt > 0 ? 'text-orange-600 font-medium' : 'text-green-600'}`}>
-                  Missing alt text: {accessibility.images_missing_alt}
-                </p>
-              )}
+              {(() => {
+                const missingAlt = images?.missing_alt ?? images?.without_alt ?? images?.images_without_alt ?? accessibility?.images_missing_alt;
+                if (missingAlt !== undefined) {
+                  return (
+                    <p className={`text-sm ${missingAlt > 0 ? 'text-orange-600 font-medium' : 'text-green-600'}`}>
+                      Missing alt text: {missingAlt}
+                    </p>
+                  );
+                }
+                return null;
+              })()}
               {images?.alt_rate_pct !== undefined && <p className="text-sm text-gray-700">Alt rate: {images.alt_rate_pct}%</p>}
             </div>
           </div>

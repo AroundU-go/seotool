@@ -45,7 +45,7 @@ export default function SeoDashboard({ results, website }: SeoDashboardProps) {
     // Images: Handle both naming conventions
     const seoImages = seoAnalysis?.images || {};
     const imagesTotal = seoImages.total || 0;
-    const imagesMissingAlt = seoImages.without_alt ?? seoImages.missing_alt ?? 0;
+    const imagesMissingAlt = seoImages.without_alt ?? seoImages.missing_alt ?? seoImages.images_without_alt ?? 0;
 
     // Links
     const seoLinks = seoAnalysis?.links || {};

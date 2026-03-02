@@ -15,12 +15,12 @@ export function ComparisonSection() {
 
                 <div className="grid md:grid-cols-3 gap-6 items-stretch">
                     {/* Card 1: SEOzapp */}
-                    <div className="bg-orange-50/50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-800/30 rounded-2xl p-10 text-center flex flex-col justify-center items-center hover:scale-105 transition-transform duration-300 shadow-sm">
+                    <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30 rounded-2xl p-10 text-center flex flex-col justify-center items-center hover:scale-105 transition-transform duration-300 shadow-sm">
                         <div className="mb-3">
-                            <span className="text-4xl md:text-5xl font-black text-orange-500">$49/mo</span>
+                            <span className="text-4xl md:text-5xl font-black text-blue-500">$49/mo</span>
                         </div>
                         <p className="text-base font-medium text-foreground/70 mb-2">AI Suite Monthly</p>
-                        <p className="text-xs font-bold text-orange-600 uppercase tracking-widest">SEOzapp</p>
+                        <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">SEOzapp</p>
                     </div>
 
                     {/* Card 2: Competitors */}
