@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import { supabase, onAuthStateChange, getProStatus, signInWithGoogle as googleSignIn, ProStatusResult } from '@/services/supabaseClient';
+import { supabase, isSupabaseConfigured, onAuthStateChange, getProStatus, signInWithGoogle as googleSignIn, ProStatusResult } from '@/services/supabaseClient';
 
-const isSupabaseReady = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
 
 interface AuthContextType {
     user: User | null;
@@ -39,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [user?.id, fetchProStatus]);
 
     useEffect(() => {
-        if (!isSupabaseReady) {
+        if (!isSupabaseConfigured) {
             setLoading(false);
             return;
         }
