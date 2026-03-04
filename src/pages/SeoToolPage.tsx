@@ -99,7 +99,9 @@ export default function SeoToolPage() {
     });
 
     // ── Local history helpers ──────────────────────────────────
-    const LOCAL_HISTORY_KEY = 'seozapp_history';
+    // Scope localStorage history per user email to prevent cross-account leakage
+    const historyEmail = user?.email || guestEmail || 'anonymous';
+    const LOCAL_HISTORY_KEY = `seozapp_history_${historyEmail}`;
     const MAX_LOCAL_HISTORY = 30;
 
     const getLocalHistory = (): SeoAnalysisRecord[] => {
@@ -148,23 +150,27 @@ export default function SeoToolPage() {
                 // Continue with local data only
             }
 
-            // Merge with local history
+            // Merge with local history, dedup by website (keep most recent per URL)
             const localData = getLocalHistory();
-            const seen = new Set<string>();
+            const allRecords = [...remoteData, ...localData];
+
+            // Sort all by date descending first, so the first seen per website is the newest
+            allRecords.sort((a, b) =>
+                new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+            );
+
+            // Deduplicate: keep only the most recent analysis per website URL
+            const seenWebsites = new Set<string>();
             const merged: SeoAnalysisRecord[] = [];
 
-            for (const r of [...remoteData, ...localData]) {
-                const key = `${r.website}__${r.created_at}`;
-                if (!seen.has(key)) {
-                    seen.add(key);
+            for (const r of allRecords) {
+                // Normalize website URL for comparison (strip trailing slash, lowercase)
+                const normalizedUrl = r.website?.toLowerCase().replace(/\/+$/, '') || '';
+                if (!seenWebsites.has(normalizedUrl)) {
+                    seenWebsites.add(normalizedUrl);
                     merged.push(r);
                 }
             }
-
-            // Sort by date descending
-            merged.sort((a, b) =>
-                new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
-            );
 
             setHistory(merged);
         } catch (err) {
@@ -179,29 +185,6 @@ export default function SeoToolPage() {
     useEffect(() => {
         fetchHistory();
     }, [fetchHistory]);
-
-    // Auto-save current dashboard results to local history if not already saved
-    useEffect(() => {
-        if (activeTab === 'history' && website && (results.seoAnalysis || results.loadingSpeed)) {
-            const local = getLocalHistory();
-            const alreadySaved = local.some(r => r.website === website);
-            if (!alreadySaved) {
-                const record: SeoAnalysisRecord = {
-                    id: `local_${Date.now()}`,
-                    user_id: user?.id,
-                    guest_email: !user?.id ? (guestEmail || undefined) : undefined,
-                    website,
-                    seo_data: results.seoAnalysis,
-                    ai_visibility_data: results.aiVisibility,
-                    ai_bot_data: results.aiBotChecker,
-                    loading_speed_data: results.loadingSpeed,
-                    created_at: new Date().toISOString(),
-                };
-                saveLocalHistory(record);
-                fetchHistory();
-            }
-        }
-    }, [activeTab]);
 
 
     useEffect(() => {
