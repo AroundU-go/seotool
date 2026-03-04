@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient, Session, User } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://seozapp.jiobase.com';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://ilmmqkfcotrmjjqbawhg.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsbW1xa2Zjb3RybWpqcWJhd2hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMTYwODQsImV4cCI6MjA4Njc5MjA4NH0.WiC981b2OZghhJ4Wj7rBSSN4k2dpGla-mG8EfQwqteE';
 
 export const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
