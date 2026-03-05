@@ -25,7 +25,6 @@ const tiers: PricingTier[] = [
             'Full On-page SEO analysis',
             'Bot access checks',
             'Performance metrics',
-            'SERP Preview',
         ],
         icon: <Zap className="w-6 h-6" />,
         cta: 'Get Started Free',

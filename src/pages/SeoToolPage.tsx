@@ -8,7 +8,7 @@ import AiBotCheckerCard from '../components/AiBotCheckerCard';
 import TopKeywordsCard from '../components/TopKeywordsCard';
 import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
-import { saveAnalysis, getUserAnalyses, getUserAnalysesByEmail, getAuditCountByEmail, recordFreeAudit, SeoAnalysisRecord } from '../services/supabaseClient';
+import { saveAnalysis, getUserAnalysesByEmailOrId, getAuditCountByEmail, recordFreeAudit, SeoAnalysisRecord } from '../services/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { Component, ReactNode } from 'react';
 
@@ -126,25 +126,10 @@ export default function SeoToolPage() {
         try {
             let remoteData: SeoAnalysisRecord[] = [];
 
-            // Try fetching from Supabase - query by both user_id AND email
-            // because past analyses may have been saved under guest_email
+            // Use unified query that matches by user_id OR guest_email
+            const email = user?.email || guestEmail;
             try {
-                if (user?.id) {
-                    const byId = await getUserAnalyses(user.id);
-                    remoteData = [...byId];
-                }
-                // Also fetch by email (covers guest analyses before signup)
-                const email = user?.email || guestEmail;
-                if (email) {
-                    const byEmail = await getUserAnalysesByEmail(email);
-                    // Merge without duplicates
-                    const existingIds = new Set(remoteData.map(r => r.id));
-                    for (const r of byEmail) {
-                        if (!existingIds.has(r.id)) {
-                            remoteData.push(r);
-                        }
-                    }
-                }
+                remoteData = await getUserAnalysesByEmailOrId(user?.id, email || undefined);
             } catch (supabaseErr) {
                 console.error('[History] Supabase fetch error:', supabaseErr);
                 // Continue with local data only

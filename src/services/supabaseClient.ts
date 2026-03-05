@@ -72,11 +72,26 @@ export async function saveAnalysis(
     console.warn('[saveAnalysis] Supabase not configured');
     return null;
   }
+
+  // Always ensure guest_email is populated for reliable email-based lookups.
+  // If we have a user_id but no guest_email, resolve email from the current session.
+  if (data.user_id && !data.guest_email) {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const sessionEmail = sessionData?.session?.user?.email;
+      if (sessionEmail) {
+        data.guest_email = sessionEmail;
+      }
+    } catch (e) {
+      console.warn('[saveAnalysis] Could not resolve email from session:', e);
+    }
+  }
+
   if (!data.user_id && !data.guest_email) {
     console.warn('[saveAnalysis] No user_id or guest_email provided, skipping save');
     return null;
   }
-  console.log('[saveAnalysis] Saving for user:', data.user_id, 'website:', data.website);
+  console.log('[saveAnalysis] Saving for user:', data.user_id, 'email:', data.guest_email, 'website:', data.website);
   const { data: result, error } = await supabase
     .from('seo_analyses')
     .insert([data])
@@ -150,6 +165,55 @@ export async function getUserAnalysesByEmail(email: string, limit = 20): Promise
 
   console.log('[getUserAnalysesByEmail] Found', data?.length || 0, 'records');
   return data || [];
+}
+
+/**
+ * Unified function: fetch analyses by user_id OR guest_email in one query.
+ * This ensures we find all records regardless of how they were originally saved.
+ */
+export async function getUserAnalysesByEmailOrId(
+  userId: string | undefined,
+  email: string | undefined,
+  limit = 20,
+): Promise<SeoAnalysisRecord[]> {
+  if (!isSupabaseConfigured) {
+    console.warn('[getUserAnalysesByEmailOrId] Supabase not configured');
+    return [];
+  }
+  if (!userId && !email) {
+    console.warn('[getUserAnalysesByEmailOrId] No userId or email provided');
+    return [];
+  }
+
+  console.log('[getUserAnalysesByEmailOrId] Fetching for userId:', userId, 'email:', email);
+
+  // Build an OR filter covering both lookup methods
+  const orParts: string[] = [];
+  if (userId) orParts.push(`user_id.eq.${userId}`);
+  if (email) orParts.push(`guest_email.eq.${email}`);
+
+  const { data, error } = await supabase
+    .from('seo_analyses')
+    .select('*')
+    .or(orParts.join(','))
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('[getUserAnalysesByEmailOrId] Error:', error.message, error.details, error.hint);
+    return [];
+  }
+
+  // Deduplicate by id (in case both filters matched the same row)
+  const seen = new Set<string>();
+  const unique = (data || []).filter(r => {
+    if (seen.has(r.id!)) return false;
+    seen.add(r.id!);
+    return true;
+  });
+
+  console.log('[getUserAnalysesByEmailOrId] Found', unique.length, 'records');
+  return unique;
 }
 
 export async function getAnalysesByWebsite(website: string, limit = 5): Promise<SeoAnalysisRecord[]> {
