@@ -170,6 +170,7 @@ export async function getUserAnalysesByEmail(email: string, limit = 20): Promise
 /**
  * Unified function: fetch analyses by user_id OR guest_email in one query.
  * This ensures we find all records regardless of how they were originally saved.
+ * Falls back to individual queries if the OR query fails.
  */
 export async function getUserAnalysesByEmailOrId(
   userId: string | undefined,
@@ -180,40 +181,107 @@ export async function getUserAnalysesByEmailOrId(
     console.warn('[getUserAnalysesByEmailOrId] Supabase not configured');
     return [];
   }
-  if (!userId && !email) {
+
+  // Normalize inputs
+  const cleanUserId = userId?.trim() || undefined;
+  const cleanEmail = email?.trim().toLowerCase() || undefined;
+
+  if (!cleanUserId && !cleanEmail) {
     console.warn('[getUserAnalysesByEmailOrId] No userId or email provided');
     return [];
   }
 
-  console.log('[getUserAnalysesByEmailOrId] Fetching for userId:', userId, 'email:', email);
+  console.log('[getUserAnalysesByEmailOrId] Fetching for userId:', cleanUserId, 'email:', cleanEmail);
 
   // Build an OR filter covering both lookup methods
   const orParts: string[] = [];
-  if (userId) orParts.push(`user_id.eq.${userId}`);
-  if (email) orParts.push(`guest_email.eq.${email}`);
+  if (cleanUserId) orParts.push(`user_id.eq.${cleanUserId}`);
+  if (cleanEmail) orParts.push(`guest_email.eq.${cleanEmail}`);
 
-  const { data, error } = await supabase
-    .from('seo_analyses')
-    .select('*')
-    .or(orParts.join(','))
-    .order('created_at', { ascending: false })
-    .limit(limit);
+  try {
+    const { data, error } = await supabase
+      .from('seo_analyses')
+      .select('*')
+      .or(orParts.join(','))
+      .order('created_at', { ascending: false })
+      .limit(limit);
 
-  if (error) {
-    console.error('[getUserAnalysesByEmailOrId] Error:', error.message, error.details, error.hint);
-    return [];
+    if (error) {
+      console.error('[getUserAnalysesByEmailOrId] OR query error:', error.message, error.details, error.hint);
+      // Fallback: try individual queries
+      return await fallbackIndividualQueries(cleanUserId, cleanEmail, limit);
+    }
+
+    // Deduplicate by id (in case both filters matched the same row)
+    const seen = new Set<string>();
+    const unique = (data || []).filter(r => {
+      if (seen.has(r.id!)) return false;
+      seen.add(r.id!);
+      return true;
+    });
+
+    console.log('[getUserAnalysesByEmailOrId] Found', unique.length, 'records');
+    return unique;
+  } catch (err) {
+    console.error('[getUserAnalysesByEmailOrId] Unexpected error:', err);
+    return await fallbackIndividualQueries(cleanUserId, cleanEmail, limit);
+  }
+}
+
+/**
+ * Fallback: query by user_id and guest_email separately, then merge.
+ */
+async function fallbackIndividualQueries(
+  userId: string | undefined,
+  email: string | undefined,
+  limit: number,
+): Promise<SeoAnalysisRecord[]> {
+  console.log('[fallbackIndividualQueries] Trying individual queries...');
+  const results: SeoAnalysisRecord[] = [];
+
+  if (userId) {
+    try {
+      const { data } = await supabase
+        .from('seo_analyses')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (data) results.push(...data);
+    } catch (e) {
+      console.error('[fallbackIndividualQueries] user_id query failed:', e);
+    }
   }
 
-  // Deduplicate by id (in case both filters matched the same row)
+  if (email) {
+    try {
+      const { data } = await supabase
+        .from('seo_analyses')
+        .select('*')
+        .eq('guest_email', email)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (data) results.push(...data);
+    } catch (e) {
+      console.error('[fallbackIndividualQueries] guest_email query failed:', e);
+    }
+  }
+
+  // Deduplicate by id
   const seen = new Set<string>();
-  const unique = (data || []).filter(r => {
+  const unique = results.filter(r => {
     if (seen.has(r.id!)) return false;
     seen.add(r.id!);
     return true;
   });
 
-  console.log('[getUserAnalysesByEmailOrId] Found', unique.length, 'records');
-  return unique;
+  // Sort by created_at descending
+  unique.sort((a, b) =>
+    new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+  );
+
+  console.log('[fallbackIndividualQueries] Found', unique.length, 'records');
+  return unique.slice(0, limit);
 }
 
 export async function getAnalysesByWebsite(website: string, limit = 5): Promise<SeoAnalysisRecord[]> {

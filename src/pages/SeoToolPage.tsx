@@ -127,39 +127,42 @@ export default function SeoToolPage() {
             let remoteData: SeoAnalysisRecord[] = [];
 
             // Use unified query that matches by user_id OR guest_email
-            const email = user?.email || guestEmail;
+            const email = (user?.email || guestEmail || '').trim().toLowerCase();
+            console.log('[History] Fetching for user:', user?.id, 'email:', email);
             try {
                 remoteData = await getUserAnalysesByEmailOrId(user?.id, email || undefined);
+                console.log('[History] Remote data count:', remoteData.length);
             } catch (supabaseErr) {
                 console.error('[History] Supabase fetch error:', supabaseErr);
                 // Continue with local data only
             }
 
-            // Merge with local history, dedup by website (keep most recent per URL)
+            // Merge with local history, dedup by id to avoid duplicates
             const localData = getLocalHistory();
             const allRecords = [...remoteData, ...localData];
 
-            // Sort all by date descending first, so the first seen per website is the newest
+            // Sort all by date descending
             allRecords.sort((a, b) =>
                 new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
             );
 
-            // Deduplicate: keep only the most recent analysis per website URL
-            const seenWebsites = new Set<string>();
+            // Deduplicate by id only (keep all analyses, even for same website)
+            const seenIds = new Set<string>();
             const merged: SeoAnalysisRecord[] = [];
 
             for (const r of allRecords) {
-                // Normalize website URL for comparison (strip trailing slash, lowercase)
-                const normalizedUrl = r.website?.toLowerCase().replace(/\/+$/, '') || '';
-                if (!seenWebsites.has(normalizedUrl)) {
-                    seenWebsites.add(normalizedUrl);
+                const recordId = r.id || `${r.website}_${r.created_at}`;
+                if (!seenIds.has(recordId)) {
+                    seenIds.add(recordId);
                     merged.push(r);
                 }
             }
 
+            console.log('[History] Total merged records:', merged.length);
             setHistory(merged);
         } catch (err) {
             console.error('[History] Fetch error:', err);
+            setHistoryError('Failed to load history. Please try again.');
             // Fall back to local only
             setHistory(getLocalHistory());
         } finally {
@@ -239,7 +242,7 @@ export default function SeoToolPage() {
                 }
 
                 // Save to localStorage immediately (always works)
-                const emailForSave = user?.email || guestEmail || undefined;
+                const emailForSave = (user?.email || guestEmail || '').trim().toLowerCase() || undefined;
                 const localRecord: SeoAnalysisRecord = {
                     id: `local_${Date.now()}`,
                     user_id: user?.id,
@@ -621,7 +624,17 @@ export default function SeoToolPage() {
                         {hasResults && !loading && (
                             <>
                                 <div className="max-w-7xl mx-auto mb-8 flex items-center justify-between">
-                                    <div /> {/* Spacer */}
+                                    <button
+                                        onClick={() => {
+                                            setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null });
+                                            setWebsite('');
+                                            setError(null);
+                                        }}
+                                        className="text-gray-600 hover:text-accent px-5 py-2.5 rounded-full border border-gray-200 hover:border-accent/30 transition-all flex items-center gap-2 font-semibold text-sm"
+                                    >
+                                        <Search className="w-4 h-4" />
+                                        New Analysis
+                                    </button>
                                     <button
                                         onClick={handleDownloadGuide}
                                         className="bg-accent text-white px-6 py-3 rounded-full hover:bg-accent-600 transition-all flex items-center gap-2 shadow-lg shadow-accent/20 font-semibold text-sm transform hover:-translate-y-0.5"

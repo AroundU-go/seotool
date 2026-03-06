@@ -42,6 +42,18 @@ export default function AiVisibilityCard({ data }: AiVisibilityCardProps) {
     return 'bg-blue-100 text-blue-700';
   };
 
+  // Sort suggestions by priority: high → medium → low
+  const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
+  const sortedSuggestions = suggestions
+    ? [...suggestions].sort((a, b) => (priorityOrder[a.priority || 'low'] ?? 3) - (priorityOrder[b.priority || 'low'] ?? 3))
+    : [];
+
+  // Sort issues by severity: high → medium → low
+  const severityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
+  const sortedIssues = issues
+    ? [...issues].sort((a, b) => (severityOrder[a.severity || 'low'] ?? 3) - (severityOrder[b.severity || 'low'] ?? 3))
+    : [];
+
   const scoreBreakdown = aiScore ? [
     { label: 'Crawlability', value: aiScore.crawlability ?? 0, max: 20 },
     { label: 'Structure', value: aiScore.structure ?? 0, max: 20 },
@@ -196,14 +208,14 @@ export default function AiVisibilityCard({ data }: AiVisibilityCardProps) {
       )}
 
       {/* Issues */}
-      {issues && issues.length > 0 && (
+      {sortedIssues.length > 0 && (
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
           <h4 className="font-semibold text-orange-900 mb-2 flex items-center gap-2">
             <AlertCircle className="w-5 h-5" />
-            Issues ({issues.length})
+            Issues ({sortedIssues.length})
           </h4>
           <div className="space-y-2">
-            {issues.map((issue, idx) => (
+            {sortedIssues.map((issue, idx) => (
               <div key={idx} className="bg-white bg-opacity-60 rounded-lg p-2">
                 <div className="flex items-center gap-2">
                   <span className={`text-xs px-2 py-0.5 rounded ${issue.severity === 'high' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`}>{issue.severity}</span>
@@ -218,11 +230,11 @@ export default function AiVisibilityCard({ data }: AiVisibilityCardProps) {
       )}
 
       {/* Suggestions */}
-      {suggestions && suggestions.length > 0 && (
+      {sortedSuggestions.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-semibold text-blue-900 mb-2">Suggestions ({suggestions.length})</h4>
+          <h4 className="font-semibold text-blue-900 mb-2">Suggestions ({sortedSuggestions.length})</h4>
           <div className="space-y-2">
-            {suggestions.map((s, idx) => (
+            {sortedSuggestions.map((s, idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <span className={`text-xs px-2 py-0.5 rounded mt-0.5 flex-shrink-0 ${priorityColor(s.priority)}`}>
                   {s.priority}
