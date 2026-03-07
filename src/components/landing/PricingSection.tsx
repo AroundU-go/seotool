@@ -42,6 +42,7 @@ const tiers: PricingTier[] = [
             'AEO & GEO optimization',
             'AI Search Visibility scoring',
             'AI keyword suggestions',
+            'Bulk URL analysis',
             'Priority support',
         ],
         highlight: true,

@@ -680,7 +680,7 @@ export default function SeoToolPage() {
                                                 </div>
                                                 <h3 className="text-3xl font-bold text-gray-900 mb-3">Unlock Full AI Report</h3>
                                                 <p className="text-gray-500 mb-8 max-w-lg mx-auto text-lg">
-                                                    Get deep insights into your AEO & GEO optimization, AI Search Visibility scoring, AI keyword suggestions, pdf exports, Priority support
+                                                    Get deep insights into your AEO & GEO optimization, AI Search Visibility scoring, AI keyword suggestions, pdf exports, bulk URL analysis, Priority support
 
                                                 </p>
                                                 <button
