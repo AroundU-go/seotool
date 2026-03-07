@@ -559,7 +559,7 @@ export default function LandingPage() {
                         </span>
                         <div className="flex items-center gap-6">
                             <a href="/blogs" className="text-sm font-medium text-foreground/60 hover:text-accent transition-colors">Blogs</a>
-                            <a href="/contact" className="text-sm font-medium text-foreground/60 hover:text-accent transition-colors">Contact</a>
+                            <a href="https://x.com/ItsUddipan" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/60 hover:text-accent transition-colors">Contact</a>
                         </div>
                         <p className="text-sm text-foreground/50">
                             © {new Date().getFullYear()} SEOzapp. All rights reserved.
