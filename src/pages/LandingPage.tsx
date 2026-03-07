@@ -368,14 +368,15 @@ export default function LandingPage() {
                     <FeaturesSection />
 
                     {/* Rank Higher On Banner */}
-                    <div className="mt-16 flex justify-center">
-                        <div className="relative w-full max-w-3xl rounded-2xl overflow-hidden bg-[#1a1a1a] shadow-lg shadow-accent/10 border border-border/20">
-                            <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-accent/5 pointer-events-none" />
-                            <img
-                                src="/rank-higher-on.png"
-                                alt="Rank Higher On Google, ChatGPT, Claude, Gemini, Perplexity, and Bing"
-                                className="w-full h-auto object-contain opacity-90"
-                            />
+                    <div className="mt-20 mb-8 flex flex-col items-center justify-center">
+                        <p className="text-sm font-bold tracking-[0.2em] text-foreground/50 uppercase mb-8">
+                            Rank Higher On
+                        </p>
+                        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-80">
+                            <img src="/icon1.png" alt="Claude" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
+                            <img src="/icon2.png" alt="ChatGPT" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
+                            <img src="/icon3.png" alt="Perplexity" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
+                            <img src="/icon4.png" alt="Gemini" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
                         </div>
                     </div>
                 </div>
