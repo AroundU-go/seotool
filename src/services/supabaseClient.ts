@@ -62,6 +62,7 @@ export interface SeoAnalysisRecord {
   ai_visibility_data: unknown;
   ai_bot_data: unknown;
   loading_speed_data: unknown;
+  top_keywords_data?: unknown;
   created_at?: string;
 }
 

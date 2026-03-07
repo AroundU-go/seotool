@@ -252,6 +252,7 @@ export default function SeoToolPage() {
                     ai_visibility_data: newResults.aiVisibility,
                     ai_bot_data: newResults.aiBotChecker,
                     loading_speed_data: newResults.loadingSpeed,
+                    top_keywords_data: newResults.topKeywords,
                     created_at: new Date().toISOString(),
                 };
                 saveLocalHistory(localRecord);
@@ -265,6 +266,7 @@ export default function SeoToolPage() {
                     ai_visibility_data: newResults.aiVisibility,
                     ai_bot_data: newResults.aiBotChecker,
                     loading_speed_data: newResults.loadingSpeed,
+                    top_keywords_data: newResults.topKeywords,
                 }).then((saved) => {
                     console.log('[SeoToolPage] Save result:', saved ? 'success' : 'failed');
                     fetchHistory();
@@ -290,7 +292,7 @@ export default function SeoToolPage() {
             aiVisibility: record.ai_visibility_data,
             aiBotChecker: record.ai_bot_data,
             loadingSpeed: record.loading_speed_data,
-            topKeywords: (record as any).top_keywords_data || null,
+            topKeywords: record.top_keywords_data || null,
         });
         setActiveTab('dashboard');
         setIsMenuOpen(false);

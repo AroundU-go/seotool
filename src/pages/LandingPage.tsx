@@ -366,6 +366,18 @@ export default function LandingPage() {
                         </p>
                     </div>
                     <FeaturesSection />
+
+                    {/* Rank Higher On Banner */}
+                    <div className="mt-16 flex justify-center">
+                        <div className="relative w-full max-w-3xl rounded-2xl overflow-hidden bg-[#1a1a1a] shadow-lg shadow-accent/10 border border-border/20">
+                            <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-accent/5 pointer-events-none" />
+                            <img
+                                src="/rank-higher-on.png"
+                                alt="Rank Higher On Google, ChatGPT, Claude, Gemini, Perplexity, and Bing"
+                                className="w-full h-auto object-contain opacity-90"
+                            />
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -509,12 +521,12 @@ export default function LandingPage() {
                     <div className="space-y-4">
                         {[
                             {
-                                q: 'What exactly does SEO It Is analyze?',
+                                q: 'What exactly does SEOzapp analyze?',
                                 a: 'We perform 20+ comprehensive on-page SEO checks including title tags, meta descriptions, heading structure (H1-H6), internal/external links, image optimization, schema markup, page speed indicators, mobile responsiveness, SSL/HTTPS. Each check is prioritized by impact on your rankings.'
                             },
                             {
                                 q: 'How is this different from tools like Ahrefs or SEMrush?',
-                                a: 'Unlike enterprise tools that overwhelm with data, SEO It Is focuses on actionable on-page fixes you can implement immediately. We provide a prioritized checklist format—critical issues first, then warnings, then optimizations. Plus, our AI Suite offers cutting-edge GEO (Generative Engine Optimization) and AEO (Answer Engine Optimization) that most traditional tools don\'t provide.'
+                                a: 'Unlike enterprise tools that overwhelm with data, SEOzapp focuses on actionable on-page fixes you can implement immediately. We provide a prioritized checklist format—critical issues first, then warnings, then optimizations. Plus, our AI Suite offers cutting-edge GEO (Generative Engine Optimization) and AEO (Answer Engine Optimization) that most traditional tools don\'t provide.'
                             }
                         ].map((item, idx) => (
                             <div
