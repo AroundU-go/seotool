@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, MessageSquare } from 'lucide-react';
+import { ArrowLeft, MessageSquare } from 'lucide-react';
 
 export default function ContactPage() {
     const navigate = useNavigate();
@@ -33,16 +33,18 @@ export default function ContactPage() {
                 <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
                     <div className="text-center">
                         <div className="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Mail className="w-7 h-7 text-accent" />
+                            <MessageSquare className="w-7 h-7 text-accent" />
                         </div>
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">Email Us</h2>
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Message Us</h2>
                         <p className="text-gray-500 mb-4">Drop us a line and we'll get back to you within 24 hours.</p>
                         <a
-                            href="mailto:go.aroundu@gmail.com"
+                            href="https://x.com/ItsUddipan"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.02]"
                         >
-                            <Mail className="w-5 h-5" />
-                            go.aroundu@gmail.com
+                            <MessageSquare className="w-5 h-5" />
+                            Contact
                         </a>
                     </div>
                 </div>
