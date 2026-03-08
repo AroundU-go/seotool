@@ -377,6 +377,8 @@ export default function LandingPage() {
                             <img src="/icon2.png" alt="ChatGPT" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
                             <img src="/icon3.png" alt="Perplexity" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
                             <img src="/icon4.png" alt="Gemini" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
+                            <img src="/icon5.png" alt="SearchGPT" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm rounded-full" />
+                            <img src="/icon6.png" alt="Google" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
                         </div>
                     </div>
                 </div>
