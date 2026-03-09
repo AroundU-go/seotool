@@ -39,6 +39,8 @@ const tiers: PricingTier[] = [
             'Everything in Free',
             'Email alerts',
             'CSV exports',
+            'History tracking',
+            'Certified report page',
             'AEO & GEO optimization',
             'AI Search Visibility scoring',
             'AI keyword suggestions',
