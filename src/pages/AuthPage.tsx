@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function AuthPage() {
     const navigate = useNavigate();
-    const { signUp, user, signInWithGoogle } = useAuth(); // We need signUp and Google OAuth
+    const { user, signInWithGoogle } = useAuth(); // We need Google OAuth
 
-    const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -17,39 +16,6 @@ export default function AuthPage() {
         navigate('/analyze', { replace: true });
         return null;
     }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-        setLoading(true);
-
-        try {
-            // Auto-generate a strong random password to satisfy Supabase requirements
-            // This effectively creates a "lead" account that can be claimed later via password reset if needed
-            const randomPassword = `SeoTool_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-
-            // Attempt to sign up to store the email in Supabase Auth
-            // We ignore the result because we're granting access regardless of email confirmation
-            await signUp(email, randomPassword);
-
-            // Store email locally to allow "Guest" access without confirmation
-            localStorage.setItem('guest_email', email);
-
-            // Redirect immediately to the tool
-            navigate('/analyze', { replace: true });
-        } catch (err) {
-            console.error('Auth error:', err);
-            // Even if Supabase fails (e.g. rate limit), allow access if we have an email
-            if (email) {
-                localStorage.setItem('guest_email', email);
-                navigate('/analyze', { replace: true });
-            } else {
-                setError('An unexpected error occurred. Please try again.');
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -69,11 +35,8 @@ export default function AuthPage() {
                 <div className="bg-card border border-border rounded-2xl p-8 shadow-xl">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Mail className="w-8 h-8 text-accent" />
-                        </div>
                         <h1 className="text-3xl font-bold text-foreground mb-2">
-                            Enter your email
+                            Sign in
                         </h1>
                         <p className="text-foreground/60 text-sm">
                             to start analyzing your websites instantly
@@ -87,46 +50,6 @@ export default function AuthPage() {
                             <p className="text-sm text-red-500">{error}</p>
                         </div>
                     )}
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-foreground/70 mb-1.5">Email</label>
-                            <div className="relative">
-                                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="you@example.com"
-                                    required
-                                    className="w-full pl-10 pr-4 py-3 bg-white border border-border rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-3.5 bg-accent text-accent-900 font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.01] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
-                        >
-                            {loading ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                    Starting Analysis…
-                                </>
-                            ) : (
-                                'Start Analyzing'
-                            )}
-                        </button>
-                    </form>
-
-                    {/* Divider */}
-                    <div className="flex items-center gap-3 my-6">
-                        <div className="flex-1 h-px bg-border" />
-                        <span className="text-xs text-foreground/40 font-medium">OR</span>
-                        <div className="flex-1 h-px bg-border" />
-                    </div>
 
                     {/* Google OAuth */}
                     <button
