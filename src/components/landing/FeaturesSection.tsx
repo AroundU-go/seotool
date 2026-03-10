@@ -13,11 +13,11 @@ export function FeaturesSection() {
         {
             title: "Deep SEO Analysis",
             description:
-                "Comprehensive on-page analysis covering meta tags, headings, links, images, and content structure.",
+                "Comprehensive on-page analysis covering meta tags, headings, links, images, content structure and many more.",
             icon: <IconTerminal2 />,
         },
         {
-            title: "Ai engine optimization",
+            title: "AI Engine Optimization",
             description:
                 "See how AI search engines perceive your content. Optimize for ChatGPT, Perplexity, and more.",
             icon: <IconEaseInOut />,
@@ -28,7 +28,7 @@ export function FeaturesSection() {
             icon: <IconCloud />,
         },
         {
-            title: "Top search keywords",
+            title: "Top Search Keywords",
             description: "Get top search keywords for your site, including ranking and volume.",
             icon: <IconSearch />,
         },
