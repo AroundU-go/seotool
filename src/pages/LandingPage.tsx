@@ -107,7 +107,7 @@ export default function LandingPage() {
     const steps = [
         { icon: ClipboardPaste, num: '1', title: 'Paste Your URL', desc: 'Enter any public URL you want to analyze.' },
         { icon: Zap, num: '2', title: 'Instant Analysis', desc: 'We scan 25+ on-page factors including title, meta, headings, links, schema, and more.' },
-        { icon: BarChart3, num: '3', title: 'Get Prioritized Results', desc: 'Issues are ranked by impact: critical, warning, and good status.' },
+        { icon: BarChart3, num: '3', title: 'Get Prioritized Results with action plan', desc: 'Issues are ranked by impact: critical, warning, and good status.' },
         { icon: Share2, num: '4', title: 'Export & Share', desc: 'Download as Markdown/PDF, copy to clipboard, or share directly with your team.' },
     ];
 
@@ -227,8 +227,7 @@ export default function LandingPage() {
                     </h1>
 
                     <p className="text-lg md:text-xl text-foreground/60 max-w-2xl mx-auto mb-12 leading-relaxed">
-                        Comprehensive on-page analysis, AI readiness scoring, bot access checks,
-                        and performance metrics with detailed fix action plan — all in one tool.
+                        Comprehensive on-page analysis, Ai readiness scoring, bot access checks, top search keywords, performance metrics and fix action plan — all in one tool.
                     </p>
                 </div>
 

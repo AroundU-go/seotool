@@ -3,9 +3,9 @@ import {
     IconCloud,
     IconEaseInOut,
     IconHeart,
-    IconHelp,
-    IconRouteAltLeft,
     IconTerminal2,
+    IconFlame,
+    IconSearch,
 } from "@tabler/icons-react";
 
 export function FeaturesSection() {
@@ -17,26 +17,26 @@ export function FeaturesSection() {
             icon: <IconTerminal2 />,
         },
         {
-            title: "AI-Powered Insights",
+            title: "Ai engine optimization",
             description:
                 "See how AI search engines perceive your content. Optimize for ChatGPT, Perplexity, and more.",
             icon: <IconEaseInOut />,
         },
         {
             title: "Blazing Fast Results",
-            description: "Get detailed analysis in seconds. All four checks run in parallel for speed.",
+            description: "Get detailed analysis and action plan in seconds. All checks run in parallel for speed.",
             icon: <IconCloud />,
         },
         {
-            title: "AI Bot Detection",
-            description: "Know exactly which AI crawlers can access your site through robots.txt analysis.",
-            icon: <IconRouteAltLeft />,
+            title: "Top search keywords",
+            description: "Get top search keywords for your site, including ranking and volume.",
+            icon: <IconSearch />,
         },
         {
             title: "Speed Optimization",
             description:
                 "Detailed loading speed metrics — TTFB, page size, request breakdown — with actionable fixes.",
-            icon: <IconHelp />,
+            icon: <IconFlame />,
         },
         {
             title: "Downloadable Reports",
