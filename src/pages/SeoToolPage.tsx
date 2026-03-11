@@ -188,7 +188,7 @@ export default function SeoToolPage() {
         if (!hasProAccess && (user?.email || guestEmail)) {
             const email = user?.email || guestEmail || '';
             const count = await getAuditCountByEmail(email);
-            if (count >= 2) {
+            if (count >= 1) {
                 setShowUpgradeModal(true);
                 return;
             }
@@ -362,9 +362,9 @@ export default function SeoToolPage() {
                             <Lock className="w-8 h-8 text-accent" />
                         </div>
 
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Trial Over</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Audit Limit Reached</h3>
                         <p className="text-gray-500 mb-8">
-                            Your Free trial is over, Switch to Pro for unlimited audits.
+                            You've used all your free audits. Upgrade to continue analyzing websites.
                         </p>
 
                         <button
