@@ -9,6 +9,8 @@ interface AuthContextType {
     loading: boolean;
     isPro: boolean;
     proExpired: boolean;
+    paymentType: string;
+    proAuditCount: number;
     signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
     signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
     signInWithGoogle: () => Promise<{ error: Error | null }>;
@@ -24,11 +26,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(true);
     const [isPro, setIsPro] = useState(false);
     const [proExpired, setProExpired] = useState(false);
+    const [paymentType, setPaymentType] = useState('');
+    const [proAuditCount, setProAuditCount] = useState(0);
 
     const fetchProStatus = useCallback(async (userId: string) => {
         const result: ProStatusResult = await getProStatus(userId);
         setIsPro(result.isPro);
         setProExpired(result.proExpired);
+        setPaymentType(result.paymentType);
+        setProAuditCount(result.proAuditCount);
     }, []);
 
     const refreshProStatus = useCallback(async () => {
@@ -62,6 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             } else {
                 setIsPro(false);
                 setProExpired(false);
+                setPaymentType('');
+                setProAuditCount(0);
             }
             setLoading(false);
         });
@@ -100,6 +108,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(null);
         setIsPro(false);
         setProExpired(false);
+        setPaymentType('');
+        setProAuditCount(0);
     };
 
     return (
@@ -110,6 +120,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 loading,
                 isPro,
                 proExpired,
+                paymentType,
+                proAuditCount,
                 signUp: handleSignUp,
                 signIn: handleSignIn,
                 signInWithGoogle: handleSignInWithGoogle,

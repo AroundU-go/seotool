@@ -8,7 +8,7 @@ import AiBotCheckerCard from '../components/AiBotCheckerCard';
 import TopKeywordsCard from '../components/TopKeywordsCard';
 import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
-import { saveAnalysis, getUserAnalysesByEmailOrId, getAuditCountByEmail, recordFreeAudit, SeoAnalysisRecord } from '../services/supabaseClient';
+import { saveAnalysis, getUserAnalysesByEmailOrId, getAuditCountByEmail, recordFreeAudit, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { Component, ReactNode } from 'react';
 
@@ -44,14 +44,14 @@ class CardErrorBoundary extends Component<{ children: ReactNode; name: string },
 export default function SeoToolPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, signOut: handleSignOut, isPro, proExpired, refreshProStatus } = useAuth();
+    const { user, signOut: handleSignOut, isPro, proExpired, paymentType, proAuditCount, refreshProStatus } = useAuth();
     const guestEmail = localStorage.getItem('guest_email');
     const displayEmail = user?.email || guestEmail;
     const isAdmin = displayEmail === 'go.aroundu@gmail.com';
     const hasProAccess = (isPro && !proExpired) || isAdmin;
 
     // Build checkout URL with user email for payment tracking
-    const checkoutUrl = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1${displayEmail ? `&customer[email]=${encodeURIComponent(displayEmail)}` : ''}&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+    const checkoutUrl = `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1${displayEmail ? `&customer[email]=${encodeURIComponent(displayEmail)}` : ''}&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
 
     // Pro activation popup state
     const [showProActivated, setShowProActivated] = useState(false);
@@ -194,6 +194,12 @@ export default function SeoToolPage() {
             }
         }
 
+        // Enforce 5-audit limit for one-time Pro users
+        if (hasProAccess && paymentType === 'one_time' && proAuditCount >= 5 && !isAdmin) {
+            setShowUpgradeModal(true);
+            return;
+        }
+
         setLoading(true);
         setError(null);
         setWebsite(url);
@@ -201,16 +207,21 @@ export default function SeoToolPage() {
         setActiveTab('dashboard'); // Ensure we switch back to dashboard
 
         try {
-            // Admin gets everything, Free users get only SEO Analysis & Speed
+            // Admin gets everything
+            // Pro ($5 one-time) gets: on-page, speed, AI bot checker, top keywords
+            // Free users get only SEO Analysis & Speed
             const promises = [
                 analyzeSeo(url),
                 checkLoadingSpeed(url),
             ];
 
             if (hasProAccess) {
-                promises.push(checkAiVisibility(url));
                 promises.push(checkAiBots(url));
                 promises.push(checkTopKeywords(url));
+                // Only subscription/admin users get AI Visibility
+                if (paymentType === 'subscription' || isAdmin) {
+                    promises.push(checkAiVisibility(url));
+                }
             }
 
             const results = await Promise.allSettled(promises);
@@ -218,16 +229,16 @@ export default function SeoToolPage() {
             // Destructure results carefully based on what was requested
             const seoData = results[0];
             const speedData = results[1];
-            const aiVisData = hasProAccess ? results[2] : { status: 'rejected', reason: 'Not requested' };
-            const aiBotData = hasProAccess ? results[3] : { status: 'rejected', reason: 'Not requested' };
-            const topKwData = hasProAccess ? results[4] : { status: 'rejected', reason: 'Not requested' };
+            const aiBotData = hasProAccess ? results[2] : { status: 'rejected', reason: 'Not requested' };
+            const topKwData = hasProAccess ? results[3] : { status: 'rejected', reason: 'Not requested' };
+            const aiVisData = (hasProAccess && (paymentType === 'subscription' || isAdmin)) ? results[4] : { status: 'rejected', reason: 'Not requested' };
 
             const newResults = {
                 seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
                 loadingSpeed: speedData.status === 'fulfilled' ? speedData.value : null,
-                aiVisibility: aiVisData.status === 'fulfilled' ? (aiVisData as any).value : null,
                 aiBotChecker: aiBotData.status === 'fulfilled' ? (aiBotData as any).value : null,
                 topKeywords: topKwData.status === 'fulfilled' ? (topKwData as any).value : null,
+                aiVisibility: aiVisData.status === 'fulfilled' ? (aiVisData as any).value : null,
             };
 
             console.log('API Results:', newResults);
@@ -239,6 +250,14 @@ export default function SeoToolPage() {
                 // Record free audit if successful
                 if (!hasProAccess && (user?.email || guestEmail)) {
                     recordFreeAudit(user?.email || guestEmail || '', url).catch(console.error);
+                }
+
+                // Increment audit count for one-time Pro users
+                if (hasProAccess && paymentType === 'one_time' && user?.id && !isAdmin) {
+                    incrementProAuditCount(user.id).then((newCount) => {
+                        console.log('[SeoToolPage] Pro audit count incremented to:', newCount);
+                        refreshProStatus();
+                    }).catch(console.error);
                 }
 
                 // Save to localStorage immediately (always works)
@@ -410,7 +429,7 @@ export default function SeoToolPage() {
                     {hasProAccess && (
                         <span className="ml-1 px-2 py-0.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-full shadow-sm flex items-center gap-1">
                             <Crown className="w-3 h-3" />
-                            PRO
+                            PRO<sup className="text-[8px] ml-0.5">+</sup>
                         </span>
                     )}
                 </div>

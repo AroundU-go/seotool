@@ -307,32 +307,62 @@ export async function getAnalysesByWebsite(website: string, limit = 5): Promise<
 export interface ProStatusResult {
   isPro: boolean;
   proExpired: boolean;
+  paymentType: string;
+  proAuditCount: number;
 }
 
 export async function getProStatus(userId: string): Promise<ProStatusResult> {
-  if (!isSupabaseConfigured) return { isPro: false, proExpired: false };
+  if (!isSupabaseConfigured) return { isPro: false, proExpired: false, paymentType: '', proAuditCount: 0 };
   const { data, error } = await supabase
     .from('profiles')
-    .select('is_pro, pro_since')
+    .select('is_pro, pro_since, payment_type, pro_audit_count')
     .eq('id', userId)
     .maybeSingle();
 
   if (error) {
     console.error('Error fetching pro status:', error);
-    return { isPro: false, proExpired: false };
+    return { isPro: false, proExpired: false, paymentType: '', proAuditCount: 0 };
   }
+
+  const paymentType = data?.payment_type || 'one_time';
+  const proAuditCount = data?.pro_audit_count ?? 0;
 
   if (data?.is_pro === true && data?.pro_since) {
-    const proSince = new Date(data.pro_since);
-    const now = new Date();
-    const diffDays = (now.getTime() - proSince.getTime()) / (1000 * 60 * 60 * 24);
-    if (diffDays > 30) {
-      return { isPro: false, proExpired: true };
+    // Only check expiry for subscription users (30 days)
+    if (paymentType === 'subscription') {
+      const proSince = new Date(data.pro_since);
+      const now = new Date();
+      const diffDays = (now.getTime() - proSince.getTime()) / (1000 * 60 * 60 * 24);
+      if (diffDays > 30) {
+        return { isPro: false, proExpired: true, paymentType, proAuditCount };
+      }
     }
-    return { isPro: true, proExpired: false };
+    // One-time payment never expires
+    return { isPro: true, proExpired: false, paymentType, proAuditCount };
   }
 
-  return { isPro: data?.is_pro === true, proExpired: false };
+  return { isPro: data?.is_pro === true, proExpired: false, paymentType, proAuditCount };
+}
+
+export async function incrementProAuditCount(userId: string): Promise<number> {
+  if (!isSupabaseConfigured) return 0;
+  // Use RPC or manual increment
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('pro_audit_count')
+    .eq('id', userId)
+    .maybeSingle();
+
+  const currentCount = (profile?.pro_audit_count ?? 0) + 1;
+  const { error } = await supabase
+    .from('profiles')
+    .update({ pro_audit_count: currentCount })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('[incrementProAuditCount] Error:', error);
+  }
+  return currentCount;
 }
 
 export async function signInWithGoogle() {

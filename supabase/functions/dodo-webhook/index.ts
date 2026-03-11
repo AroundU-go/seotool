@@ -81,17 +81,48 @@ function base64Encode(bytes: Uint8Array): string {
     return btoa(binary);
 }
 
+// --- Extract common fields from webhook payload ---
+function extractPayloadFields(event: any) {
+    const payload = event.data || event.payload || event;
+
+    const customerEmail =
+        payload.customer?.email ||
+        payload.customer_email ||
+        payload.billing?.email ||
+        payload.metadata?.email ||
+        "";
+
+    const customerId =
+        payload.customer?.customer_id ||
+        payload.customer_id ||
+        "";
+
+    const subscriptionId =
+        payload.subscription_id ||
+        payload.subscription?.subscription_id ||
+        "";
+
+    return { payload, customerEmail, customerId, subscriptionId };
+}
+
 // --- Mark user as Pro in profiles table ---
-async function markUserAsPro(email: string, customerId?: string, subscriptionId?: string) {
-    console.log(`Marking user as Pro: ${email}`);
+async function markUserAsPro(
+    email: string,
+    paymentType: "one_time" | "subscription",
+    customerId?: string,
+    subscriptionId?: string
+) {
+    console.log(`Marking user as Pro: ${email}, paymentType: ${paymentType}`);
 
     const { data, error } = await supabase
         .from("profiles")
         .update({
             is_pro: true,
+            payment_type: paymentType,
             dodo_customer_id: customerId || null,
             subscription_id: subscriptionId || null,
             pro_since: new Date().toISOString(),
+            pro_audit_count: 0, // Reset audit count on new payment
         })
         .eq("email", email)
         .select();
@@ -106,8 +137,46 @@ async function markUserAsPro(email: string, customerId?: string, subscriptionId?
         return false;
     }
 
-    console.log(`Successfully marked ${email} as Pro`);
+    console.log(`Successfully marked ${email} as Pro (${paymentType})`);
     return true;
+}
+
+// --- Domain handlers ---
+
+async function handleOneTimePayment(event: any) {
+    const { customerEmail, customerId } = extractPayloadFields(event);
+    console.log(`[OneTimePayment] email: ${customerEmail}, customer: ${customerId}`);
+
+    if (!customerEmail) {
+        console.warn("[OneTimePayment] No customer email found");
+        return { success: false, message: "No customer email in payload" };
+    }
+
+    const success = await markUserAsPro(customerEmail, "one_time", customerId);
+    return {
+        success,
+        message: success
+            ? `User ${customerEmail} marked as Pro (one_time)`
+            : `Profile not found for ${customerEmail}`,
+    };
+}
+
+async function handleSubscriptionEvent(event: any) {
+    const { customerEmail, customerId, subscriptionId } = extractPayloadFields(event);
+    console.log(`[Subscription] email: ${customerEmail}, customer: ${customerId}, sub: ${subscriptionId}`);
+
+    if (!customerEmail) {
+        console.warn("[Subscription] No customer email found");
+        return { success: false, message: "No customer email in payload" };
+    }
+
+    const success = await markUserAsPro(customerEmail, "subscription", customerId, subscriptionId);
+    return {
+        success,
+        message: success
+            ? `User ${customerEmail} marked as Pro (subscription)`
+            : `Profile not found for ${customerEmail}`,
+    };
 }
 
 // --- Main handler ---
@@ -149,83 +218,32 @@ Deno.serve(async (req: Request) => {
         const event = JSON.parse(body);
         console.log("Webhook event received:", JSON.stringify(event, null, 2));
 
-        const eventType = event.type || event.event_type || "";
-        const payload = event.data || event.payload || event;
+        const eventType = (event.type || event.event_type || "").toLowerCase();
+        console.log(`Event type: ${eventType}`);
 
-        // Extract customer email from various possible payload structures
-        const customerEmail =
-            payload.customer?.email ||
-            payload.customer_email ||
-            payload.billing?.email ||
-            payload.metadata?.email ||
-            "";
+        // Switch on event.type to call the appropriate domain handler
+        let result: { success: boolean; message: string };
 
-        const customerId =
-            payload.customer?.customer_id ||
-            payload.customer_id ||
-            "";
-
-        const subscriptionId =
-            payload.subscription_id ||
-            payload.subscription?.subscription_id ||
-            "";
-
-        console.log(`Event: ${eventType}, Email: ${customerEmail}, Customer: ${customerId}`);
-
-        // Handle relevant events
-        const successEvents = [
-            "subscription.active",
-            "subscription.created",
-            "payment.succeeded",
-            "payment.completed",
-            "payment_succeeded",
-            "payment_completed",
-            "order.completed",
-            "one_time_payment.completed",
-        ];
-
-        if (successEvents.includes(eventType) || eventType.includes("payment") || eventType.includes("subscription")) {
-            if (customerEmail) {
-                const success = await markUserAsPro(customerEmail, customerId, subscriptionId);
-                if (success) {
-                    return new Response(
-                        JSON.stringify({ success: true, message: `User ${customerEmail} marked as Pro` }),
-                        {
-                            status: 200,
-                            headers: { ...corsHeaders, "Content-Type": "application/json" },
-                        }
-                    );
-                } else {
-                    // Still return 200 to acknowledge receipt (avoid retries)
-                    return new Response(
-                        JSON.stringify({ success: false, message: `Profile not found for ${customerEmail}` }),
-                        {
-                            status: 200,
-                            headers: { ...corsHeaders, "Content-Type": "application/json" },
-                        }
-                    );
+        if (eventType.startsWith("payment.") || eventType.startsWith("payment_") || eventType === "one_time_payment.completed") {
+            result = await handleOneTimePayment(event);
+        } else if (eventType.startsWith("subscription.") || eventType.startsWith("subscription_")) {
+            result = await handleSubscriptionEvent(event);
+        } else {
+            // Unhandled event type — acknowledge receipt
+            console.log(`Unhandled event type: ${eventType}`);
+            return new Response(
+                JSON.stringify({ success: true, message: `Event ${eventType} acknowledged` }),
+                {
+                    status: 200,
+                    headers: { ...corsHeaders, "Content-Type": "application/json" },
                 }
-            } else {
-                console.warn("No customer email found in webhook payload");
-                return new Response(
-                    JSON.stringify({ success: false, message: "No customer email in payload" }),
-                    {
-                        status: 200,
-                        headers: { ...corsHeaders, "Content-Type": "application/json" },
-                    }
-                );
-            }
+            );
         }
 
-        // For unhandled event types, acknowledge receipt
-        console.log(`Unhandled event type: ${eventType}`);
-        return new Response(
-            JSON.stringify({ success: true, message: `Event ${eventType} acknowledged` }),
-            {
-                status: 200,
-                headers: { ...corsHeaders, "Content-Type": "application/json" },
-            }
-        );
+        return new Response(JSON.stringify(result), {
+            status: 200,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     } catch (error) {
         console.error("Webhook handler error:", error);
         return new Response(
