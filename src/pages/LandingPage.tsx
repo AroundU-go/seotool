@@ -1,48 +1,15 @@
-import { useState, useRef, useEffect, Component, ReactNode } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Rocket, Search, Star, ClipboardPaste, Zap, BarChart3, Share2, MessageSquare, DollarSign, AlertCircle, X, Mail, Loader2, Lock, ArrowRight, Download, ChevronDown, CheckCircle } from 'lucide-react';
+import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown } from 'lucide-react';
 import ParticleCanvas from '@/components/landing/ParticleHero';
 import { NavBar } from '@/components/ui/NavBar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { PricingSection } from '@/components/landing/PricingSection';
 import { ComparisonSection } from '@/components/landing/ComparisonSection';
-import { analyzeSeo, checkLoadingSpeed } from '@/services/seoApi';
-import { getAuditCountByEmail, signUp } from '@/services/supabaseClient';
-import SeoAnalysisCard from '@/components/SeoAnalysisCard';
-import LoadingSpeedCard from '@/components/LoadingSpeedCard';
-import { generateFixGuidePdf } from '@/utils/pdfGenerator';
-
-// Error boundary for result cards
-class CardErrorBoundary extends Component<{ children: ReactNode; name: string }, { hasError: boolean; error?: Error }> {
-    constructor(props: { children: ReactNode; name: string }) {
-        super(props);
-        this.state = { hasError: false };
-    }
-    static getDerivedStateFromError(error: Error) {
-        return { hasError: true, error };
-    }
-    render() {
-        if (this.state.hasError) {
-            return (
-                <div className="bg-card rounded-xl shadow-lg p-6 border border-red-300 dark:border-red-800">
-                    <div className="flex items-center gap-3 text-red-600 dark:text-red-400 mb-2">
-                        <AlertCircle className="w-5 h-5" />
-                        <h3 className="font-semibold">Error rendering {this.props.name}</h3>
-                    </div>
-                    <p className="text-sm text-red-500">{this.state.error?.message}</p>
-                </div>
-            );
-        }
-        return this.props.children;
-    }
-}
-
-const FREE_AUDIT_LIMIT = 1;
 
 export default function LandingPage() {
     const navigate = useNavigate();
-    const resultsRef = useRef<HTMLDivElement>(null);
 
     // Scroll-spy for navbar
     const [activeSection, setActiveSection] = useState('Home');
@@ -78,24 +45,6 @@ export default function LandingPage() {
 
     // URL & email state
     const [url, setUrl] = useState('');
-    const [email, setEmail] = useState('');
-    const [showEmailModal, setShowEmailModal] = useState(false);
-
-    // Analysis state
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [analyzedWebsite, setAnalyzedWebsite] = useState('');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [results, setResults] = useState<{ seoAnalysis: any; loadingSpeed: any }>({
-        seoAnalysis: null,
-        loadingSpeed: null,
-    });
-
-    // Quota state
-    const [quotaExceeded, setQuotaExceeded] = useState(false);
-    const [auditCount, setAuditCount] = useState(0);
-    const [checkingQuota, setCheckingQuota] = useState(false);
-    const [verificationSent, setVerificationSent] = useState(false);
 
     const navItems = [
         { name: 'Home', url: '#hero', icon: Home, onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }) },
@@ -112,105 +61,14 @@ export default function LandingPage() {
         { icon: Share2, num: '4', title: 'Export & Share', desc: 'Download as Markdown/PDF, copy to clipboard, or share directly with your team.' },
     ];
 
-    const handleAnalyzeClick = () => {
-        if (!url.trim()) return;
-        setError(null);
-        setQuotaExceeded(false);
-        setShowEmailModal(true);
-    };
-
-    const handleEmailSubmit = async (e: React.FormEvent) => {
+    const handleAnalyzeClick = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!email.trim()) return;
-
-        setCheckingQuota(true);
-        setError(null);
-
-        try {
-            // Check quota BEFORE sending verification
-            const count = await getAuditCountByEmail(email.trim());
-            setAuditCount(count);
-
-            if (count >= FREE_AUDIT_LIMIT) {
-                setQuotaExceeded(true);
-                setCheckingQuota(false);
-                return;
-            }
-
-            // Store the URL so AuthCallback can redirect to /analyze with it
-            localStorage.setItem('pending_analyze_url', url.trim());
-            localStorage.setItem('guest_email', email.trim());
-
-            // Send verification email via Supabase signUp
-            const randomPassword = `SeoTool_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-            const { error: signUpError } = await signUp(email.trim(), randomPassword);
-
-            if (signUpError) {
-                // If user already exists, still show "check your email" since Supabase 
-                // may have re-sent a confirmation or the user just needs to sign in
-                if (signUpError.message?.includes('already registered')) {
-                    setVerificationSent(true);
-                } else {
-                    setError(signUpError.message);
-                }
-            } else {
-                setVerificationSent(true);
-            }
-        } catch (err) {
-            setError('An unexpected error occurred. Please try again.');
-            console.error('[handleEmailSubmit] Error:', err);
-        } finally {
-            setCheckingQuota(false);
-        }
+        if (!url.trim()) return;
+        
+        // Store the URL so AuthCallback/AuthPage can redirect to /analyze with it
+        localStorage.setItem('pending_analyze_url', url.trim());
+        navigate('/auth');
     };
-
-    const runAnalysis = async (targetUrl: string) => {
-        setLoading(true);
-        setError(null);
-        const cleanUrl = targetUrl.replace(/^https?:\/\//, '');
-        setAnalyzedWebsite(cleanUrl);
-        setResults({ seoAnalysis: null, loadingSpeed: null });
-
-        try {
-            const [seoData, speedData] = await Promise.allSettled([
-                analyzeSeo(cleanUrl),
-                checkLoadingSpeed(cleanUrl),
-            ]);
-
-            const newResults = {
-                seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
-                loadingSpeed: speedData.status === 'fulfilled' ? speedData.value : null,
-            };
-
-            setResults(newResults);
-
-            if (seoData.status === 'rejected' && speedData.status === 'rejected') {
-                setError('Failed to analyze website. Please check the URL and try again.');
-            }
-
-            // Scroll to results
-            setTimeout(() => {
-                resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 300);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unexpected error occurred');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleDownloadGuide = () => {
-        if (results.seoAnalysis || results.loadingSpeed) {
-            generateFixGuidePdf(analyzedWebsite, {
-                seoAnalysis: results.seoAnalysis,
-                aiVisibility: null,
-                aiBotChecker: null,
-                loadingSpeed: results.loadingSpeed,
-            });
-        }
-    };
-
-    const hasResults = results.seoAnalysis || results.loadingSpeed;
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -254,7 +112,7 @@ export default function LandingPage() {
                 {/* URL Input + Login to Analyze — separate from hero content to avoid stacking issues */}
                 <div className="w-full max-w-2xl mx-auto px-6" style={{ position: 'relative', zIndex: 50 }}>
                     <form
-                        onSubmit={(e) => { e.preventDefault(); handleAnalyzeClick(); }}
+                        onSubmit={handleAnalyzeClick}
                         className="flex flex-col sm:flex-row items-stretch gap-3"
                     >
                         <div className="relative flex-1">
@@ -270,7 +128,7 @@ export default function LandingPage() {
                         </div>
                         <button
                             type="submit"
-                            disabled={!url.trim() || loading}
+                            disabled={!url.trim()}
                             className="group px-6 py-4 bg-accent text-accent-900 font-bold text-base rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
                             style={{ position: 'relative', zIndex: 2 }}
                         >
@@ -285,92 +143,6 @@ export default function LandingPage() {
 
 
             </section>
-
-            {/* Inline Results Section */}
-            <div ref={resultsRef}>
-                {loading && (
-                    <section className="py-20 px-6 bg-muted/20">
-                        <div className="max-w-4xl mx-auto text-center">
-                            <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/20 rounded-full mb-6">
-                                <Search className="w-8 h-8 text-accent animate-spin" />
-                            </div>
-                            <h3 className="text-2xl font-semibold text-foreground mb-2">Analyzing {analyzedWebsite}...</h3>
-                            <p className="text-foreground/60">Running on-page SEO analysis and loading speed test</p>
-                            <div className="mt-8 grid grid-cols-2 gap-4 max-w-md mx-auto">
-                                {['SEO Analysis', 'Page Speed'].map((label) => (
-                                    <div key={label} className="bg-card rounded-lg p-4 shadow-sm border border-border animate-pulse">
-                                        <div className="h-3 bg-muted rounded w-3/4 mx-auto mb-2" />
-                                        <div className="h-6 bg-muted rounded w-1/2 mx-auto mb-1" />
-                                        <p className="text-xs text-foreground/40">{label}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {error && !loading && (
-                    <section className="py-12 px-6 bg-muted/20">
-                        <div className="max-w-3xl mx-auto">
-                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 flex items-start gap-3">
-                                <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
-                                <p className="text-red-800 dark:text-red-300">{error}</p>
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {hasResults && !loading && (
-                    <section className="py-16 px-6 bg-muted/20">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="text-center mb-8">
-                                <h2 className="text-3xl font-bold text-foreground mb-2">
-                                    Results for <span className="text-accent">{analyzedWebsite}</span>
-                                </h2>
-                                <p className="text-foreground/60 mb-6">Free plan — On-page SEO & Loading Speed</p>
-                                <button
-                                    onClick={handleDownloadGuide}
-                                    className="bg-accent text-accent-900 px-6 py-3 rounded-xl hover:bg-accent-400 transition-colors inline-flex items-center gap-2 shadow-lg font-semibold"
-                                >
-                                    <Download className="w-5 h-5" />
-                                    Download Fix Guide
-                                </button>
-                            </div>
-
-                            <div className="space-y-6">
-                                {results.seoAnalysis && (
-                                    <CardErrorBoundary name="SEO Analysis">
-                                        <SeoAnalysisCard data={results.seoAnalysis} />
-                                    </CardErrorBoundary>
-                                )}
-                                {results.loadingSpeed && (
-                                    <CardErrorBoundary name="Loading Speed">
-                                        <LoadingSpeedCard data={results.loadingSpeed} />
-                                    </CardErrorBoundary>
-                                )}
-                            </div>
-
-                            {/* Upsell Banner */}
-                            <div className="mt-10 bg-card border border-accent/30 rounded-2xl p-8 text-center">
-                                <div className="flex items-center justify-center gap-2 mb-3">
-                                    <Lock className="w-5 h-5 text-accent" />
-                                    <h3 className="text-xl font-bold text-foreground">Want the full picture?</h3>
-                                </div>
-                                <p className="text-foreground/60 mb-6 max-w-lg mx-auto">
-                                    Upgrade to Pro for AI Search Visibility scoring, AI bot access checks, AEO & GEO optimization, and unlimited audits.
-                                </p>
-                                <button
-                                    onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="px-8 py-3 bg-accent text-accent-900 font-bold rounded-full shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-105 inline-flex items-center gap-2"
-                                >
-                                    View Pricing
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
-                    </section>
-                )}
-            </div>
 
             {/* Features Section */}
             <section id="features" className="py-20 px-6 bg-background">
@@ -609,136 +381,6 @@ export default function LandingPage() {
                 </div>
             </footer>
 
-            {/* Email Modal */}
-            {showEmailModal && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    {/* Backdrop */}
-                    <div
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                        onClick={() => { setShowEmailModal(false); setQuotaExceeded(false); }}
-                    />
-
-                    {/* Modal Card */}
-                    <div className="relative bg-card border border-border rounded-2xl p-8 shadow-2xl max-w-md w-full animate-in fade-in zoom-in duration-200">
-                        {/* Close button */}
-                        <button
-                            onClick={() => { setShowEmailModal(false); setQuotaExceeded(false); }}
-                            className="absolute top-4 right-4 text-foreground/40 hover:text-foreground transition-colors"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-
-                        {quotaExceeded ? (
-                            /* Quota exceeded view */
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <Lock className="w-8 h-8 text-amber-500" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-foreground mb-3">Free limit reached</h3>
-                                <p className="text-foreground/60 mb-2">
-                                    You've used all <span className="font-semibold text-foreground">{auditCount}/{FREE_AUDIT_LIMIT}</span> free audits for
-                                </p>
-                                <p className="font-semibold text-accent mb-6">{email}</p>
-                                <p className="text-sm text-foreground/50 mb-6">
-                                    Upgrade to Pro for unlimited audits, AI search visibility, and more.
-                                </p>
-                                <button
-                                    onClick={() => {
-                                        setShowEmailModal(false);
-                                        setQuotaExceeded(false);
-                                        document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
-                                    }}
-                                    className="w-full py-3.5 bg-accent text-accent-900 font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.01] flex items-center justify-center gap-2"
-                                >
-                                    View Pricing Plans
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        ) : verificationSent ? (
-                            /* Check your email view */
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-accent/15 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <CheckCircle className="w-8 h-8 text-accent" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-foreground mb-3">Check your email</h3>
-                                <p className="text-foreground/60 mb-2">
-                                    We've sent a verification link to
-                                </p>
-                                <p className="font-semibold text-accent mb-4">{email}</p>
-                                <p className="text-sm text-foreground/50 mb-6">
-                                    Click the link in your email to start analyzing <span className="font-semibold text-foreground">{url}</span>
-                                </p>
-                                <button
-                                    onClick={() => {
-                                        setVerificationSent(false);
-                                        setEmail('');
-                                    }}
-                                    className="text-sm text-accent hover:underline font-medium"
-                                >
-                                    Use a different email
-                                </button>
-                            </div>
-                        ) : (
-                            /* Email entry view */
-                            <>
-                                <div className="text-center mb-6">
-                                    <div className="w-14 h-14 bg-accent/15 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <Mail className="w-7 h-7 text-accent" />
-                                    </div>
-                                    <h3 className="text-2xl font-bold text-foreground mb-2">Enter your email</h3>
-                                    <p className="text-sm text-foreground/60">
-                                        We'll analyze <span className="font-semibold text-foreground">{url}</span> for you
-                                    </p>
-                                </div>
-
-                                <form onSubmit={handleEmailSubmit} className="space-y-4">
-                                    <div className="relative">
-                                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
-                                        <input
-                                            type="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="you@example.com"
-                                            required
-                                            autoFocus
-                                            className="w-full pl-10 pr-4 py-3.5 bg-white dark:bg-background border border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
-                                        />
-                                    </div>
-
-                                    {error && (
-                                        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 flex items-start gap-2">
-                                            <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                                            <p className="text-sm text-red-500">{error}</p>
-                                        </div>
-                                    )}
-
-                                    <button
-                                        type="submit"
-                                        disabled={checkingQuota || !email.trim()}
-                                        className="w-full py-3.5 bg-accent text-accent-900 font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.01] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                    >
-                                        {checkingQuota ? (
-                                            <>
-                                                <Loader2 className="w-5 h-5 animate-spin" />
-                                                Checking…
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Search className="w-5 h-5" />
-                                                Analyze Now
-                                            </>
-                                        )}
-                                    </button>
-                                </form>
-
-                                <p className="text-xs text-center text-foreground/40 mt-4">
-                                    1 free audit per email • No spam, ever
-                                </p>
-                            </>
-                        )}
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
