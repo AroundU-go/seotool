@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, Component, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Rocket, Search, Star, ClipboardPaste, Zap, BarChart3, Share2, MessageSquare, DollarSign, AlertCircle, X, Mail, Loader2, Lock, ArrowRight, Download, ChevronDown } from 'lucide-react';
+import { Home, Rocket, Search, Star, ClipboardPaste, Zap, BarChart3, Share2, MessageSquare, DollarSign, AlertCircle, X, Mail, Loader2, Lock, ArrowRight, Download, ChevronDown, CheckCircle } from 'lucide-react';
 import ParticleCanvas from '@/components/landing/ParticleHero';
 import { NavBar } from '@/components/ui/NavBar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -8,7 +8,7 @@ import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { PricingSection } from '@/components/landing/PricingSection';
 import { ComparisonSection } from '@/components/landing/ComparisonSection';
 import { analyzeSeo, checkLoadingSpeed } from '@/services/seoApi';
-import { getAuditCountByEmail } from '@/services/supabaseClient';
+import { getAuditCountByEmail, signUp } from '@/services/supabaseClient';
 import SeoAnalysisCard from '@/components/SeoAnalysisCard';
 import LoadingSpeedCard from '@/components/LoadingSpeedCard';
 import { generateFixGuidePdf } from '@/utils/pdfGenerator';
@@ -95,6 +95,7 @@ export default function LandingPage() {
     const [quotaExceeded, setQuotaExceeded] = useState(false);
     const [auditCount, setAuditCount] = useState(0);
     const [checkingQuota, setCheckingQuota] = useState(false);
+    const [verificationSent, setVerificationSent] = useState(false);
 
     const navItems = [
         { name: 'Home', url: '#hero', icon: Home, onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }) },
@@ -126,7 +127,7 @@ export default function LandingPage() {
         setError(null);
 
         try {
-            // Check quota BEFORE recording the audit
+            // Check quota BEFORE sending verification
             const count = await getAuditCountByEmail(email.trim());
             setAuditCount(count);
 
@@ -136,19 +137,30 @@ export default function LandingPage() {
                 return;
             }
 
-            // Store email locally for guest access in ProtectedRoute
+            // Store the URL so AuthCallback can redirect to /analyze with it
+            localStorage.setItem('pending_analyze_url', url.trim());
             localStorage.setItem('guest_email', email.trim());
 
-            setShowEmailModal(false);
+            // Send verification email via Supabase signUp
+            const randomPassword = `SeoTool_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+            const { error: signUpError } = await signUp(email.trim(), randomPassword);
+
+            if (signUpError) {
+                // If user already exists, still show "check your email" since Supabase 
+                // may have re-sent a confirmation or the user just needs to sign in
+                if (signUpError.message?.includes('already registered')) {
+                    setVerificationSent(true);
+                } else {
+                    setError(signUpError.message);
+                }
+            } else {
+                setVerificationSent(true);
+            }
+        } catch (err) {
+            setError('An unexpected error occurred. Please try again.');
+            console.error('[handleEmailSubmit] Error:', err);
+        } finally {
             setCheckingQuota(false);
-
-            // Redirect to the main tool page with the URL
-            // The audit will be recorded on SeoToolPage after a successful analysis
-            navigate('/analyze', { state: { analyzeUrl: url.trim() } });
-        } catch {
-            // Even if checking fails, let them analyze
-            localStorage.setItem('guest_email', email.trim());
-            navigate('/analyze', { state: { analyzeUrl: url.trim() } });
         }
     };
 
@@ -640,6 +652,30 @@ export default function LandingPage() {
                                 >
                                     View Pricing Plans
                                     <ArrowRight className="w-4 h-4" />
+                                </button>
+                            </div>
+                        ) : verificationSent ? (
+                            /* Check your email view */
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-accent/15 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <CheckCircle className="w-8 h-8 text-accent" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-foreground mb-3">Check your email</h3>
+                                <p className="text-foreground/60 mb-2">
+                                    We've sent a verification link to
+                                </p>
+                                <p className="font-semibold text-accent mb-4">{email}</p>
+                                <p className="text-sm text-foreground/50 mb-6">
+                                    Click the link in your email to start analyzing <span className="font-semibold text-foreground">{url}</span>
+                                </p>
+                                <button
+                                    onClick={() => {
+                                        setVerificationSent(false);
+                                        setEmail('');
+                                    }}
+                                    className="text-sm text-accent hover:underline font-medium"
+                                >
+                                    Use a different email
                                 </button>
                             </div>
                         ) : (

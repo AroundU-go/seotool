@@ -37,11 +37,21 @@ export default function AuthCallback() {
                 // (handles hash-fragment flows where the client auto-detects tokens)
                 const { data: { session } } = await supabase.auth.getSession();
 
+                const redirectWithUrl = () => {
+                    // Check if there's a pending URL from the landing page
+                    const pendingUrl = localStorage.getItem('pending_analyze_url');
+                    localStorage.removeItem('pending_analyze_url');
+
+                    if (pendingUrl) {
+                        navigate('/analyze', { replace: true, state: { analyzeUrl: pendingUrl } });
+                    } else {
+                        navigate('/analyze', { replace: true });
+                    }
+                };
+
                 if (session) {
                     setStatus('success');
-                    setTimeout(() => {
-                        navigate('/analyze', { replace: true });
-                    }, 1000);
+                    setTimeout(redirectWithUrl, 1000);
                 } else {
                     // No code and no session — might still be processing
                     // Give Supabase a moment to process hash fragments
@@ -49,9 +59,7 @@ export default function AuthCallback() {
                     const { data: { session: retrySession } } = await supabase.auth.getSession();
                     if (retrySession) {
                         setStatus('success');
-                        setTimeout(() => {
-                            navigate('/analyze', { replace: true });
-                        }, 1000);
+                        setTimeout(redirectWithUrl, 1000);
                     } else {
                         setStatus('error');
                         setErrorMessage('Could not establish a session. Please try signing in again.');
