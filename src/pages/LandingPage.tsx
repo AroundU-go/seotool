@@ -8,7 +8,7 @@ import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { PricingSection } from '@/components/landing/PricingSection';
 import { ComparisonSection } from '@/components/landing/ComparisonSection';
 import { analyzeSeo, checkLoadingSpeed } from '@/services/seoApi';
-import { getAuditCountByEmail, recordFreeAudit } from '@/services/supabaseClient';
+import { getAuditCountByEmail } from '@/services/supabaseClient';
 import SeoAnalysisCard from '@/components/SeoAnalysisCard';
 import LoadingSpeedCard from '@/components/LoadingSpeedCard';
 import { generateFixGuidePdf } from '@/utils/pdfGenerator';
@@ -38,7 +38,7 @@ class CardErrorBoundary extends Component<{ children: ReactNode; name: string },
     }
 }
 
-const FREE_AUDIT_LIMIT = 2;
+const FREE_AUDIT_LIMIT = 1;
 
 export default function LandingPage() {
     const navigate = useNavigate();
@@ -126,8 +126,15 @@ export default function LandingPage() {
         setError(null);
 
         try {
-            // Record this audit (fire and forget or wait, doesn't matter much)
-            await recordFreeAudit(email.trim(), url.trim());
+            // Check quota BEFORE recording the audit
+            const count = await getAuditCountByEmail(email.trim());
+            setAuditCount(count);
+
+            if (count >= FREE_AUDIT_LIMIT) {
+                setQuotaExceeded(true);
+                setCheckingQuota(false);
+                return;
+            }
 
             // Store email locally for guest access in ProtectedRoute
             localStorage.setItem('guest_email', email.trim());
@@ -136,9 +143,10 @@ export default function LandingPage() {
             setCheckingQuota(false);
 
             // Redirect to the main tool page with the URL
+            // The audit will be recorded on SeoToolPage after a successful analysis
             navigate('/analyze', { state: { analyzeUrl: url.trim() } });
         } catch {
-            // Even if recording fails, let them analyze
+            // Even if checking fails, let them analyze
             localStorage.setItem('guest_email', email.trim());
             navigate('/analyze', { state: { analyzeUrl: url.trim() } });
         }
@@ -259,7 +267,7 @@ export default function LandingPage() {
                         </button>
                     </form>
                     <p className="text-xs text-foreground/40 mt-3 text-center">
-                        2 free audits • No credit card required
+                        1 free audit • No credit card required
                     </p>
                 </div>
 
@@ -688,7 +696,7 @@ export default function LandingPage() {
                                 </form>
 
                                 <p className="text-xs text-center text-foreground/40 mt-4">
-                                    2 free audits per email • No spam, ever
+                                    1 free audit per email • No spam, ever
                                 </p>
                             </>
                         )}
