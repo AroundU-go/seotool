@@ -1,4 +1,3 @@
-import { Check, X, Info } from 'lucide-react';
 
 export function ComparisonSection() {
     return (
@@ -15,7 +14,7 @@ export function ComparisonSection() {
 
                 <div className="grid md:grid-cols-3 gap-6 items-stretch">
                     {/* Card 1: SEOzapp */}
-                    <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30 rounded-2xl p-10 text-center flex flex-col justify-center items-center hover:scale-105 transition-transform duration-300 shadow-sm">
+                    <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30 rounded-2xl p-10 text-center flex flex-col justify-center items-center transition-transform duration-300 shadow-sm">
                         <div className="mb-3">
                             <span className="text-4xl md:text-5xl font-black text-blue-500">$20/mo</span>
                         </div>
@@ -24,7 +23,7 @@ export function ComparisonSection() {
                     </div>
 
                     {/* Card 2: Competitors */}
-                    <div className="bg-card border border-border/60 rounded-2xl p-10 text-center flex flex-col justify-center items-center opacity-60 hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-card border border-border/60 rounded-2xl p-10 text-center flex flex-col justify-center items-center opacity-60 transition-opacity duration-300">
                         <div className="mb-3">
                             <span className="text-4xl md:text-5xl font-black text-foreground/40">$2,500/mo</span>
                         </div>

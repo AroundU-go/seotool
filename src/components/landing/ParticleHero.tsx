@@ -23,11 +23,6 @@ interface BackgroundParticle {
 
 const PARTICLE_DENSITY = 0.00012;
 const BG_PARTICLE_DENSITY = 0.00004;
-const MOUSE_RADIUS = 180;
-const RETURN_SPEED = 0.08;
-const DAMPING = 0.90;
-const REPULSION_STRENGTH = 1.2;
-
 const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const ParticleCanvas: React.FC = () => {
@@ -35,7 +30,6 @@ const ParticleCanvas: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const particlesRef = useRef<Particle[]>([]);
     const bgParticlesRef = useRef<BackgroundParticle[]>([]);
-    const mouseRef = useRef({ x: -1000, y: -1000, isActive: false });
     const frameIdRef = useRef(0);
     const [isDark, setIsDark] = useState(false);
 
@@ -111,34 +105,11 @@ const ParticleCanvas: React.FC = () => {
         }
         ctx.globalAlpha = 1.0;
 
-        // Main particles
+        // Main particles (static, no mouse interaction)
         const particles = particlesRef.current;
-        const mouse = mouseRef.current;
 
         for (const p of particles) {
-            const dx = mouse.x - p.x;
-            const dy = mouse.y - p.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (mouse.isActive && distance < MOUSE_RADIUS) {
-                const force = (MOUSE_RADIUS - distance) / MOUSE_RADIUS;
-                p.vx -= (dx / distance) * force * REPULSION_STRENGTH * 5;
-                p.vy -= (dy / distance) * force * REPULSION_STRENGTH * 5;
-            }
-
-            p.vx += (p.originX - p.x) * RETURN_SPEED;
-            p.vy += (p.originY - p.y) * RETURN_SPEED;
-        }
-
-        // Integrate & draw
-        for (const p of particles) {
-            p.vx *= DAMPING;
-            p.vy *= DAMPING;
-            p.x += p.vx;
-            p.y += p.vy;
-
-            const velocity = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-            const opacity = Math.min(0.3 + velocity * 0.1, 1);
+            const opacity = 0.3;
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -178,25 +149,6 @@ const ParticleCanvas: React.FC = () => {
         frameIdRef.current = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(frameIdRef.current);
     }, [animate]);
-
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        const onMove = (e: MouseEvent) => {
-            const rect = container.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-                mouseRef.current = { x, y, isActive: true };
-            } else {
-                mouseRef.current.isActive = false;
-            }
-        };
-
-        window.addEventListener('mousemove', onMove);
-        return () => window.removeEventListener('mousemove', onMove);
-    }, []);
 
     return (
         <div

@@ -129,11 +129,11 @@ export default function LandingPage() {
                         <button
                             type="submit"
                             disabled={!url.trim()}
-                            className="group px-6 py-4 bg-accent text-accent-900 font-bold text-base rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
+                            className="group px-6 py-4 bg-accent text-accent-900 font-bold text-base rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
                             style={{ position: 'relative', zIndex: 2 }}
                         >
                             Login to Analyze
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                            <ArrowRight className="w-4 h-4" />
                         </button>
                     </form>
                     <p className="text-xs text-foreground/40 mt-3 text-center">
@@ -164,12 +164,12 @@ export default function LandingPage() {
                             Rank Higher On
                         </p>
                         <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-80">
-                            <img src="/icon1.png" alt="Claude" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
-                            <img src="/icon2.png" alt="ChatGPT" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
-                            <img src="/icon3.png" alt="Perplexity" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
-                            <img src="/icon4.png" alt="Gemini" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
-                            <img src="/icon5.png" alt="SearchGPT" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm rounded-full" />
-                            <img src="/icon6.png" alt="Google" className="h-10 md:h-12 w-auto object-contain hover:scale-110 transition-all duration-300 hover:opacity-100 drop-shadow-sm" />
+                            <img src="/icon1.png" alt="Claude" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                            <img src="/icon2.png" alt="ChatGPT" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                            <img src="/icon3.png" alt="Perplexity" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                            <img src="/icon4.png" alt="Gemini" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                            <img src="/icon5.png" alt="SearchGPT" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm rounded-full" />
+                            <img src="/icon6.png" alt="Google" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@ export default function LandingPage() {
                         {steps.map((step) => {
                             const Icon = step.icon;
                             return (
-                                <div key={step.num} className="relative bg-card border border-border rounded-2xl p-8 hover:border-accent/40 transition-all duration-300 group hover:shadow-lg hover:shadow-accent/5">
+                                <div key={step.num} className="relative bg-card border border-border rounded-2xl p-8 transition-all duration-300 group">
                                     <div className="absolute -top-4 -left-2 w-10 h-10 bg-accent rounded-full flex items-center justify-center font-black text-accent-900 text-lg shadow-md shadow-accent/30">
                                         {step.num}
                                     </div>
@@ -312,10 +312,10 @@ export default function LandingPage() {
                     </p>
                     <button
                         onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="group px-10 py-5 bg-accent text-accent-900 font-bold text-xl rounded-full shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-105 inline-flex items-center gap-3"
+                        className="group px-10 py-5 bg-accent text-accent-900 font-bold text-xl rounded-full shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 inline-flex items-center gap-3"
                     >
                         Analyze Your Site Now
-                        <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-6 h-6" />
                     </button>
                 </div>
             </section>
