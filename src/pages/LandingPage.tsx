@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown } from 'lucide-react';
-import ParticleCanvas from '@/components/landing/ParticleHero';
+
 import { NavBar } from '@/components/ui/NavBar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
@@ -89,7 +89,7 @@ export default function LandingPage() {
 
             {/* Hero Section */}
             <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden isolate">
-                <ParticleCanvas />
+
 
                 {/* Hero Content */}
                 <div className="relative text-center px-6 max-w-4xl mx-auto" style={{ zIndex: 10 }}>
