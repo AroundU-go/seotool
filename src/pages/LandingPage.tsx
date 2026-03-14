@@ -93,11 +93,6 @@ export default function LandingPage() {
 
                 {/* Hero Content */}
                 <div className="relative text-center px-6 max-w-4xl mx-auto" style={{ zIndex: 10 }}>
-                    <div className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 backdrop-blur-sm mb-8">
-                        <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                        <span className="text-sm font-medium text-foreground/70">AI-Powered SEO Analysis</span>
-                    </div>
-
                     <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight mb-8">
                         <span className="block text-foreground">Turn your SEO</span>
                         <span className="block text-foreground">issues into</span>
@@ -141,11 +136,25 @@ export default function LandingPage() {
                     </p>
                 </div>
 
+                {/* Rank Higher On Banner */}
+                <div className="mt-20 mb-8 flex flex-col items-center justify-center w-full" style={{ position: 'relative', zIndex: 50 }}>
+                    <p className="text-sm font-bold tracking-[0.2em] text-foreground/50 uppercase mb-8">
+                        Rank Higher On
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-80">
+                        <img src="/icon1.png" alt="Claude" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                        <img src="/icon2.png" alt="ChatGPT" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                        <img src="/icon3.png" alt="Perplexity" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                        <img src="/icon4.png" alt="Gemini" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                        <img src="/icon5.png" alt="SearchGPT" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm rounded-full" />
+                        <img src="/icon6.png" alt="Google" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
+                    </div>
+                </div>
 
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-20 px-6 bg-background">
+            <section id="features" className="py-20 px-6 bg-card">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -157,26 +166,11 @@ export default function LandingPage() {
                         </p>
                     </div>
                     <FeaturesSection />
-
-                    {/* Rank Higher On Banner */}
-                    <div className="mt-20 mb-8 flex flex-col items-center justify-center">
-                        <p className="text-sm font-bold tracking-[0.2em] text-foreground/50 uppercase mb-8">
-                            Rank Higher On
-                        </p>
-                        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-80">
-                            <img src="/icon1.png" alt="Claude" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
-                            <img src="/icon2.png" alt="ChatGPT" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
-                            <img src="/icon3.png" alt="Perplexity" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
-                            <img src="/icon4.png" alt="Gemini" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
-                            <img src="/icon5.png" alt="SearchGPT" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm rounded-full" />
-                            <img src="/icon6.png" alt="Google" className="h-10 md:h-12 w-auto object-contain drop-shadow-sm" />
-                        </div>
-                    </div>
                 </div>
             </section>
 
             {/* How It Works Section */}
-            <section id="how-it-works" className="py-20 px-6 bg-muted/30">
+            <section id="how-it-works" className="py-20 px-6 bg-background">
                 <div className="max-w-5xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -228,7 +222,7 @@ export default function LandingPage() {
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-20 px-6 bg-background">
+            <section className="py-20 px-6 bg-card">
                 <div className="max-w-5xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -302,7 +296,7 @@ export default function LandingPage() {
             <ComparisonSection />
 
             {/* CTA Section */}
-            <section className="py-20 px-6 bg-muted/30">
+            <section className="py-20 px-6 bg-background">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                         Ready to optimize your site?
@@ -321,7 +315,7 @@ export default function LandingPage() {
             </section>
 
             {/* FAQ Section */}
-            <section id="faq" className="py-20 px-6 bg-background">
+            <section id="faq" className="py-20 px-6 bg-card">
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-12">
                         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -364,7 +358,7 @@ export default function LandingPage() {
             </section>
 
             {/* Footer */}
-            <footer className="py-12 px-6 border-t border-border bg-card">
+            <footer className="py-12 px-6 border-t border-border bg-background">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                         <span className="text-xl font-black tracking-tight text-foreground">
