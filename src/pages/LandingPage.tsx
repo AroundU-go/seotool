@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown } from 'lucide-react';
+import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown, Check } from 'lucide-react';
 
 import { NavBar } from '@/components/ui/NavBar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -88,7 +88,10 @@ export default function LandingPage() {
             </div>
 
             {/* Hero Section */}
-            <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden isolate">
+            <section id="hero" className="relative min-h-screen flex flex-col items-center justify-start pt-32 md:pt-48 pb-20 overflow-hidden isolate">
+
+                {/* Hero Gradient Background */}
+                <div className="absolute top-1/3 md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] md:w-[800px] h-[500px] md:h-[600px] bg-accent/30 rounded-full blur-[120px] opacity-60 pointer-events-none" />
 
 
                 {/* Hero Content */}
@@ -117,7 +120,7 @@ export default function LandingPage() {
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
                                 placeholder="Enter website URL (e.g., example.com)"
-                                className="w-full pl-12 pr-4 py-4 bg-card/80 backdrop-blur-md border border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-lg cursor-text"
+                                className="w-full pl-12 pr-4 py-4 bg-card/80 backdrop-blur-md border border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-lg cursor-text shadow-[0_15px_40px_-10px_rgba(117,221,255,0.4)]"
                                 style={{ position: 'relative', zIndex: 2 }}
                             />
                         </div>
@@ -131,9 +134,10 @@ export default function LandingPage() {
                             <ArrowRight className="w-4 h-4" />
                         </button>
                     </form>
-                    <p className="text-xs text-foreground/40 mt-3 text-center">
-                        1 free audit • No credit card required
-                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-6">
+                        <span className="flex items-center gap-2 text-sm font-semibold text-foreground/60"><Check className="w-4 h-4 text-[#10B981] stroke-[3]" /> 1 free audit</span>
+                        <span className="flex items-center gap-2 text-sm font-semibold text-foreground/60"><Check className="w-4 h-4 text-[#10B981] stroke-[3]" /> No credit card required</span>
+                    </div>
                 </div>
 
                 {/* Rank Higher On Banner */}
