@@ -53,6 +53,10 @@ export function generateFixGuidePdf(website: string, data: {
   aiVisibility: unknown;
   aiBotChecker: unknown;
   loadingSpeed: unknown;
+  topKeywords?: unknown;
+  backlinkData?: unknown;
+  newBacklinks?: unknown;
+  poorBacklinks?: unknown;
 }) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
@@ -232,6 +236,135 @@ export function generateFixGuidePdf(website: string, data: {
     doc.setTextColor(80, 80, 80);
     doc.text('No major issues found. Great job!', 14, yPos);
     yPos += 15;
+  }
+
+  // ── BACKLINKS ───────────────────────────────────────────────
+  const bd = data.backlinkData as Record<string, unknown> | null;
+  const nb = data.newBacklinks as Record<string, unknown> | null;
+  const pb = data.poorBacklinks as Record<string, unknown> | null;
+
+  if (bd || nb || pb) {
+    const backlinks = (bd?.backlinks || bd?.data || []) as Array<Record<string, unknown>>;
+    const totalBacklinks = (bd?.total_backlinks ?? bd?.total ?? backlinks.length ?? 0) as number;
+    const referringDomains = (bd?.referring_domains ?? bd?.ref_domains ?? 0) as number;
+    
+    const newList = (nb?.new_backlinks || nb?.data || []) as Array<Record<string, unknown>>;
+    const newTotal = (nb?.total ?? newList.length ?? 0) as number;
+    
+    const poorList = (pb?.poor_backlinks || pb?.data || []) as Array<Record<string, unknown>>;
+    const poorTotal = (pb?.total ?? poorList.length ?? 0) as number;
+
+    yPos = checkPageBreak(doc, yPos, 40);
+    yPos = drawSectionHeading(doc, 'Backlink Analysis', yPos);
+
+    // Summary stats
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    doc.text(`Total Backlinks: ${totalBacklinks}`, 14, yPos);
+    doc.text(`Referring Domains: ${referringDomains}`, 100, yPos);
+    yPos += 7;
+    doc.text(`New Backlinks: ${newTotal}`, 14, yPos);
+    doc.text(`Toxic Backlinks: ${poorTotal}`, 100, yPos);
+    yPos += 12;
+
+    // Top Backlinks Table
+    if (backlinks.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 30);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(40, 40, 40);
+      doc.text('Top Backlinks', 14, yPos);
+      yPos += 5;
+
+      const blBody = backlinks.slice(0, 10).map((bl) => [
+        (bl.source_url as string) || '-',
+        (bl.anchor_text as string) || '-',
+        String(bl.domain_authority ?? '-'),
+        bl.nofollow ? 'nofollow' : 'dofollow'
+      ]);
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Source URL', 'Anchor Text', 'DA', 'Type']],
+        body: blBody,
+        theme: 'grid',
+        headStyles: { fillColor: [63, 81, 181] }, // Indigo
+        columnStyles: {
+          0: { cellWidth: 50 },
+          1: { cellWidth: 40 },
+          2: { cellWidth: 15 },
+          3: { cellWidth: 20 },
+        },
+        styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
+        margin: { left: 14, right: 14 },
+      });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // New Backlinks Table
+    if (newList.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 30);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(40, 40, 40);
+      doc.text('New Backlinks', 14, yPos);
+      yPos += 5;
+
+      const nlBody = newList.slice(0, 5).map((nl) => [
+        (nl.source_url as string) || '-',
+        (nl.anchor_text as string) || '-',
+        nl.first_seen ? new Date(nl.first_seen as string).toLocaleDateString() : '-'
+      ]);
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Source URL', 'Anchor Text', 'First Seen']],
+        body: nlBody,
+        theme: 'grid',
+        headStyles: { fillColor: [76, 175, 80] }, // Green
+        columnStyles: {
+          0: { cellWidth: 60 },
+          1: { cellWidth: 40 },
+          2: { cellWidth: 25 },
+        },
+        styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
+        margin: { left: 14, right: 14 },
+      });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // Toxic/Poor Backlinks Table
+    if (poorList.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 30);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(40, 40, 40);
+      doc.text('Toxic / Poor Backlinks', 14, yPos);
+      yPos += 5;
+
+      const plBody = poorList.slice(0, 5).map((pl) => [
+        (pl.source_url as string) || '-',
+        String(pl.spam_score ?? '-'),
+        (pl.reason as string) || '-'
+      ]);
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Source URL', 'Spam Score', 'Reason']],
+        body: plBody,
+        theme: 'grid',
+        headStyles: { fillColor: [244, 67, 54] }, // Red
+        columnStyles: {
+          0: { cellWidth: 60 },
+          1: { cellWidth: 25 },
+          2: { cellWidth: 40 },
+        },
+        styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
+        margin: { left: 14, right: 14 },
+      });
+      yPos = getTableEndY(doc, yPos);
+    }
   }
 
   // ── AI VISIBILITY ───────────────────────────────────────────

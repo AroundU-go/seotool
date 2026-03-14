@@ -145,3 +145,61 @@ export async function checkLoadingSpeed(website: string): Promise<LoadingSpeedRe
 export async function checkTopKeywords(website: string): Promise<TopKeywordsResult> {
   return callVebApi<TopKeywordsResult>("seo/topsearchkeywords", website);
 }
+
+// ─── Backlink interfaces & API calls ────────────────────────
+
+export interface BacklinkDataResult {
+  backlinks?: Array<{
+    source_url?: string;
+    target_url?: string;
+    anchor_text?: string;
+    domain_authority?: number;
+    page_authority?: number;
+    nofollow?: boolean;
+    first_seen?: string;
+    last_seen?: string;
+    [key: string]: unknown;
+  }>;
+  total_backlinks?: number;
+  referring_domains?: number;
+  [key: string]: unknown;
+}
+
+export interface NewBacklinksResult {
+  new_backlinks?: Array<{
+    source_url?: string;
+    target_url?: string;
+    anchor_text?: string;
+    domain_authority?: number;
+    first_seen?: string;
+    nofollow?: boolean;
+    [key: string]: unknown;
+  }>;
+  total?: number;
+  [key: string]: unknown;
+}
+
+export interface PoorBacklinksResult {
+  poor_backlinks?: Array<{
+    source_url?: string;
+    target_url?: string;
+    anchor_text?: string;
+    spam_score?: number;
+    reason?: string;
+    [key: string]: unknown;
+  }>;
+  total?: number;
+  [key: string]: unknown;
+}
+
+export async function getBacklinkData(website: string): Promise<BacklinkDataResult> {
+  return callVebApi<BacklinkDataResult>("seo/backlinkdata", website);
+}
+
+export async function getNewBacklinks(website: string): Promise<NewBacklinksResult> {
+  return callVebApi<NewBacklinksResult>("seo/newbacklinks", website);
+}
+
+export async function getPoorBacklinks(website: string): Promise<PoorBacklinksResult> {
+  return callVebApi<PoorBacklinksResult>("seo/poorbacklinks", website);
+}

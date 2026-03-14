@@ -6,7 +6,8 @@ import SeoDashboard from '../components/SeoDashboard';
 import AiVisibilityCard from '../components/AiVisibilityCard';
 import AiBotCheckerCard from '../components/AiBotCheckerCard';
 import TopKeywordsCard from '../components/TopKeywordsCard';
-import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords } from '../services/seoApi';
+import BacklinksCard from '../components/BacklinksCard';
+import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
 import { saveAnalysis, getUserAnalysesByEmailOrId, getAuditCountByEmail, recordFreeAudit, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
@@ -90,12 +91,18 @@ export default function SeoToolPage() {
         aiBotChecker: any;
         loadingSpeed: any;
         topKeywords: any;
+        backlinkData: any;
+        newBacklinks: any;
+        poorBacklinks: any;
     }>({
         seoAnalysis: null,
         aiVisibility: null,
         aiBotChecker: null,
         loadingSpeed: null,
         topKeywords: null,
+        backlinkData: null,
+        newBacklinks: null,
+        poorBacklinks: null,
     });
 
     // ── Local history helpers ──────────────────────────────────
@@ -203,7 +210,7 @@ export default function SeoToolPage() {
         setLoading(true);
         setError(null);
         setWebsite(url);
-        setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null });
+        setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null });
         setActiveTab('dashboard'); // Ensure we switch back to dashboard
 
         try {
@@ -222,6 +229,10 @@ export default function SeoToolPage() {
                 if (paymentType === 'subscription' || isAdmin) {
                     promises.push(checkAiVisibility(url));
                 }
+                // Backlink APIs for all paid users
+                promises.push(getBacklinkData(url));
+                promises.push(getNewBacklinks(url));
+                promises.push(getPoorBacklinks(url));
             }
 
             const results = await Promise.allSettled(promises);
@@ -233,12 +244,21 @@ export default function SeoToolPage() {
             const topKwData = hasProAccess ? results[3] : { status: 'rejected', reason: 'Not requested' };
             const aiVisData = (hasProAccess && (paymentType === 'subscription' || isAdmin)) ? results[4] : { status: 'rejected', reason: 'Not requested' };
 
+            // Backlink data indices depend on whether AI Visibility was requested
+            const backlinkOffset = (hasProAccess && (paymentType === 'subscription' || isAdmin)) ? 5 : 4;
+            const backlinkDataRes = hasProAccess ? results[backlinkOffset] : { status: 'rejected', reason: 'Not requested' };
+            const newBacklinksRes = hasProAccess ? results[backlinkOffset + 1] : { status: 'rejected', reason: 'Not requested' };
+            const poorBacklinksRes = hasProAccess ? results[backlinkOffset + 2] : { status: 'rejected', reason: 'Not requested' };
+
             const newResults = {
                 seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
                 loadingSpeed: speedData.status === 'fulfilled' ? speedData.value : null,
                 aiBotChecker: aiBotData.status === 'fulfilled' ? (aiBotData as any).value : null,
                 topKeywords: topKwData.status === 'fulfilled' ? (topKwData as any).value : null,
                 aiVisibility: aiVisData.status === 'fulfilled' ? (aiVisData as any).value : null,
+                backlinkData: backlinkDataRes.status === 'fulfilled' ? (backlinkDataRes as any).value : null,
+                newBacklinks: newBacklinksRes.status === 'fulfilled' ? (newBacklinksRes as any).value : null,
+                poorBacklinks: poorBacklinksRes.status === 'fulfilled' ? (poorBacklinksRes as any).value : null,
             };
 
             console.log('API Results:', newResults);
@@ -272,6 +292,9 @@ export default function SeoToolPage() {
                     ai_bot_data: newResults.aiBotChecker,
                     loading_speed_data: newResults.loadingSpeed,
                     top_keywords_data: newResults.topKeywords,
+                    backlink_data: newResults.backlinkData,
+                    new_backlinks_data: newResults.newBacklinks,
+                    poor_backlinks_data: newResults.poorBacklinks,
                     created_at: new Date().toISOString(),
                 };
                 saveLocalHistory(localRecord);
@@ -286,6 +309,9 @@ export default function SeoToolPage() {
                     ai_bot_data: newResults.aiBotChecker,
                     loading_speed_data: newResults.loadingSpeed,
                     top_keywords_data: newResults.topKeywords,
+                    backlink_data: newResults.backlinkData,
+                    new_backlinks_data: newResults.newBacklinks,
+                    poor_backlinks_data: newResults.poorBacklinks,
                 }).then((saved) => {
                     console.log('[SeoToolPage] Save result:', saved ? 'success' : 'failed');
                     fetchHistory();
@@ -312,12 +338,15 @@ export default function SeoToolPage() {
             aiBotChecker: record.ai_bot_data,
             loadingSpeed: record.loading_speed_data,
             topKeywords: record.top_keywords_data || null,
+            backlinkData: record.backlink_data || null,
+            newBacklinks: record.new_backlinks_data || null,
+            poorBacklinks: record.poor_backlinks_data || null,
         });
         setActiveTab('dashboard');
         setIsMenuOpen(false);
     };
 
-    const hasResults = results.seoAnalysis || results.aiVisibility || results.aiBotChecker || results.loadingSpeed || results.topKeywords;
+    const hasResults = results.seoAnalysis || results.aiVisibility || results.aiBotChecker || results.loadingSpeed || results.topKeywords || results.backlinkData;
 
     return (
         <div className="min-h-screen bg-[#f8f9fe]">
@@ -647,7 +676,7 @@ export default function SeoToolPage() {
                                 <div className="max-w-7xl mx-auto mb-8 flex items-center justify-between">
                                     <button
                                         onClick={() => {
-                                            setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null });
+                                            setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null });
                                             setWebsite('');
                                             setError(null);
                                         }}
@@ -686,6 +715,16 @@ export default function SeoToolPage() {
                                     {hasProAccess && results.topKeywords && (
                                         <CardErrorBoundary name="Top Keywords">
                                             <TopKeywordsCard data={results.topKeywords} />
+                                        </CardErrorBoundary>
+                                    )}
+
+                                    {hasProAccess && (results.backlinkData || results.newBacklinks || results.poorBacklinks) && (
+                                        <CardErrorBoundary name="Backlinks">
+                                            <BacklinksCard
+                                                backlinkData={results.backlinkData}
+                                                newBacklinks={results.newBacklinks}
+                                                poorBacklinks={results.poorBacklinks}
+                                            />
                                         </CardErrorBoundary>
                                     )}
 
