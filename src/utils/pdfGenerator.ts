@@ -238,6 +238,66 @@ export function generateFixGuidePdf(website: string, data: {
     yPos += 15;
   }
 
+  // ── TOP KEYWORDS ────────────────────────────────────────────
+  const tkData = data.topKeywords as Record<string, unknown> | null;
+  if (tkData) {
+    let kwList: Array<Record<string, unknown>> = [];
+    if (Array.isArray(tkData.keywords)) {
+      kwList = tkData.keywords;
+    } else if (Array.isArray(tkData)) {
+      kwList = tkData as any;
+    } else {
+      for (const val of Object.values(tkData)) {
+        if (Array.isArray(val) && val.length > 0 && val[0]?.keyword) {
+          kwList = val;
+          break;
+        }
+      }
+    }
+
+    if (kwList.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      yPos = drawSectionHeading(doc, 'Top Search Keywords', yPos);
+
+      const top10 = kwList.filter(k => (k.position as number || 99) <= 10).length;
+      const top3 = kwList.filter(k => (k.position as number || 99) <= 3).length;
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(60, 60, 60);
+      doc.text(`Total Keywords: ${kwList.length}`, 14, yPos);
+      doc.text(`Top 10 Rankings: ${top10}`, 90, yPos);
+      doc.text(`Top 3 Rankings: ${top3}`, 160, yPos);
+      yPos += 10;
+
+      const kwBody = kwList.slice(0, 15).map((kw) => [
+        (kw.keyword as string) || '-',
+        String(kw.position ?? '-'),
+        String(kw.search_volume ?? '-'),
+        String(kw.traffic ?? '-'),
+        kw.cpc !== undefined ? `$${Number(kw.cpc).toFixed(2)}` : '-'
+      ]);
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Keyword', 'Position', 'Volume', 'Traffic', 'CPC']],
+        body: kwBody,
+        theme: 'grid',
+        headStyles: { fillColor: [41, 98, 255] }, // Blue
+        columnStyles: {
+          0: { cellWidth: 50 },
+          1: { cellWidth: 25 },
+          2: { cellWidth: 30 },
+          3: { cellWidth: 30 },
+          4: { cellWidth: 'auto' },
+        },
+        styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
+        margin: { left: 14, right: 14 },
+      });
+      yPos = getTableEndY(doc, yPos);
+    }
+  }
+
   // ── BACKLINKS ───────────────────────────────────────────────
   const bd = data.backlinkData as Record<string, unknown> | null;
   const nb = data.newBacklinks as Record<string, unknown> | null;
@@ -367,14 +427,23 @@ export function generateFixGuidePdf(website: string, data: {
     }
   }
 
-  // ── AI VISIBILITY ───────────────────────────────────────────
   const aiVisData = data.aiVisibility as Record<string, unknown>;
   const aiScore = aiVisData?.score ?? (aiVisData?.ai_score as any)?.total;
-  const aiSuggestions = aiVisData?.suggestions as Array<{
+  let aiSuggestions = (aiVisData?.suggestions || aiVisData?.issues) as Array<{
     priority?: string;
+    severity?: string;
     category?: string;
+    id?: string;
     message?: string;
+    evidence?: string;
   }>;
+
+  // Fallback to searching the object graph
+  if (!aiSuggestions || aiSuggestions.length === 0) {
+    if (aiVisData?.data && Array.isArray((aiVisData.data as any).suggestions)) {
+      aiSuggestions = (aiVisData.data as any).suggestions;
+    }
+  }
 
   if (aiScore !== undefined || (Array.isArray(aiSuggestions) && aiSuggestions.length > 0)) {
     // Always start AI sections on a new page to avoid overlap with large issue tables
@@ -394,13 +463,13 @@ export function generateFixGuidePdf(website: string, data: {
 
     if (Array.isArray(aiSuggestions) && aiSuggestions.length > 0) {
       const aiBody = aiSuggestions.map((s) => [
-        s.priority || '',
-        s.category || '',
-        s.message || '',
+        (s.priority || s.severity || 'Medium').toUpperCase(),
+        s.category || s.id || 'General',
+        s.message || s.evidence || '-',
       ]);
       autoTable(doc, {
         startY: yPos,
-        head: [['Priority', 'Category', 'Suggestion']],
+        head: [['Priority', 'Category', 'Issue / Suggestion']],
         body: aiBody,
         theme: 'grid',
         headStyles: { fillColor: [155, 89, 182] },

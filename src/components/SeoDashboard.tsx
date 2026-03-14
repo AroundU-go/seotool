@@ -43,12 +43,12 @@ export default function SeoDashboard({ results, website }: SeoDashboardProps) {
     const seoStructured = seoAnalysis?.structured_data || {};
 
     // Images: Handle both naming conventions
-    const seoImages = seoAnalysis?.images || {};
+    const seoImages = seoBasic?.images || seoAnalysis?.seo_results?.images || seoAnalysis?.images || {};
     const imagesTotal = seoImages.total || 0;
     const imagesMissingAlt = seoImages.without_alt ?? seoImages.missing_alt ?? seoImages.images_without_alt ?? 0;
 
     // Links
-    const seoLinks = seoAnalysis?.links || {};
+    const seoLinks = seoAnalysis?.links || seoAnalysis?.seo_results?.links || {};
 
     // Findings Sort: Critical -> Warning -> Good/Info
     const findings = (seoAnalysis?.findings || []).sort((a: any, b: any) => {
