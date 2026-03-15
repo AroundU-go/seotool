@@ -13,6 +13,7 @@ interface AuthContextType {
     proAuditCount: number;
     signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
     signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+    signInWithOtp: (email: string) => Promise<{ error: Error | null }>;
     signInWithGoogle: () => Promise<{ error: Error | null }>;
     signOut: () => Promise<void>;
     refreshProStatus: () => Promise<void>;
@@ -97,6 +98,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: error as Error | null };
     };
 
+    const handleSignInWithOtp = async (email: string) => {
+        const { error } = await supabase.auth.signInWithOtp({
+            email,
+            options: {
+                emailRedirectTo: `${window.location.origin}/auth/callback`,
+            },
+        });
+        return { error: error as Error | null };
+    };
+
     const handleSignInWithGoogle = async () => {
         const { error } = await googleSignIn();
         return { error: error as Error | null };
@@ -124,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 proAuditCount,
                 signUp: handleSignUp,
                 signIn: handleSignIn,
+                signInWithOtp: handleSignInWithOtp,
                 signInWithGoogle: handleSignInWithGoogle,
                 signOut: handleSignOut,
                 refreshProStatus,

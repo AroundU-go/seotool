@@ -6,7 +6,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function AuthPage() {
     const navigate = useNavigate();
-    const { signUp, user, signInWithGoogle } = useAuth(); // We need signUp and Google OAuth
+    const { signInWithOtp, user, signInWithGoogle } = useAuth(); // We need signInWithOtp and Google OAuth
 
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
@@ -25,22 +25,11 @@ export default function AuthPage() {
         setLoading(true);
 
         try {
-            // Auto-generate a strong random password to satisfy Supabase requirements
-            const randomPassword = `SeoTool_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+            // Send a magic link to the user's email address
+            const { error: otpError } = await signInWithOtp(email);
 
-            // Attempt to sign up. Supabase will send a confirmation email since we have email confirmations enabled.
-            const { error: signUpError } = await signUp(email, randomPassword);
-
-            if (signUpError) {
-                // If the user already exists, they might need to sign in instead, or we can send a magic link.
-                // For simplicity assuming the signUp function handles sending the confirmation link.
-                if (signUpError.message.includes('already registered')) {
-                    // In a real app we might send an OTP or magic link here if user exists. 
-                    // Here we'll just show the same message to check email.
-                    setVerificationSent(true);
-                } else {
-                    setError(signUpError.message);
-                }
+            if (otpError) {
+                setError(otpError.message);
             } else {
                 setVerificationSent(true);
             }
