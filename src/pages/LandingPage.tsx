@@ -95,10 +95,10 @@ export default function LandingPage() {
 
 
                 {/* Hero Content */}
-                <div className="relative text-center px-6 max-w-4xl mx-auto" style={{ zIndex: 10 }}>
-                    <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight mb-8">
+                <div className="relative text-center px-4 max-w-5xl mx-auto" style={{ zIndex: 10 }}>
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mb-8 whitespace-normal md:whitespace-nowrap">
                         <span className="block text-foreground">Turn your SEO issues into</span>
-                        <span className="block text-gradient">Real Traffic</span>
+                        <span className="block text-gradient mt-1 xl:mt-3 text-5xl sm:text-6xl md:text-7xl lg:text-8xl">Real Traffic</span>
                     </h1>
 
                     <p className="text-lg md:text-xl text-foreground/60 max-w-2xl mx-auto mb-12 leading-relaxed">
@@ -107,30 +107,31 @@ export default function LandingPage() {
                 </div>
 
                 {/* URL Input + Login to Analyze — separate from hero content to avoid stacking issues */}
-                <div className="w-full max-w-3xl mx-auto px-6" style={{ position: 'relative', zIndex: 50 }}>
+                <div className="w-full max-w-3xl mx-auto px-4" style={{ position: 'relative', zIndex: 50 }}>
                     <form
                         onSubmit={handleAnalyzeClick}
-                        className="flex flex-col sm:flex-row items-stretch gap-3"
+                        className="flex flex-col sm:flex-row items-center bg-card/90 backdrop-blur-md border border-border rounded-3xl sm:rounded-full p-2 shadow-[0_15px_40px_-10px_rgba(117,221,255,0.4)] transition-all duration-300 gap-2 sm:gap-0"
                     >
-                        <div className="relative flex-1">
-                            <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40" style={{ zIndex: 1 }} />
+                        <div className="hidden sm:flex items-center pl-4 pr-1 text-foreground/40">
+                            <Globe className="w-5 h-5 md:w-6 md:h-6" />
+                        </div>
+                        <div className="relative flex-1 w-full sm:w-auto flex items-center">
+                            <Globe className="absolute left-4 w-5 h-5 text-foreground/40 sm:hidden" />
                             <input
                                 type="text"
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
                                 placeholder="Enter website URL (e.g., example.com)"
-                                className="w-full pl-12 pr-4 py-4 bg-card/80 backdrop-blur-md border border-border rounded-xl text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-lg cursor-text shadow-[0_15px_40px_-10px_rgba(117,221,255,0.4)]"
-                                style={{ position: 'relative', zIndex: 2 }}
+                                className="w-full bg-transparent border-none text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-0 text-base md:text-lg min-w-0 pl-12 sm:pl-2 pr-4 py-4 sm:py-3"
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={!url.trim()}
-                            className="group px-6 py-4 bg-accent text-accent-900 font-bold text-base rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
-                            style={{ position: 'relative', zIndex: 2 }}
+                            className="w-full sm:w-auto px-8 py-4 sm:py-3 md:py-4 bg-accent text-accent-900 font-bold text-base md:text-lg rounded-2xl sm:rounded-full shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
                         >
                             Login to Analyze
-                            <ArrowRight className="w-4 h-4" />
+                            <ArrowRight className="w-5 h-5" />
                         </button>
                     </form>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-6">
