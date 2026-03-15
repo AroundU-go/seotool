@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown, Check } from 'lucide-react';
+import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown, Check, Globe } from 'lucide-react';
 
 import { NavBar } from '@/components/ui/NavBar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -97,8 +97,7 @@ export default function LandingPage() {
                 {/* Hero Content */}
                 <div className="relative text-center px-6 max-w-4xl mx-auto" style={{ zIndex: 10 }}>
                     <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight mb-8">
-                        <span className="block text-foreground">Turn your SEO</span>
-                        <span className="block text-foreground">issues into</span>
+                        <span className="block text-foreground">Turn your SEO issues into</span>
                         <span className="block text-gradient">Real Traffic</span>
                     </h1>
 
@@ -108,13 +107,13 @@ export default function LandingPage() {
                 </div>
 
                 {/* URL Input + Login to Analyze — separate from hero content to avoid stacking issues */}
-                <div className="w-full max-w-2xl mx-auto px-6" style={{ position: 'relative', zIndex: 50 }}>
+                <div className="w-full max-w-3xl mx-auto px-6" style={{ position: 'relative', zIndex: 50 }}>
                     <form
                         onSubmit={handleAnalyzeClick}
                         className="flex flex-col sm:flex-row items-stretch gap-3"
                     >
                         <div className="relative flex-1">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40" style={{ zIndex: 1 }} />
+                            <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40" style={{ zIndex: 1 }} />
                             <input
                                 type="text"
                                 value={url}
