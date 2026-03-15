@@ -14,6 +14,8 @@ export function FeaturesSection() {
         "/features/media__1773560310384.jpg",
         "/features/media__1773560310427.jpg",
         "/features/media__1773560310440.jpg",
+        "/features/media__1773560834379.jpg",
+        "/features/media__1773561046838.jpg",
     ];
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -71,7 +73,7 @@ export function FeaturesSection() {
 
             {/* Slideshow */}
             <div className="max-w-4xl w-full mx-auto pb-10 px-4">
-                <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border border-border bg-card/50">
+                <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-4 border-slate-800 bg-slate-950">
                     {slides.map((slide, idx) => (
                         <img
                             key={slide}
