@@ -12,7 +12,6 @@ import {
     RefreshCw,
     Link2,
     Clock,
-    BarChart3
 } from 'lucide-react';
 
 interface SeoDashboardProps {

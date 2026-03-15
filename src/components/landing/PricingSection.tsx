@@ -33,7 +33,7 @@ const tiers: PricingTier[] = [
         name: 'One-Time',
         price: '$5',
         description: 'Unlock powerful features with a single one-time payment.',
-        quota: '5 audits',
+        quota: '2 full audits',
         features: [
             'Everything in Free',
             'CSV exports',
@@ -59,13 +59,13 @@ const tiers: PricingTier[] = [
         price: '$20',
         period: '/month',
         description: 'For growth-focused teams and agencies who need unlimited power.',
-        quota: 'Unlimited audits',
+        quota: '10k audits',
         features: [
             'Everything in One-Time',
             'Email alerts',
             'AEO & GEO optimization',
             'Bulk URL analysis',
-            'Unlimited audits',
+            '10k audits',
             'Backlink analysis',
             'New backlink tracking',
             'Toxic backlink detection',
@@ -184,7 +184,7 @@ export function PricingSection() {
                             <ul className="space-y-3">
                                 {tier.features.map((feature) => (
                                     <li key={feature} className="flex items-start gap-3 text-sm">
-                                        <Check className={`w-4 h-4 mt-0.5 shrink-0 ${tier.highlight ? 'text-accent' : 'text-accent/60'}`} />
+                                        <Check className="w-4 h-4 mt-0.5 shrink-0 text-green-500" />
                                         <span className="text-foreground/70">{feature}</span>
                                     </li>
                                 ))}

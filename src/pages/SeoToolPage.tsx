@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Download, AlertCircle, Search, ArrowLeft, LogOut, Lock, ArrowRight, History, LayoutDashboard, Menu, X, ChevronRight, Crown, CheckCircle2 } from 'lucide-react';
+import { Download, AlertCircle, Search, ArrowLeft, LogOut, Lock, ArrowRight, History, LayoutDashboard, Menu, X, ChevronRight, Crown, CheckCircle2, Brain, TrendingUp, Link2 } from 'lucide-react';
 import UrlInput from '../components/UrlInput';
 import SeoDashboard from '../components/SeoDashboard';
 import AiVisibilityCard from '../components/AiVisibilityCard';
 import AiBotCheckerCard from '../components/AiBotCheckerCard';
 import TopKeywordsCard from '../components/TopKeywordsCard';
 import BacklinksCard from '../components/BacklinksCard';
+import { DummyProCard } from '../components/DummyProCard';
 import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
 import { saveAnalysis, getUserAnalysesByEmailOrId, getAuditCountByEmail, recordFreeAudit, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
@@ -201,8 +202,8 @@ export default function SeoToolPage() {
             }
         }
 
-        // Enforce 5-audit limit for one-time Pro users
-        if (hasProAccess && paymentType === 'one_time' && proAuditCount >= 5 && !isAdmin) {
+        // Enforce 2-audit limit for one-time Pro users
+        if (hasProAccess && paymentType === 'one_time' && proAuditCount >= 2 && !isAdmin) {
             setShowUpgradeModal(true);
             return;
         }
@@ -223,32 +224,25 @@ export default function SeoToolPage() {
             ];
 
             if (hasProAccess) {
-                promises.push(checkAiBots(url));
-                promises.push(checkTopKeywords(url));
-                // Only subscription/admin users get AI Visibility
-                if (paymentType === 'subscription' || isAdmin) {
-                    promises.push(checkAiVisibility(url));
-                }
-                // Backlink APIs for all paid users
-                promises.push(getBacklinkData(url));
-                promises.push(getNewBacklinks(url));
-                promises.push(getPoorBacklinks(url));
+                promises.push(checkAiBots(url));        // idx 2
+                promises.push(checkTopKeywords(url));   // idx 3
+                promises.push(checkAiVisibility(url));  // idx 4 — all pro users
+                promises.push(getBacklinkData(url));    // idx 5
+                promises.push(getNewBacklinks(url));    // idx 6
+                promises.push(getPoorBacklinks(url));   // idx 7
             }
 
             const results = await Promise.allSettled(promises);
 
-            // Destructure results carefully based on what was requested
+            // Destructure results — indices are fixed since all pro APIs are always requested together
             const seoData = results[0];
             const speedData = results[1];
             const aiBotData = hasProAccess ? results[2] : { status: 'rejected', reason: 'Not requested' };
             const topKwData = hasProAccess ? results[3] : { status: 'rejected', reason: 'Not requested' };
-            const aiVisData = (hasProAccess && (paymentType === 'subscription' || isAdmin)) ? results[4] : { status: 'rejected', reason: 'Not requested' };
-
-            // Backlink data indices depend on whether AI Visibility was requested
-            const backlinkOffset = (hasProAccess && (paymentType === 'subscription' || isAdmin)) ? 5 : 4;
-            const backlinkDataRes = hasProAccess ? results[backlinkOffset] : { status: 'rejected', reason: 'Not requested' };
-            const newBacklinksRes = hasProAccess ? results[backlinkOffset + 1] : { status: 'rejected', reason: 'Not requested' };
-            const poorBacklinksRes = hasProAccess ? results[backlinkOffset + 2] : { status: 'rejected', reason: 'Not requested' };
+            const aiVisData = hasProAccess ? results[4] : { status: 'rejected', reason: 'Not requested' };
+            const backlinkDataRes = hasProAccess ? results[5] : { status: 'rejected', reason: 'Not requested' };
+            const newBacklinksRes = hasProAccess ? results[6] : { status: 'rejected', reason: 'Not requested' };
+            const poorBacklinksRes = hasProAccess ? results[7] : { status: 'rejected', reason: 'Not requested' };
 
             const newResults = {
                 seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
@@ -728,27 +722,27 @@ export default function SeoToolPage() {
                                         </CardErrorBoundary>
                                     )}
 
-                                    {/* Dummy Pro Button for Free Users */}
+                                    {/* Dummy Pro Cards for Free Users */}
                                     {!hasProAccess && (
-                                        <div className="bg-white border border-accent/20 rounded-3xl p-10 text-center mt-12 relative overflow-hidden shadow-lg shadow-accent/5">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent pointer-events-none" />
-                                            <div className="relative z-10 flex flex-col items-center">
-                                                <div className="inline-flex items-center justify-center w-14 h-14 bg-accent/10 rounded-full mb-6 text-accent">
-                                                    <Lock className="w-7 h-7" />
-                                                </div>
-                                                <h3 className="text-3xl font-bold text-gray-900 mb-3">Unlock Full AI Report</h3>
-                                                <p className="text-gray-500 mb-8 max-w-lg mx-auto text-lg">
-                                                    Get deep insights into your AEO & GEO optimization, AI Search Visibility scoring, AI keyword suggestions, pdf exports, bulk URL analysis, Priority support
-
-                                                </p>
-                                                <button
-                                                    onClick={() => window.location.href = checkoutUrl}
-                                                    className="px-10 py-4 bg-accent text-white font-bold rounded-full shadow-xl shadow-accent/30 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.02] inline-flex items-center gap-2 cursor-pointer text-lg"
-                                                >
-                                                    Unlock full report with Pro
-                                                    <ArrowRight className="w-5 h-5" />
-                                                </button>
-                                            </div>
+                                        <div className="space-y-8 mt-8">
+                                            <DummyProCard 
+                                                icon={Brain}
+                                                title="AI SEO Readiness"
+                                                description="Content optimization for AI systems"
+                                                checkoutUrl={checkoutUrl}
+                                            />
+                                            <DummyProCard 
+                                                icon={TrendingUp}
+                                                title="Top Search Keywords"
+                                                description="Keyword rankings and search volumes"
+                                                checkoutUrl={checkoutUrl}
+                                            />
+                                            <DummyProCard 
+                                                icon={Link2}
+                                                title="Backlink Analysis"
+                                                description="Backlink profile overview, new & toxic links"
+                                                checkoutUrl={checkoutUrl}
+                                            />
                                         </div>
                                     )}
                                 </div>

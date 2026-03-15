@@ -89,8 +89,6 @@ export function generateFixGuidePdf(website: string, data: {
   if (seoData) {
     yPos = checkPageBreak(doc, yPos, 55);
 
-    // Background box — size dynamically based on content
-    const boxStartY = yPos;
     let innerY = yPos + 8;
 
     // Overall Score
@@ -129,8 +127,7 @@ export function generateFixGuidePdf(website: string, data: {
       }
     }
 
-    // Draw the background box to fit the content
-    const boxHeight = innerY - boxStartY + 4;
+    // Draw the background box to fit the content (spacing handled by yPos)
     doc.setDrawColor(200, 200, 200);
     doc.setFillColor(245, 245, 250);
     // Draw box behind (we need to draw it first, but since we already drew text, we'll draw a rect then redraw text)

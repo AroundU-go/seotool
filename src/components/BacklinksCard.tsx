@@ -88,14 +88,14 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                                 {backlinks.slice(0, 15).map((bl, i) => (
                                     <tr key={i} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
                                         <td className="px-3 py-2 text-indigo-600 max-w-[200px]">
-                                            <a href={bl.source_url as string} target="_blank" rel="noreferrer" className="hover:underline" title={bl.source_url as string}>
-                                                {truncateUrl(bl.source_url as string)}
+                                            <a href={(bl.url_from || bl.source_url) as string} target="_blank" rel="noreferrer" className="hover:underline" title={(bl.url_from || bl.source_url) as string}>
+                                                {truncateUrl((bl.url_from || bl.source_url) as string)}
                                             </a>
                                         </td>
-                                        <td className="px-3 py-2 text-gray-700 max-w-[150px] truncate">{(bl.anchor_text as string) || '-'}</td>
+                                        <td className="px-3 py-2 text-gray-700 max-w-[150px] truncate">{((bl.anchor || bl.anchor_text) as string) || '-'}</td>
                                         <td className="px-3 py-2">
                                             <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium text-xs">
-                                                {String(bl.domain_authority ?? '-')}
+                                                {String(bl.domain_inlink_rank ?? bl.domain_authority ?? '-')}
                                             </span>
                                         </td>
                                         <td className="px-3 py-2">
@@ -125,14 +125,14 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                         {newList.slice(0, 10).map((nl, i) => (
                             <div key={i} className="bg-green-50/60 rounded-lg p-3 flex items-center justify-between gap-4">
                                 <div className="flex-1 min-w-0">
-                                    <a href={nl.source_url as string} target="_blank" rel="noreferrer" className="text-sm text-green-700 hover:underline font-medium truncate block">
-                                        {truncateUrl(nl.source_url as string)}
+                                    <a href={(nl.url_from || nl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-green-700 hover:underline font-medium truncate block">
+                                        {truncateUrl((nl.url_from || nl.source_url) as string)}
                                     </a>
-                                    {nl.anchor_text && (
-                                        <span className="text-xs text-gray-500">Anchor: {String(nl.anchor_text)}</span>
+                                    {Boolean(nl.anchor || nl.anchor_text) && (
+                                        <span className="text-xs text-gray-500">Anchor: {String(nl.anchor || nl.anchor_text)}</span>
                                     )}
                                 </div>
-                                {nl.first_seen && (
+                                {Boolean(nl.first_seen) && (
                                     <span className="text-xs text-gray-400 shrink-0">{new Date(String(nl.first_seen)).toLocaleDateString()}</span>
                                 )}
                             </div>
@@ -155,8 +155,8 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                         {poorList.slice(0, 10).map((pl, i) => (
                             <div key={i} className="bg-red-50/60 rounded-lg p-3">
                                 <div className="flex items-center justify-between gap-4">
-                                    <a href={pl.source_url as string} target="_blank" rel="noreferrer" className="text-sm text-red-700 hover:underline font-medium truncate flex-1">
-                                        {truncateUrl(pl.source_url as string)}
+                                    <a href={(pl.url_from || pl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-red-700 hover:underline font-medium truncate flex-1">
+                                        {truncateUrl((pl.url_from || pl.source_url) as string)}
                                     </a>
                                     {pl.spam_score !== undefined && (
                                         <span className="px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs font-bold shrink-0">
@@ -164,11 +164,11 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                                         </span>
                                     )}
                                 </div>
-                                {pl.reason && (
+                                {Boolean(pl.reason) && (
                                     <p className="text-xs text-red-600 mt-1">{String(pl.reason)}</p>
                                 )}
-                                {pl.anchor_text && (
-                                    <p className="text-xs text-gray-500 mt-0.5">Anchor: {String(pl.anchor_text)}</p>
+                                {Boolean(pl.anchor || pl.anchor_text) && (
+                                    <p className="text-xs text-gray-500 mt-0.5">Anchor: {String(pl.anchor || pl.anchor_text)}</p>
                                 )}
                             </div>
                         ))}
