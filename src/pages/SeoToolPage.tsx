@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Download, AlertCircle, Search, ArrowLeft, LogOut, Lock, ArrowRight, History, LayoutDashboard, Menu, X, ChevronRight, Crown, CheckCircle2, Brain, TrendingUp, Link2 } from 'lucide-react';
-import UrlInput from '../components/UrlInput';
+import { Download, AlertCircle, Search, ArrowLeft, LogOut, Lock, ArrowRight, History, LayoutDashboard, Menu, X, ChevronRight, Crown, CheckCircle2, Brain, TrendingUp, Link2, Globe, Loader2 } from 'lucide-react';
 import SeoDashboard from '../components/SeoDashboard';
 import AiVisibilityCard from '../components/AiVisibilityCard';
 import AiBotCheckerCard from '../components/AiBotCheckerCard';
@@ -342,8 +341,31 @@ export default function SeoToolPage() {
 
     const hasResults = results.seoAnalysis || results.aiVisibility || results.aiBotChecker || results.loadingSpeed || results.topKeywords || results.backlinkData;
 
+    // Local URL state for the landing-page-style input
+    const [inputUrl, setInputUrl] = useState('');
+
     return (
-        <div className="min-h-screen bg-[#f8f9fe]">
+        <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #F4FCFF 0%, #daf3ff 40%, #b8e8ff 100%)' }}>
+            {/* ── Background Effects ── */}
+            {/* Radial glow behind hero */}
+            <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full opacity-50" style={{ background: 'radial-gradient(circle, rgba(117,221,255,0.35) 0%, rgba(117,221,255,0.10) 50%, transparent 75%)' }} />
+
+            {/* Top-right blurred blob */}
+            <div className="pointer-events-none absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-40 blur-[100px]" style={{ background: 'radial-gradient(circle, #75DDFF 0%, rgba(255,255,255,0.6) 70%)' }} />
+
+            {/* Bottom-left blurred blob */}
+            <div className="pointer-events-none absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full opacity-30 blur-[120px]" style={{ background: 'radial-gradient(circle, #75DDFF 0%, rgba(255,255,255,0.5) 70%)' }} />
+
+            {/* Abstract flowing wave pattern (right side) */}
+            <svg className="pointer-events-none absolute top-0 right-0 h-full w-1/2" viewBox="0 0 600 1200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{ opacity: 0.07 }}>
+              <path d="M300 0C350 200 450 300 600 400C450 500 350 700 300 900C250 1100 350 1150 600 1200" stroke="#75DDFF" strokeWidth="2" fill="none" />
+              <path d="M350 0C400 150 500 250 600 350C500 450 400 650 350 850C300 1050 400 1100 600 1150" stroke="#75DDFF" strokeWidth="1.5" fill="none" />
+              <path d="M400 0C440 180 520 280 600 320C520 420 440 620 400 800C360 1000 440 1060 600 1100" stroke="#75DDFF" strokeWidth="1" fill="none" />
+              <path d="M250 100Q350 300 600 450Q350 600 250 850Q350 1000 600 1050" stroke="#75DDFF" strokeWidth="1.2" fill="none" />
+            </svg>
+
+            {/* Subtle noise texture overlay */}
+            <div className="pointer-events-none absolute inset-0 z-[1]" style={{ opacity: 0.015, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', backgroundSize: '256px 256px' }} />
             {/* Pro Expired Modal */}
             {proExpired && !isAdmin && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -434,8 +456,8 @@ export default function SeoToolPage() {
                 </div>
             )}
 
-            {/* Top Bar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
+            {/* Top Bar — transparent, matching landing page glass style */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/30 bg-white/60 backdrop-blur-md sticky top-0 z-40">
                 <button
                     onClick={() => navigate('/')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
@@ -462,14 +484,14 @@ export default function SeoToolPage() {
                         <>
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="p-2 rounded-full hover:bg-gray-100 transition-colors relative"
+                                className="p-2 rounded-full hover:bg-white/40 transition-colors relative"
                             >
                                 {isMenuOpen ? <X className="w-6 h-6 text-gray-600" /> : <Menu className="w-6 h-6 text-gray-600" />}
                             </button>
 
                             {/* Dropdown Menu */}
                             {isMenuOpen && (
-                                <div className="absolute top-12 right-0 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                                <div className="absolute top-12 right-0 w-64 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/50 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
                                     <div className="px-4 py-3 border-b border-gray-100 mb-2">
                                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Signed in as</p>
                                         <p className="text-sm font-semibold text-gray-900 truncate">{displayEmail}</p>
@@ -519,13 +541,13 @@ export default function SeoToolPage() {
                 </div>
             </div>
 
-            {/* Tab Bar */}
-            <div className="flex items-center gap-1 px-6 py-2 border-b border-gray-200 bg-white">
+            {/* Tab Bar — glass style */}
+            <div className="flex items-center gap-1 px-6 py-2 border-b border-white/30 bg-white/40 backdrop-blur-sm">
                 <button
                     onClick={() => setActiveTab('dashboard')}
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'dashboard'
-                        ? 'bg-accent/10 text-accent'
-                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                        ? 'bg-accent/15 text-accent'
+                        : 'text-gray-500 hover:bg-white/40 hover:text-gray-700'
                         }`}
                 >
                     <LayoutDashboard className="w-4 h-4" />
@@ -534,8 +556,8 @@ export default function SeoToolPage() {
                 <button
                     onClick={() => { setActiveTab('history'); fetchHistory(); }}
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'history'
-                        ? 'bg-accent/10 text-accent'
-                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                        ? 'bg-accent/15 text-accent'
+                        : 'text-gray-500 hover:bg-white/40 hover:text-gray-700'
                         }`}
                 >
                     <History className="w-4 h-4" />
@@ -543,7 +565,7 @@ export default function SeoToolPage() {
                 </button>
             </div>
 
-            <div className="container mx-auto px-4 py-12">
+            <div className="container mx-auto px-4 py-12 relative z-[2]">
 
                 {activeTab === 'history' ? (
                     <div className="max-w-4xl mx-auto">
@@ -635,7 +657,36 @@ export default function SeoToolPage() {
 
                         <div className="flex flex-col items-center mb-8">
                             {!hasResults && !loading && (
-                                <UrlInput onAnalyze={handleAnalyze} loading={loading} />
+                                <form
+                                    onSubmit={(e) => { e.preventDefault(); if (inputUrl.trim()) { const cleanUrl = inputUrl.trim().replace(/^https?:\/\//, ''); handleAnalyze(cleanUrl); } }}
+                                    className="w-full max-w-3xl flex flex-col sm:flex-row items-center bg-white/80 backdrop-blur-md border border-white/50 rounded-3xl sm:rounded-full p-2 shadow-[0_15px_40px_-10px_rgba(117,221,255,0.4)] transition-all duration-300 gap-2 sm:gap-0"
+                                >
+                                    <div className="hidden sm:flex items-center pl-4 pr-1 text-gray-400">
+                                        <Globe className="w-5 h-5 md:w-6 md:h-6" />
+                                    </div>
+                                    <div className="relative flex-1 w-full sm:w-auto flex items-center">
+                                        <Globe className="absolute left-4 w-5 h-5 text-gray-400 sm:hidden" />
+                                        <input
+                                            type="text"
+                                            value={inputUrl}
+                                            onChange={(e) => setInputUrl(e.target.value)}
+                                            placeholder="Enter website URL (e.g., example.com)"
+                                            className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0 text-base md:text-lg min-w-0 pl-12 sm:pl-2 pr-4 py-4 sm:py-3"
+                                            disabled={loading}
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        disabled={loading || !inputUrl.trim()}
+                                        className="w-full sm:w-auto px-8 py-4 sm:py-3 md:py-4 bg-accent text-accent-900 font-bold text-base md:text-lg rounded-2xl sm:rounded-full shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
+                                    >
+                                        {loading ? (
+                                            <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing</>
+                                        ) : (
+                                            <><Search className="w-5 h-5" /> Analyze</>
+                                        )}
+                                    </button>
+                                </form>
                             )}
 
                             {error && (
