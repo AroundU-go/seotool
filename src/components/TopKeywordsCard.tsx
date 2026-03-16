@@ -3,12 +3,12 @@ import { Search, TrendingUp, ExternalLink, ArrowUpRight } from 'lucide-react';
 
 interface KeywordEntry {
     keyword?: string;
-    position?: number;
-    search_volume?: number;
-    cpc?: number;
-    url?: string;
-    traffic?: number;
-    traffic_percent?: number;
+    rank?: number;
+    searchVolume?: number;
+    exactCostPerClick?: number | null;
+    broadCostPerClick?: number | null;
+    topRankedUrl?: string;
+    seoClicks?: number;
     [key: string]: unknown;
 }
 
@@ -110,9 +110,9 @@ export default function TopKeywordsCard({ data }: TopKeywordsCardProps) {
                                             <span className="text-sm font-medium text-gray-900 truncate">
                                                 {kw.keyword || '-'}
                                             </span>
-                                            {kw.url && (
+                                            {kw.topRankedUrl && (
                                                 <a
-                                                    href={kw.url}
+                                                    href={kw.topRankedUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
@@ -122,21 +122,21 @@ export default function TopKeywordsCard({ data }: TopKeywordsCardProps) {
                                             )}
                                         </div>
                                         <div className="col-span-2 flex justify-center">
-                                            <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getPositionColor(kw.position || 99)}`}>
-                                                #{kw.position ?? '-'}
+                                            <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getPositionColor(kw.rank || 99)}`}>
+                                                #{kw.rank ?? '-'}
                                             </span>
                                         </div>
                                         <div className="col-span-2 text-right text-sm text-gray-600">
-                                            {formatNumber(kw.search_volume)}
+                                            {formatNumber(kw.searchVolume)}
                                         </div>
                                         <div className="col-span-2 text-right text-sm text-gray-600 flex items-center justify-end gap-1">
-                                            {kw.traffic !== undefined && kw.traffic > 0 && (
+                                            {kw.seoClicks !== undefined && kw.seoClicks > 0 && (
                                                 <TrendingUp className="w-3 h-3 text-green-500" />
                                             )}
-                                            {formatNumber(kw.traffic)}
+                                            {formatNumber(kw.seoClicks)}
                                         </div>
                                         <div className="col-span-1 text-right text-sm text-gray-500">
-                                            {kw.cpc !== undefined ? `$${kw.cpc.toFixed(2)}` : '-'}
+                                            {kw.exactCostPerClick !== undefined && kw.exactCostPerClick !== null ? `$${kw.exactCostPerClick.toFixed(2)}` : kw.broadCostPerClick !== undefined && kw.broadCostPerClick !== null ? `$${kw.broadCostPerClick.toFixed(2)}` : '-'}
                                         </div>
                                     </div>
                                 ))}
@@ -163,20 +163,20 @@ export default function TopKeywordsCard({ data }: TopKeywordsCardProps) {
                         <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t border-gray-100">
                             <div className="text-center">
                                 <div className="text-2xl font-bold text-gray-900">
-                                    {keywordList.filter(k => (k.position || 99) <= 10).length}
+                                    {keywordList.filter(k => (k.rank || 99) <= 10).length}
                                 </div>
                                 <div className="text-xs text-gray-500 mt-1">Top 10 Keywords</div>
                             </div>
                             <div className="text-center">
                                 <div className="text-2xl font-bold text-gray-900">
-                                    {formatNumber(keywordList.reduce((sum, k) => sum + (k.traffic || 0), 0))}
+                                    {formatNumber(keywordList.reduce((sum, k) => sum + (k.seoClicks || 0), 0))}
                                 </div>
                                 <div className="text-xs text-gray-500 mt-1">Est. Traffic</div>
                             </div>
                             <div className="text-center">
                                 <div className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-1">
                                     <ArrowUpRight className="w-4 h-4 text-green-500" />
-                                    {keywordList.filter(k => (k.position || 99) <= 3).length}
+                                    {keywordList.filter(k => (k.rank || 99) <= 3).length}
                                 </div>
                                 <div className="text-xs text-gray-500 mt-1">Top 3 Rankings</div>
                             </div>

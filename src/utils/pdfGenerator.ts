@@ -256,8 +256,8 @@ export function generateFixGuidePdf(website: string, data: {
       yPos = checkPageBreak(doc, yPos, 40);
       yPos = drawSectionHeading(doc, 'Top Search Keywords', yPos);
 
-      const top10 = kwList.filter(k => (k.position as number || 99) <= 10).length;
-      const top3 = kwList.filter(k => (k.position as number || 99) <= 3).length;
+      const top10 = kwList.filter(k => (k.rank as number || 99) <= 10).length;
+      const top3 = kwList.filter(k => (k.rank as number || 99) <= 3).length;
 
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
@@ -267,13 +267,16 @@ export function generateFixGuidePdf(website: string, data: {
       doc.text(`Top 3 Rankings: ${top3}`, 160, yPos);
       yPos += 10;
 
-      const kwBody = kwList.slice(0, 15).map((kw) => [
-        (kw.keyword as string) || '-',
-        String(kw.position ?? '-'),
-        String(kw.search_volume ?? '-'),
-        String(kw.traffic ?? '-'),
-        kw.cpc !== undefined ? `$${Number(kw.cpc).toFixed(2)}` : '-'
-      ]);
+      const kwBody = kwList.slice(0, 15).map((kw) => {
+        const cpc = kw.exactCostPerClick ?? kw.broadCostPerClick;
+        return [
+          (kw.keyword as string) || '-',
+          String(kw.rank ?? '-'),
+          String(kw.searchVolume ?? '-'),
+          String(kw.seoClicks ?? '-'),
+          cpc !== undefined && cpc !== null ? `$${Number(cpc).toFixed(2)}` : '-'
+        ];
+      });
 
       autoTable(doc, {
         startY: yPos,

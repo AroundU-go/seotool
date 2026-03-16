@@ -84,13 +84,21 @@ export interface LoadingSpeedResult {
 
 export interface TopKeywordsResult {
   keywords?: Array<{
+    countryCode?: string;
     keyword?: string;
-    position?: number;
-    search_volume?: number;
-    cpc?: number;
-    url?: string;
-    traffic?: number;
-    traffic_percent?: number;
+    topRankedUrl?: string;
+    rank?: number;
+    rankChange?: number;
+    searchVolume?: number;
+    rankingDifficulty?: number;
+    seoClicks?: number;
+    seoClicksChange?: number;
+    totalMonthlyClicks?: number;
+    broadCostPerClick?: number | null;
+    phraseCostPerClick?: number | null;
+    exactCostPerClick?: number | null;
+    paidCompetitors?: number;
+    rankingHomepages?: number;
     [key: string]: unknown;
   }>;
   total_keywords?: number;
