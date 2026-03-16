@@ -628,7 +628,7 @@ export default function SeoToolPage() {
                                         <Search className="w-8 h-8 text-accent" />
                                     </div>
                                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-sans">
-                                        Upgrade your SEO game
+                                        Drop your URL below
                                         <span className="block text-accent text-3xl md:text-4xl mt-2">Rank higher. Get discovered by humans + AI search engines</span>
                                     </h1>
                                     <p className="text-xl text-gray-500 max-w-2xl mx-auto">
