@@ -31,7 +31,7 @@ export function FeaturesSection() {
 
     const features = [
         {
-            title: "Deep SEO Analysis",
+            title: "Deep On-Page SEO Analysis",
             description:
                 "Comprehensive on-page analysis covering meta tags, headings, links, images, content structure and many more.",
             icon: <IconTerminal2 />,
