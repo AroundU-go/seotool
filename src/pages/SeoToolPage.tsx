@@ -364,6 +364,11 @@ export default function SeoToolPage() {
               <path d="M250 100Q350 300 600 450Q350 600 250 850Q350 1000 600 1050" stroke="#75DDFF" strokeWidth="1.2" fill="none" />
             </svg>
 
+            {/* Background dashboard image — faint decorative layer */}
+            <div className="pointer-events-none absolute inset-0 z-[0]" style={{ opacity: 0.06 }}>
+                <img src="/analyze-bg.png" alt="" className="w-full h-full object-cover object-center" draggable={false} />
+            </div>
+
             {/* Subtle noise texture overlay */}
             <div className="pointer-events-none absolute inset-0 z-[1]" style={{ opacity: 0.015, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', backgroundSize: '256px 256px' }} />
             {/* Pro Expired Modal */}
@@ -541,29 +546,7 @@ export default function SeoToolPage() {
                 </div>
             </div>
 
-            {/* Tab Bar — glass style */}
-            <div className="flex items-center gap-1 px-6 py-2 border-b border-white/30 bg-white/40 backdrop-blur-sm">
-                <button
-                    onClick={() => setActiveTab('dashboard')}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'dashboard'
-                        ? 'bg-accent/15 text-accent'
-                        : 'text-gray-500 hover:bg-white/40 hover:text-gray-700'
-                        }`}
-                >
-                    <LayoutDashboard className="w-4 h-4" />
-                    Dashboard
-                </button>
-                <button
-                    onClick={() => { setActiveTab('history'); fetchHistory(); }}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'history'
-                        ? 'bg-accent/15 text-accent'
-                        : 'text-gray-500 hover:bg-white/40 hover:text-gray-700'
-                        }`}
-                >
-                    <History className="w-4 h-4" />
-                    History
-                </button>
-            </div>
+
 
             <div className="container mx-auto px-4 py-12 relative z-[2]">
 
