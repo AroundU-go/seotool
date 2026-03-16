@@ -102,7 +102,7 @@ export default function LandingPage() {
                     </h1>
 
                     <p className="text-lg md:text-xl text-foreground/60 max-w-2xl mx-auto mb-12 leading-relaxed">
-                        Comprehensive on-page analysis, Ai readiness scoring, bot access checks, top search keywords, performance metrics and fix action plan — all in one tool.
+                        Comprehensive on-page analysis, AI readiness scoring, bot access checks, top search keywords, backlinks analysis and fix action plan — all in one tool.
                     </p>
                 </div>
 
