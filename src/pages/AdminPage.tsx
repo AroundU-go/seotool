@@ -92,7 +92,7 @@ export default function AdminPage() {
     return (
         <div className="min-h-screen bg-[#f8f9fe]">
             {/* Top Bar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
                 <button
                     onClick={() => navigate('/analyze')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
@@ -100,23 +100,23 @@ export default function AdminPage() {
                     <ArrowLeft className="w-4 h-4" />
                     <span className="hidden sm:inline">Dashboard</span>
                 </button>
-                <span className="font-black text-xl tracking-tight text-gray-900">
-                    SEO<span className="text-accent">zapp</span> <span className="text-sm font-normal text-gray-400">Admin</span>
+                <span className="font-black text-lg sm:text-xl tracking-tight text-gray-900">
+                    SEO<span className="text-accent">zapp</span> <span className="text-xs sm:text-sm font-normal text-gray-400">Admin</span>
                 </span>
                 <div className="w-8" />
             </div>
 
-            <div className="container mx-auto px-4 py-8 max-w-4xl">
+            <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-4xl">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Blog Manager</h1>
-                        <p className="text-gray-500 mt-1">Create and manage blog posts</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Blog Manager</h1>
+                        <p className="text-sm sm:text-base text-gray-500 mt-1">Create and manage blog posts</p>
                     </div>
                     {!showForm && (
                         <button
                             onClick={handleNewPost}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all hover:scale-[1.02]"
+                            className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all hover:scale-[1.02]"
                         >
                             <Plus className="w-5 h-5" />
                             New Post
@@ -126,7 +126,7 @@ export default function AdminPage() {
 
                 {/* Blog Form */}
                 {showForm && (
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-8">
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-6 sm:mb-8">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-gray-900">
                                 {editingId ? 'Edit Post' : 'New Post'}
@@ -191,18 +191,18 @@ export default function AdminPage() {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 mt-6 pt-6 border-t border-gray-100">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6 pt-6 border-t border-gray-100">
                             <button
                                 onClick={handleSave}
                                 disabled={saving || !form.title.trim() || !form.slug.trim()}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                             >
                                 <Save className="w-4 h-4" />
                                 {saving ? 'Saving...' : editingId ? 'Update Post' : 'Create Post'}
                             </button>
                             <button
                                 onClick={() => { setShowForm(false); setEditingId(null); setForm(emptyForm); }}
-                                className="px-5 py-2.5 text-gray-500 font-medium hover:text-gray-700 transition-colors"
+                                className="px-5 py-2.5 text-gray-500 font-medium hover:text-gray-700 transition-colors text-center"
                             >
                                 Cancel
                             </button>
@@ -219,17 +219,17 @@ export default function AdminPage() {
                 ) : blogs.length > 0 ? (
                     <div className="space-y-3">
                         {blogs.map(blog => (
-                            <div key={blog.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex items-center justify-between gap-4">
+                            <div key={blog.id} className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="font-semibold text-gray-900 truncate">{blog.title}</h3>
-                                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${blog.published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                        <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base">{blog.title}</h3>
+                                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${blog.published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                                             {blog.published ? 'Published' : 'Draft'}
                                         </span>
                                     </div>
-                                    <p className="text-sm text-gray-400 truncate">/blogs/{blog.slug}</p>
+                                    <p className="text-xs sm:text-sm text-gray-400 truncate">/blogs/{blog.slug}</p>
                                 </div>
-                                <div className="flex items-center gap-2 flex-shrink-0">
+                                <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 self-end sm:self-center">
                                     <button
                                         onClick={() => handleEdit(blog)}
                                         className="p-2 text-gray-400 hover:text-accent hover:bg-accent/5 rounded-lg transition-colors"
