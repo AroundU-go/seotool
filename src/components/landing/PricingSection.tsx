@@ -1,4 +1,5 @@
 import { Check, Sparkles, Building2, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface PricingTier {
     name: string;
@@ -28,6 +29,7 @@ const tiers: PricingTier[] = [
         ],
         icon: <Zap className="w-6 h-6" />,
         cta: 'Get Started Free',
+        href: '/analyze',
     },
     {
         name: 'One-Time',
@@ -148,7 +150,20 @@ export function PricingSection() {
                             </div>
 
                             {/* CTA */}
-                            {tier.href ? (
+                            {tier.href?.startsWith('/') ? (
+                                <Link
+                                    to={tier.href}
+                                    className={`
+                                        block w-full py-3.5 rounded-full font-bold text-sm transition-all duration-300 text-center
+                                        ${tier.highlight
+                                            ? 'bg-accent text-accent-900 shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:scale-[1.02]'
+                                            : 'bg-card border border-border text-foreground hover:border-accent/50 hover:text-accent'
+                                        }
+                                    `}
+                                >
+                                    {tier.cta}
+                                </Link>
+                            ) : tier.href ? (
                                 <a
                                     href={tier.href}
                                     className={`
