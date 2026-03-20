@@ -433,6 +433,7 @@ export interface BlogRecord {
   excerpt: string;
   content: string;
   published: boolean;
+  image_url?: string;
   author_email: string;
   created_at?: string;
   updated_at?: string;

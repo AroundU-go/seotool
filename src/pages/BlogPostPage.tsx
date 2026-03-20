@@ -71,7 +71,16 @@ export default function BlogPostPage() {
                         {new Date(blog.created_at || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </div>
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">{blog.title}</h1>
-                    <p className="text-lg text-gray-500">{blog.excerpt}</p>
+                    <p className="text-lg text-gray-500 mb-6">{blog.excerpt}</p>
+                    {blog.image_url && (
+                        <div className="w-full h-64 sm:h-96 rounded-2xl overflow-hidden bg-gray-100 mb-8 border border-gray-100 shadow-sm">
+                            <img 
+                                src={blog.image_url} 
+                                alt={blog.title} 
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
                 </div>
 
                 <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">

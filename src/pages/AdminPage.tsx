@@ -9,10 +9,11 @@ interface BlogForm {
     slug: string;
     excerpt: string;
     content: string;
+    image_url?: string;
     published: boolean;
 }
 
-const emptyForm: BlogForm = { title: '', slug: '', excerpt: '', content: '', published: false };
+const emptyForm: BlogForm = { title: '', slug: '', excerpt: '', content: '', image_url: '', published: false };
 
 export default function AdminPage() {
     const navigate = useNavigate();
@@ -71,6 +72,7 @@ export default function AdminPage() {
             slug: blog.slug,
             excerpt: blog.excerpt,
             content: blog.content,
+            image_url: blog.image_url || '',
             published: blog.published,
         });
         setEditingId(blog.id!);
@@ -158,6 +160,16 @@ export default function AdminPage() {
                                     onChange={e => setForm(prev => ({ ...prev, slug: e.target.value }))}
                                     className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none transition-all text-gray-500"
                                     placeholder="url-friendly-slug"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Cover Image URL</label>
+                                <input
+                                    type="text"
+                                    value={form.image_url || ''}
+                                    onChange={e => setForm(prev => ({ ...prev, image_url: e.target.value }))}
+                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none transition-all"
+                                    placeholder="https://example.com/image.jpg"
                                 />
                             </div>
                             <div>

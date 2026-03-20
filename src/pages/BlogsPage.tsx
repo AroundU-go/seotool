@@ -54,20 +54,31 @@ export default function BlogsPage() {
                                 to={`/blogs/${blog.slug}`}
                                 className="block bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-accent/20 transition-all group"
                             >
-                                <div className="flex items-start justify-between gap-4">
-                                    <div className="flex-1">
-                                        <h2 className="text-xl font-bold text-gray-900 group-hover:text-accent transition-colors mb-2">
-                                            {blog.title}
-                                        </h2>
-                                        <p className="text-gray-500 text-sm mb-3 line-clamp-2">{blog.excerpt}</p>
-                                        <div className="flex items-center gap-3 text-xs text-gray-400">
+                                <div className="flex flex-col sm:flex-row items-start gap-6">
+                                    {blog.image_url && (
+                                        <div className="w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+                                            <img 
+                                                src={blog.image_url} 
+                                                alt={blog.title} 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center h-full pt-1">
+                                        <div className="flex items-start justify-between gap-4 mb-2">
+                                            <h2 className="text-xl font-bold text-gray-900 group-hover:text-accent transition-colors line-clamp-2">
+                                                {blog.title}
+                                            </h2>
+                                            <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-accent transition-colors flex-shrink-0 mt-1 hidden sm:block" />
+                                        </div>
+                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{blog.excerpt}</p>
+                                        <div className="flex items-center gap-3 text-xs text-gray-400 mt-auto">
                                             <span className="flex items-center gap-1">
                                                 <Calendar className="w-3 h-3" />
                                                 {new Date(blog.created_at || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                             </span>
                                         </div>
                                     </div>
-                                    <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-accent transition-colors flex-shrink-0 mt-1" />
                                 </div>
                             </Link>
                         ))}
