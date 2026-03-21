@@ -9,6 +9,8 @@ export default function AuthCallback() {
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
+        let authListener: any = null;
+
         const handleCallback = async () => {
             try {
                 // Check for error in URL hash (Supabase puts errors there for OAuth)
@@ -16,7 +18,7 @@ export default function AuthCallback() {
                 const hashError = hashParams.get('error_description') || hashParams.get('error');
                 if (hashError) {
                     setStatus('error');
-                    setErrorMessage(hashError);
+                    setErrorMessage(hashError.replace(/\+/g, ' '));
                     return;
                 }
 
@@ -27,9 +29,14 @@ export default function AuthCallback() {
                 if (code) {
                     const { error } = await supabase.auth.exchangeCodeForSession(code);
                     if (error) {
-                        setStatus('error');
-                        setErrorMessage(error.message);
-                        return;
+                        // Supabase client might have already automatically exchanged the code.
+                        // Let's verify if a session was established regardless of the error.
+                        const { data: { session: existingSession } } = await supabase.auth.getSession();
+                        if (!existingSession) {
+                            setStatus('error');
+                            setErrorMessage(error.message);
+                            return;
+                        }
                     }
                 }
 
@@ -53,17 +60,29 @@ export default function AuthCallback() {
                     setStatus('success');
                     setTimeout(redirectWithUrl, 1000);
                 } else {
-                    // No code and no session — might still be processing
-                    // Give Supabase a moment to process hash fragments
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    const { data: { session: retrySession } } = await supabase.auth.getSession();
-                    if (retrySession) {
-                        setStatus('success');
-                        setTimeout(redirectWithUrl, 1000);
-                    } else {
-                        setStatus('error');
-                        setErrorMessage('Could not establish a session. Please try signing in again.');
-                    }
+                    // Listen for auth state changes in case the session is still being established
+                    const { data } = supabase.auth.onAuthStateChange((event, newSession) => {
+                        if (event === 'SIGNED_IN' && newSession) {
+                            setStatus('success');
+                            setTimeout(redirectWithUrl, 1000);
+                        }
+                    });
+                    
+                    authListener = data.subscription;
+
+                    // Set a timeout to show an error if no session is established after a few seconds
+                    setTimeout(async () => {
+                        const { data: { session: retrySession } } = await supabase.auth.getSession();
+                        if (!retrySession) {
+                            setStatus(current => {
+                                if (current !== 'success') {
+                                    setErrorMessage('Could not establish a session. Please try signing in again.');
+                                    return 'error';
+                                }
+                                return current;
+                            });
+                        }
+                    }, 4000);
                 }
             } catch (err) {
                 setStatus('error');
@@ -73,6 +92,12 @@ export default function AuthCallback() {
         };
 
         handleCallback();
+
+        return () => {
+            if (authListener) {
+                authListener.unsubscribe();
+            }
+        };
     }, [navigate]);
 
     return (
