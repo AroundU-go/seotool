@@ -1,6 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const API_KEY = "cacb1ff9-ace8-44e2-92c5-1aac4beb605f";
+const API_KEY = "bafb22ba-4c34-4a09-9b33-8d6d8274ba9e";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

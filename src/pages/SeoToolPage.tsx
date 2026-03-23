@@ -199,6 +199,9 @@ export default function SeoToolPage() {
                 setShowUpgradeModal(true);
                 return;
             }
+            // Record the free audit IMMEDIATELY (before API calls)
+            // so a concurrent second click will see count >= 1
+            await recordFreeAudit(email, url);
         }
 
         // Enforce 2-audit limit for one-time Pro users
@@ -260,10 +263,6 @@ export default function SeoToolPage() {
             if (seoData.status === 'rejected' && speedData.status === 'rejected') {
                 setError('Failed to analyze website. Please check the URL and try again.');
             } else {
-                // Record free audit if successful
-                if (!hasProAccess && (user?.email || guestEmail)) {
-                    recordFreeAudit(user?.email || guestEmail || '', url).catch(console.error);
-                }
 
                 // Increment audit count for one-time Pro users
                 if (hasProAccess && paymentType === 'one_time' && user?.id && !isAdmin) {
