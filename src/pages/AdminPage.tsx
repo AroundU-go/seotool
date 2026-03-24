@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Edit2, Trash2, Eye, EyeOff, Save, X, BookOpen } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, Eye, EyeOff, Save, X, BookOpen, Link2 } from 'lucide-react';
 import { getAllBlogs, createBlog, updateBlog, deleteBlog, BlogRecord } from '@/services/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -24,6 +24,35 @@ export default function AdminPage() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState<BlogForm>(emptyForm);
     const [saving, setSaving] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const handleInsertLink = () => {
+        const url = prompt('Enter link URL (e.g., https://example.com):');
+        if (!url) return;
+        
+        const textarea = textareaRef.current;
+        let selectedText = '';
+        if (textarea) {
+            selectedText = form.content.substring(textarea.selectionStart, textarea.selectionEnd);
+        }
+        
+        const text = prompt('Enter link text:', selectedText) || url;
+        const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline font-medium">${text}</a>`;
+        
+        if (textarea) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const newContent = form.content.substring(0, start) + linkHtml + form.content.substring(end);
+            setForm(prev => ({ ...prev, content: newContent }));
+            
+            setTimeout(() => {
+                textarea.focus();
+                textarea.setSelectionRange(start + linkHtml.length, start + linkHtml.length);
+            }, 0);
+        } else {
+            setForm(prev => ({ ...prev, content: prev.content + linkHtml }));
+        }
+    };
 
     const fetchBlogs = async () => {
         const data = await getAllBlogs();
@@ -183,13 +212,23 @@ export default function AdminPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                                <div className="flex items-center justify-between mb-1">
+                                    <label className="block text-sm font-medium text-gray-700">Content</label>
+                                    <button
+                                        type="button"
+                                        onClick={handleInsertLink}
+                                        className="text-xs flex items-center gap-1 text-accent hover:text-accent/80 font-medium bg-accent/5 px-2 py-1 rounded-md transition-colors"
+                                    >
+                                        <Link2 className="w-3.5 h-3.5" /> Insert Link
+                                    </button>
+                                </div>
                                 <textarea
+                                    ref={textareaRef}
                                     value={form.content}
                                     onChange={e => setForm(prev => ({ ...prev, content: e.target.value }))}
                                     rows={12}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none transition-all resize-y font-mono text-sm"
-                                    placeholder="Write your blog post content here..."
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none transition-all resize-y font-mono text-sm leading-relaxed"
+                                    placeholder="Write your blog post content here. You can use standard HTML like <a href='...'>Link</a> or plain text."
                                 />
                             </div>
                             <div className="flex items-center gap-3">

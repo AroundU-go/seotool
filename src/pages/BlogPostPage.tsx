@@ -84,9 +84,10 @@ export default function BlogPostPage() {
                 </div>
 
                 <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-                    <div className="prose prose-gray max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed">
-                        {blog.content}
-                    </div>
+                    <div 
+                        className="prose prose-gray max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed [&>a]:text-accent [&>a]:hover:underline"
+                        dangerouslySetInnerHTML={{ __html: blog.content }}
+                    />
                 </div>
             </article>
         </div>
