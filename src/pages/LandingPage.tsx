@@ -368,13 +368,18 @@ export default function LandingPage() {
                         <span className="text-xl font-black tracking-tight text-foreground">
                             SEO<span className="text-accent">zapp</span>
                         </span>
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-6 text-center">
                             <a href="/blogs" className="text-sm font-medium text-foreground/60 hover:text-accent transition-colors">Blogs</a>
                             <a href="https://x.com/ItsUddipan" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/60 hover:text-accent transition-colors">Contact</a>
                         </div>
-                        <p className="text-sm text-foreground/50">
-                            © {new Date().getFullYear()} SEOzapp. All rights reserved.
-                        </p>
+                        <div className="flex flex-col md:flex-row items-center gap-4">
+                            <p className="text-sm text-foreground/50">
+                                © {new Date().getFullYear()} SEOzapp. All rights reserved.
+                            </p>
+                            <a href="https://startupfa.me/s/seozapp?utm_source=www.seozapp.com" target="_blank" rel="noreferrer">
+                                <img src="https://startupfa.me/badges/featured-badge-small.webp" alt="SEOzapp - Featured on Startup Fame" width="224" height="36" className="w-[140px] h-auto" />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </footer>
