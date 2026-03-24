@@ -110,9 +110,9 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                 className="fixed top-0 right-0 bottom-0 w-3/4 max-w-sm bg-background border-l border-border z-[100] shadow-2xl p-6 flex flex-col"
                             >
                                 <div className="flex items-center justify-between mb-8">
-                                    <span className="text-xl font-black tracking-tight text-foreground">
+                                    <a href="https://seozapp.com" className="text-xl font-black tracking-tight text-foreground">
                                         SEO<span className="text-accent">zapp</span>
-                                    </span>
+                                    </a>
                                     <button
                                         onClick={() => setIsMenuOpen(false)}
                                         className="p-2 -mr-2 text-foreground/60 hover:text-foreground transition-colors"

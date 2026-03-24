@@ -466,9 +466,9 @@ export default function SeoToolPage() {
 
                 {/* Updated Logo */}
                 <div className="flex items-center gap-2">
-                    <span className="font-black text-xl tracking-tight text-gray-900">
+                    <a href="https://seozapp.com" className="font-black text-xl tracking-tight text-gray-900">
                         SEO<span className="text-accent">zapp</span>
-                    </span>
+                    </a>
                     {hasProAccess && (
                         <span className="ml-1 px-2 py-0.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-full shadow-sm flex items-center gap-1">
                             <Crown className="w-3 h-3" />

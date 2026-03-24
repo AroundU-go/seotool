@@ -58,9 +58,9 @@ export default function BlogPostPage() {
                     <ArrowLeft className="w-4 h-4" />
                     <span className="hidden sm:inline">All Posts</span>
                 </button>
-                <span className="font-black text-xl tracking-tight text-gray-900">
+                <a href="https://seozapp.com" className="font-black text-xl tracking-tight text-gray-900">
                     SEO<span className="text-accent">zapp</span>
-                </span>
+                </a>
                 <div className="w-8" />
             </div>
 

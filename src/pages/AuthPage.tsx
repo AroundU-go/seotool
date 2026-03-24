@@ -46,9 +46,9 @@ export default function AuthPage() {
         <div className="min-h-screen bg-background flex items-center justify-center px-4">
             {/* Logo */}
             <div className="fixed top-6 left-6 z-50">
-                <Link to="/" className="text-xl font-black tracking-tight text-foreground">
+                <a href="https://seozapp.com" className="text-xl font-black tracking-tight text-foreground">
                     SEO<span className="text-accent">zapp</span>
-                </Link>
+                </a>
             </div>
 
             <div className="fixed top-6 right-6 z-50">

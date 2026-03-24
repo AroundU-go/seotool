@@ -102,9 +102,9 @@ export default function AdminPage() {
                     <ArrowLeft className="w-4 h-4" />
                     <span className="hidden sm:inline">Dashboard</span>
                 </button>
-                <span className="font-black text-lg sm:text-xl tracking-tight text-gray-900">
+                <a href="https://seozapp.com" className="font-black text-lg sm:text-xl tracking-tight text-gray-900">
                     SEO<span className="text-accent">zapp</span> <span className="text-xs sm:text-sm font-normal text-gray-400">Admin</span>
-                </span>
+                </a>
                 <div className="w-8" />
             </div>
 

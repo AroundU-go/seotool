@@ -74,9 +74,9 @@ export default function LandingPage() {
         <div className="min-h-screen bg-background text-foreground">
             {/* Logo - Fixed Top Left */}
             <div className="fixed top-6 left-6 z-50">
-                <span className="text-xl font-black tracking-tight text-foreground">
+                <a href="https://seozapp.com" className="text-xl font-black tracking-tight text-foreground">
                     SEO<span className="text-accent">zapp</span>
-                </span>
+                </a>
             </div>
 
             {/* Navbar */}
@@ -365,9 +365,9 @@ export default function LandingPage() {
             <footer className="py-12 px-6 border-t border-border bg-background">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <span className="text-xl font-black tracking-tight text-foreground">
+                        <a href="https://seozapp.com" className="text-xl font-black tracking-tight text-foreground">
                             SEO<span className="text-accent">zapp</span>
-                        </span>
+                        </a>
                         <div className="flex items-center gap-6 text-center">
                             <a href="/blogs" className="text-sm font-medium text-foreground/60 hover:text-accent transition-colors">Blogs</a>
                             <a href="https://x.com/ItsUddipan" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-foreground/60 hover:text-accent transition-colors">Contact</a>
