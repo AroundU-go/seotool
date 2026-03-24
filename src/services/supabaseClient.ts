@@ -390,38 +390,28 @@ export async function signInWithGoogle() {
 
 // ─── Free audit tracking ─────────────────────────────────────
 
-export async function getAuditCountByEmail(email: string): Promise<number> {
+/**
+ * Count how many analyses this email already has in seo_analyses.
+ * Uses the actual analysis table (not a separate tracking table)
+ * so the count is always accurate.
+ */
+export async function getAnalysisCountByEmail(email: string): Promise<number> {
   if (email === 'go.aroundu@gmail.com') return 0; // Admin bypass
-  if (!isSupabaseConfigured) return 0;
-  console.log('[getAuditCount] Checking for email:', email);
+  if (!isSupabaseConfigured) return 999; // Block if Supabase is down
+  const cleanEmail = email.trim().toLowerCase();
+  console.log('[getAnalysisCountByEmail] Checking for email:', cleanEmail);
   const { count, error } = await supabase
-    .from('free_audits')
+    .from('seo_analyses')
     .select('*', { count: 'exact', head: true })
-    .eq('email', email);
+    .eq('guest_email', cleanEmail);
 
   if (error) {
-    console.error('[getAuditCount] Error:', error.message, error.details);
-    return 0;
+    console.error('[getAnalysisCountByEmail] Error:', error.message, error.details);
+    return 999; // Block analysis on error — fail closed
   }
 
-  console.log('[getAuditCount] Count:', count);
+  console.log('[getAnalysisCountByEmail] Count:', count);
   return count ?? 0;
-}
-
-export async function recordFreeAudit(email: string, url: string): Promise<boolean> {
-  if (email === 'go.aroundu@gmail.com') return true; // Admin bypass
-  if (!isSupabaseConfigured) return false;
-  console.log('[recordFreeAudit] Recording for email:', email, 'url:', url);
-  const { error } = await supabase
-    .from('free_audits')
-    .insert([{ email, url }]);
-
-  if (error) {
-    console.error('[recordFreeAudit] Error:', error.message, error.details);
-    return false;
-  }
-
-  return true;
 }
 
 // ─── Blog helpers ────────────────────────────────────────────

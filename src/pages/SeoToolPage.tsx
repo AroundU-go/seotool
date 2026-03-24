@@ -9,7 +9,7 @@ import BacklinksCard from '../components/BacklinksCard';
 import { DummyProCard } from '../components/DummyProCard';
 import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
-import { saveAnalysis, getUserAnalysesByEmailOrId, getAuditCountByEmail, recordFreeAudit, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
+import { saveAnalysis, getUserAnalysesByEmailOrId, getAnalysisCountByEmail, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { Component, ReactNode } from 'react';
 
@@ -194,14 +194,11 @@ export default function SeoToolPage() {
         // Enforce limits for non-admin users
         if (!hasProAccess && (user?.email || guestEmail)) {
             const email = user?.email || guestEmail || '';
-            const count = await getAuditCountByEmail(email);
+            const count = await getAnalysisCountByEmail(email);
             if (count >= 1) {
                 setShowUpgradeModal(true);
                 return;
             }
-            // Record the free audit IMMEDIATELY (before API calls)
-            // so a concurrent second click will see count >= 1
-            await recordFreeAudit(email, url);
         }
 
         // Enforce 2-audit limit for one-time Pro users
