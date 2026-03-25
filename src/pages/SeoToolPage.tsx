@@ -718,7 +718,7 @@ export default function SeoToolPage() {
                                 <div className="max-w-7xl mx-auto space-y-8">
 
                                     <CardErrorBoundary name="SEO Dashboard">
-                                        <SeoDashboard results={results} website={website} />
+                                        <SeoDashboard results={results} website={website} hasProAccess={hasProAccess} checkoutUrl={checkoutUrl} />
                                     </CardErrorBoundary>
 
                                     {hasProAccess && results.aiVisibility && (

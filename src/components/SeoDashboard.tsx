@@ -12,15 +12,19 @@ import {
     RefreshCw,
     Link2,
     Clock,
+    Lock,
+    ArrowRight,
 } from 'lucide-react';
 
 interface SeoDashboardProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     results: any;
     website: string;
+    hasProAccess?: boolean;
+    checkoutUrl?: string;
 }
 
-export default function SeoDashboard({ results, website }: SeoDashboardProps) {
+export default function SeoDashboard({ results, website, hasProAccess = false, checkoutUrl = '#' }: SeoDashboardProps) {
     const { seoAnalysis, aiVisibility, loadingSpeed } = results;
 
     // Safe access helpers
@@ -64,6 +68,14 @@ export default function SeoDashboard({ results, website }: SeoDashboardProps) {
         const weightB = severityWeight[b.severity?.toLowerCase()] || 0;
         return weightB - weightA;
     });
+
+    const isPremiumIssue = (severity: string) => {
+        const s = severity?.toLowerCase();
+        return s === 'critical' || s === 'error' || s === 'warning' || s === 'high' || s === 'medium';
+    };
+
+    const premiumFindings = findings.filter((f: any) => isPremiumIssue(f.severity));
+    const nonPremiumFindings = findings.filter((f: any) => !isPremiumIssue(f.severity));
 
     const speedScore = loadingSpeed?.summary?.performance_grade?.score || 0;
     const speedGrade = loadingSpeed?.summary?.performance_grade?.grade || '-';
@@ -377,7 +389,7 @@ export default function SeoDashboard({ results, website }: SeoDashboardProps) {
 
             {/* Issues & Recommendations */}
             {findings && findings.length > 0 ? (
-                <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8 relative">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="p-2 bg-red-50 rounded-xl text-red-600">
                             <AlertCircle className="w-6 h-6" />
@@ -386,9 +398,9 @@ export default function SeoDashboard({ results, website }: SeoDashboardProps) {
                     </div>
 
                     <div className="space-y-4">
-                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                        {findings.map((f: any, idx: number) => (
-                            <div key={idx} className="flex gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
+                        {/* Non-Premium Findings */}
+                        {nonPremiumFindings.map((f: any, idx: number) => (
+                            <div key={`non-premium-${idx}`} className="flex gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
                                 <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full 
                                     ${f.severity === 'critical' || f.severity === 'error' ? 'bg-red-500' :
                                         f.severity === 'warning' ? 'bg-orange-500' : 'bg-blue-500'}`} />
@@ -410,6 +422,57 @@ export default function SeoDashboard({ results, website }: SeoDashboardProps) {
                                 </div>
                             </div>
                         ))}
+
+                        {/* Premium Findings */}
+                        {premiumFindings.length > 0 && (
+                            <div className="relative mt-8">
+                                <div className={!hasProAccess ? 'space-y-4 filter blur-md select-none pointer-events-none opacity-60' : 'space-y-4'}>
+                                    {premiumFindings.map((f: any, idx: number) => (
+                                        <div key={`premium-${idx}`} className="flex gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
+                                            <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full 
+                                                ${f.severity === 'critical' || f.severity === 'error' ? 'bg-red-500' :
+                                                    f.severity === 'warning' || f.severity === 'high' || f.severity === 'medium' ? 'bg-orange-500' : 'bg-blue-500'}`} />
+                                            <div className='flex-1'>
+                                                <div className="flex items-start justify-between">
+                                                    <h5 className="font-semibold text-gray-800">{!hasProAccess ? 'Hidden Critical/Warning Issue' : f.issue}</h5>
+                                                    <span className={`px-2 py-0.5 rounded text-xs uppercase font-bold tracking-wider 
+                                                        ${f.severity === 'critical' || f.severity === 'error' ? 'bg-red-100 text-red-700' :
+                                                            f.severity === 'warning' || f.severity === 'high' || f.severity === 'medium' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                        {f.severity}
+                                                    </span>
+                                                </div>
+                                                {f.fix && (
+                                                    <p className="text-sm text-gray-600 mt-2 bg-white/50 p-3 rounded-lg border border-gray-100">
+                                                        <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
+                                                        {!hasProAccess ? 'Upgrade to Pro plan to view the detailed fix for this issue.' : f.fix}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                
+                                {!hasProAccess && (
+                                    <div className="absolute inset-0 z-10 flex items-center justify-center p-6">
+                                        <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl shadow-red-900/10 backdrop-blur-sm bg-white/60">
+                                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <Lock className="w-8 h-8 text-red-600" />
+                                            </div>
+                                            <h4 className="text-xl font-bold text-red-900 mb-2">Critical issues found</h4>
+                                            <p className="text-red-700 mb-6 text-sm">
+                                                We've detected {premiumFindings.length} critical or warning SEO issues on your website. Upgrade to view them and get detailed fixes.
+                                            </p>
+                                            <a
+                                                href={checkoutUrl}
+                                                className="inline-flex items-center justify-center gap-2 w-full py-3 bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
+                                            >
+                                                Upgrade to View <ArrowRight className="w-5 h-5" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : (
