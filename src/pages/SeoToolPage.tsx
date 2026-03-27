@@ -321,7 +321,7 @@ export default function SeoToolPage() {
 
     const handleDownloadGuide = () => {
         if (results.seoAnalysis || results.aiVisibility || results.aiBotChecker || results.loadingSpeed) {
-            generateFixGuidePdf(website, results);
+            generateFixGuidePdf(website, results, hasProAccess);
         }
     };
 

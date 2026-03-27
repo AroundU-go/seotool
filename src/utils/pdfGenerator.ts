@@ -57,7 +57,7 @@ export function generateFixGuidePdf(website: string, data: {
   backlinkData?: unknown;
   newBacklinks?: unknown;
   poorBacklinks?: unknown;
-}) {
+}, hasProAccess: boolean = false) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   const contentWidth = pageWidth - 28; // 14px margin each side
@@ -200,12 +200,39 @@ export function generateFixGuidePdf(website: string, data: {
     return weightB - weightA;
   });
 
-  const issuesBody = findings.map((f) => [
+  const isPremiumIssue = (severity: string) => {
+    const s = severity?.toLowerCase();
+    return s === 'critical' || s === 'error' || s === 'high';
+  };
+  const isWarningIssue = (severity: string) => {
+    const s = severity?.toLowerCase();
+    return s === 'warning' || s === 'medium';
+  };
+
+  const goodFindings = findings.filter(f => !isPremiumIssue(f.severity || '') && !isWarningIssue(f.severity || ''));
+  const warningFindings = findings.filter(f => isWarningIssue(f.severity || ''));
+  const criticalFindings = findings.filter(f => isPremiumIssue(f.severity || ''));
+
+  const freeVisibleWarnings = warningFindings.slice(0, 2);
+  const hiddenFindings = [...warningFindings.slice(2), ...criticalFindings];
+
+  const visibleFindings = hasProAccess ? findings : [...goodFindings, ...freeVisibleWarnings];
+
+  const issuesBody = visibleFindings.map((f) => [
     f.severity?.toUpperCase() || 'INFO',
     f.category?.replace(/_/g, ' ') || 'General',
     f.issue || '',
     f.fix || '',
   ]);
+
+  if (!hasProAccess && hiddenFindings.length > 0) {
+    issuesBody.push([
+      'CRITICAL/WARNING',
+      'Hidden Issues',
+      `${hiddenFindings.length} more critical/warning issues found.`,
+      'Upgrade to Pro at seozapp.com/pricing to view complete details.',
+    ]);
+  }
 
   if (issuesBody.length > 0) {
     autoTable(doc, {

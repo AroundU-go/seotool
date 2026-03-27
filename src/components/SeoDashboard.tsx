@@ -15,6 +15,11 @@ import {
     Lock,
     ArrowRight,
     Share2,
+    Bot,
+    FileText,
+    Scale,
+    Eye,
+    Monitor,
 } from 'lucide-react';
 
 interface SeoDashboardProps {
@@ -52,6 +57,29 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
 
     // Links
     const seoLinks = seoAnalysis?.links || seoAnalysis?.seo_results?.links || {};
+    const seoLinkCounts = seoLinks.counts || seoLinks || {};
+
+    // Crawl signals
+    const crawlSignals = seoAnalysis?.crawl_signals || {};
+    const robotsInfo = crawlSignals.robots || {};
+    const sitemapInfo = crawlSignals.sitemap || {};
+    const llmsTxtInfo = crawlSignals.llms_txt || {};
+    const aiTxtInfo = crawlSignals.ai_txt || {};
+
+    // Content stats
+    const contentStats = seoAnalysis?.content || {};
+
+    // Technology
+    const techDetected = seoAnalysis?.technology?.detected || {};
+
+    // Legal pages
+    const legalPages = seoAnalysis?.legal_pages || {};
+
+    // Accessibility
+    const accessibility = seoAnalysis?.accessibility || {};
+
+    // Performance (from seoAnalysis, not loadingSpeed)
+    const seoPerformance = seoAnalysis?.performance || {};
 
     // Findings Sort: Critical -> Warning -> Good/Info
     const findings = (seoAnalysis?.findings || []).sort((a: any, b: any) => {
@@ -265,6 +293,12 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                 <p className="text-sm font-medium text-gray-700 mt-1 max-w-[150px] truncate">{seoBasic.canonical ? 'Set' : 'Not Set'}</p>
                             </div>
                         </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Favicon</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoBasic.favicon ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {seoBasic.favicon ? 'Found' : 'Missing'}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -295,17 +329,47 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                         </div>
                         <h4 className="font-bold text-gray-800">Security</h4>
                     </div>
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">SSL Certificate</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.ssl_valid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                {seoSecurity.ssl_valid ? 'Valid' : 'Invalid'}
+                            <span className="text-sm text-gray-600 font-medium">HTTPS</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.https || seoSecurity.ssl_valid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {seoSecurity.https || seoSecurity.ssl_valid ? 'Enabled' : 'Disabled'}
                             </span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                             <span className="text-sm text-gray-600 font-medium">HSTS</span>
                             <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.hsts ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
                                 {seoSecurity.hsts ? 'Enabled' : 'Disabled'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">X-Frame-Options</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.x_frame_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {seoSecurity.x_frame_options ? 'Set' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Content-Type-Options</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.x_content_type_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {seoSecurity.x_content_type_options ? 'Set' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Referrer Policy</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.referrer_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {seoSecurity.referrer_policy ? 'Set' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">CSP</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.content_security_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {seoSecurity.content_security_policy ? 'Set' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Mixed Content</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.mixed_content_found ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                                {seoSecurity.mixed_content_found ? 'Found' : 'Clean'}
                             </span>
                         </div>
                     </div>
@@ -337,13 +401,29 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                     <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-4">
                         <div>
                             <span className="text-xs text-gray-400 uppercase font-semibold">Internal Links</span>
-                            <p className="text-lg font-bold text-gray-800 mt-1">{seoLinks.internal || 0}</p>
+                            <p className="text-lg font-bold text-gray-800 mt-1">{seoLinkCounts.internal || seoLinks.internal || 0}</p>
                         </div>
                         <div>
                             <span className="text-xs text-gray-400 uppercase font-semibold">External</span>
-                            <p className="text-lg font-bold text-gray-800 mt-1">{seoLinks.external || 0}</p>
+                            <p className="text-lg font-bold text-gray-800 mt-1">{seoLinkCounts.external || seoLinks.external || 0}</p>
                         </div>
                     </div>
+                    {(seoLinkCounts.total || seoLinkCounts.nofollow !== undefined) && (
+                        <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-3 gap-4">
+                            <div>
+                                <span className="text-xs text-gray-400 uppercase font-semibold">Total</span>
+                                <p className="text-lg font-bold text-gray-800 mt-1">{seoLinkCounts.total || 0}</p>
+                            </div>
+                            <div>
+                                <span className="text-xs text-gray-400 uppercase font-semibold">Nofollow</span>
+                                <p className="text-lg font-bold text-gray-800 mt-1">{seoLinkCounts.nofollow || 0}</p>
+                            </div>
+                            <div>
+                                <span className="text-xs text-gray-400 uppercase font-semibold">Empty Anchor</span>
+                                <p className="text-lg font-bold text-gray-800 mt-1">{seoLinkCounts.empty_text || 0}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Structured Data */}
@@ -439,6 +519,197 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                         </div>
                     </div>
                 )}
+
+                {/* Crawl Signals */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-cyan-50 rounded-lg text-cyan-600">
+                            <Bot className="w-5 h-5" />
+                        </div>
+                        <h4 className="font-bold text-gray-800">Crawl Signals</h4>
+                    </div>
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Robots.txt</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${robotsInfo.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {robotsInfo.found ? 'Found' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Sitemap.xml</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${sitemapInfo.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {sitemapInfo.found ? 'Found' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">llms.txt</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${llmsTxtInfo.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {llmsTxtInfo.found ? 'Found' : 'Not Found'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">ai.txt</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${aiTxtInfo.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {aiTxtInfo.found ? 'Found' : 'Not Found'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content Stats */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
+                            <FileText className="w-5 h-5" />
+                        </div>
+                        <h4 className="font-bold text-gray-800">Content Stats</h4>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="p-3 bg-gray-50 rounded-xl text-center">
+                            <span className="text-2xl font-bold text-gray-800 block">{contentStats.word_count_estimate || rapidApiData?.wordCount || 0}</span>
+                            <span className="text-xs text-gray-500">Words</span>
+                        </div>
+                        <div className="p-3 bg-gray-50 rounded-xl text-center">
+                            <span className="text-2xl font-bold text-gray-800 block">{contentStats.paragraph_count || 0}</span>
+                            <span className="text-xs text-gray-500">Paragraphs</span>
+                        </div>
+                    </div>
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                        <div className="p-3 bg-gray-50 rounded-xl text-center">
+                            <span className="text-2xl font-bold text-gray-800 block">{contentStats.content_to_html_ratio_pct || 0}%</span>
+                            <span className="text-xs text-gray-500">Content / HTML</span>
+                        </div>
+                        <div className="p-3 bg-gray-50 rounded-xl text-center">
+                            <span className="text-2xl font-bold text-gray-800 block">{contentStats.avg_sentence_words || 0}</span>
+                            <span className="text-xs text-gray-500">Avg Sentence Words</span>
+                        </div>
+                    </div>
+                    {seoPerformance.ttfb_seconds !== undefined && (
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-600 font-medium">TTFB</span>
+                                <span className="font-bold text-gray-800">{(seoPerformance.ttfb_seconds * 1000).toFixed(0)}ms</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Technology Stack */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-violet-50 rounded-lg text-violet-600">
+                            <Monitor className="w-5 h-5" />
+                        </div>
+                        <h4 className="font-bold text-gray-800">Technology Stack</h4>
+                    </div>
+                    <div className="space-y-4">
+                        {techDetected.cdn_waf && techDetected.cdn_waf.length > 0 && (
+                            <div>
+                                <span className="text-xs text-gray-400 uppercase font-semibold">CDN / WAF</span>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                    {techDetected.cdn_waf.map((item: string, idx: number) => (
+                                        <span key={idx} className="px-2 py-1 bg-violet-50 text-violet-600 rounded-md text-xs font-medium border border-violet-100">{item}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {techDetected.analytics && techDetected.analytics.length > 0 && (
+                            <div>
+                                <span className="text-xs text-gray-400 uppercase font-semibold">Analytics</span>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                    {techDetected.analytics.map((item: string, idx: number) => (
+                                        <span key={idx} className="px-2 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium border border-blue-100">{item}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {techDetected.css && techDetected.css.length > 0 && (
+                            <div>
+                                <span className="text-xs text-gray-400 uppercase font-semibold">CSS Framework</span>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                    {techDetected.css.map((item: string, idx: number) => (
+                                        <span key={idx} className="px-2 py-1 bg-teal-50 text-teal-600 rounded-md text-xs font-medium border border-teal-100">{item}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {techDetected.server && (
+                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                                <span className="text-sm text-gray-600 font-medium">Server</span>
+                                <span className="text-sm font-bold text-gray-800">{techDetected.server}</span>
+                            </div>
+                        )}
+                        {!techDetected.cdn_waf?.length && !techDetected.analytics?.length && !techDetected.css?.length && !techDetected.server && (
+                            <p className="text-sm text-gray-400 text-center py-4">No technology data detected</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Legal Pages */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-rose-50 rounded-lg text-rose-600">
+                            <Scale className="w-5 h-5" />
+                        </div>
+                        <h4 className="font-bold text-gray-800">Legal Pages</h4>
+                    </div>
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Privacy Policy</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${legalPages.privacy_policy?.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {legalPages.privacy_policy?.found ? 'Found' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Terms of Service</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${legalPages.terms?.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {legalPages.terms?.found ? 'Found' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Cookie Policy</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${legalPages.cookie_policy?.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {legalPages.cookie_policy?.found ? 'Found' : 'Missing'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">GDPR</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${legalPages.gdpr?.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                {legalPages.gdpr?.found ? 'Found' : 'Missing'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Accessibility */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-sky-50 rounded-lg text-sky-600">
+                            <Eye className="w-5 h-5" />
+                        </div>
+                        <h4 className="font-bold text-gray-800">Accessibility</h4>
+                    </div>
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Heading Hierarchy</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${accessibility.heading_hierarchy_ok ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {accessibility.heading_hierarchy_ok ? 'OK' : 'Issues'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Images Missing Alt</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${(accessibility.images_missing_alt || 0) === 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {accessibility.images_missing_alt || 0}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium">Form Labels Missing</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${(accessibility.form_controls_missing_label || 0) === 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {accessibility.form_controls_missing_label || 0}
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
