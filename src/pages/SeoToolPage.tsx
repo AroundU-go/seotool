@@ -7,7 +7,7 @@ import AiBotCheckerCard from '../components/AiBotCheckerCard';
 import TopKeywordsCard from '../components/TopKeywordsCard';
 import BacklinksCard from '../components/BacklinksCard';
 import { DummyProCard } from '../components/DummyProCard';
-import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks } from '../services/seoApi';
+import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks, fetchRapidApiData } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
 import { saveAnalysis, getUserAnalysesByEmailOrId, getAnalysisCountByEmail, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
@@ -94,6 +94,7 @@ export default function SeoToolPage() {
         backlinkData: any;
         newBacklinks: any;
         poorBacklinks: any;
+        rapidApiData: any;
     }>({
         seoAnalysis: null,
         aiVisibility: null,
@@ -103,6 +104,7 @@ export default function SeoToolPage() {
         backlinkData: null,
         newBacklinks: null,
         poorBacklinks: null,
+        rapidApiData: null,
     });
 
     // ── Local history helpers ──────────────────────────────────
@@ -210,7 +212,7 @@ export default function SeoToolPage() {
         setLoading(true);
         setError(null);
         setWebsite(url);
-        setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null });
+        setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null, rapidApiData: null });
         setActiveTab('dashboard'); // Ensure we switch back to dashboard
 
         try {
@@ -220,15 +222,16 @@ export default function SeoToolPage() {
             const promises = [
                 analyzeSeo(url),
                 checkLoadingSpeed(url),
+                fetchRapidApiData(url),
             ];
 
             if (hasProAccess) {
-                promises.push(checkAiBots(url));        // idx 2
-                promises.push(checkTopKeywords(url));   // idx 3
-                promises.push(checkAiVisibility(url));  // idx 4 — all pro users
-                promises.push(getBacklinkData(url));    // idx 5
-                promises.push(getNewBacklinks(url));    // idx 6
-                promises.push(getPoorBacklinks(url));   // idx 7
+                promises.push(checkAiBots(url));        // idx 3
+                promises.push(checkTopKeywords(url));   // idx 4
+                promises.push(checkAiVisibility(url));  // idx 5 — all pro users
+                promises.push(getBacklinkData(url));    // idx 6
+                promises.push(getNewBacklinks(url));    // idx 7
+                promises.push(getPoorBacklinks(url));   // idx 8
             }
 
             const results = await Promise.allSettled(promises);
@@ -236,16 +239,18 @@ export default function SeoToolPage() {
             // Destructure results — indices are fixed since all pro APIs are always requested together
             const seoData = results[0];
             const speedData = results[1];
-            const aiBotData = hasProAccess ? results[2] : { status: 'rejected', reason: 'Not requested' };
-            const topKwData = hasProAccess ? results[3] : { status: 'rejected', reason: 'Not requested' };
-            const aiVisData = hasProAccess ? results[4] : { status: 'rejected', reason: 'Not requested' };
-            const backlinkDataRes = hasProAccess ? results[5] : { status: 'rejected', reason: 'Not requested' };
-            const newBacklinksRes = hasProAccess ? results[6] : { status: 'rejected', reason: 'Not requested' };
-            const poorBacklinksRes = hasProAccess ? results[7] : { status: 'rejected', reason: 'Not requested' };
+            const rapidApiDataRes = results[2];
+            const aiBotData = hasProAccess ? results[3] : { status: 'rejected', reason: 'Not requested' };
+            const topKwData = hasProAccess ? results[4] : { status: 'rejected', reason: 'Not requested' };
+            const aiVisData = hasProAccess ? results[5] : { status: 'rejected', reason: 'Not requested' };
+            const backlinkDataRes = hasProAccess ? results[6] : { status: 'rejected', reason: 'Not requested' };
+            const newBacklinksRes = hasProAccess ? results[7] : { status: 'rejected', reason: 'Not requested' };
+            const poorBacklinksRes = hasProAccess ? results[8] : { status: 'rejected', reason: 'Not requested' };
 
             const newResults = {
                 seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
                 loadingSpeed: speedData.status === 'fulfilled' ? speedData.value : null,
+                rapidApiData: rapidApiDataRes.status === 'fulfilled' ? (rapidApiDataRes as any).value : null,
                 aiBotChecker: aiBotData.status === 'fulfilled' ? (aiBotData as any).value : null,
                 topKeywords: topKwData.status === 'fulfilled' ? (topKwData as any).value : null,
                 aiVisibility: aiVisData.status === 'fulfilled' ? (aiVisData as any).value : null,
@@ -284,6 +289,7 @@ export default function SeoToolPage() {
                     backlink_data: newResults.backlinkData,
                     new_backlinks_data: newResults.newBacklinks,
                     poor_backlinks_data: newResults.poorBacklinks,
+                    rapid_api_data: newResults.rapidApiData,
                     created_at: new Date().toISOString(),
                 };
                 saveLocalHistory(localRecord);
@@ -301,6 +307,7 @@ export default function SeoToolPage() {
                     backlink_data: newResults.backlinkData,
                     new_backlinks_data: newResults.newBacklinks,
                     poor_backlinks_data: newResults.poorBacklinks,
+                    rapid_api_data: newResults.rapidApiData,
                 }).then((saved) => {
                     console.log('[SeoToolPage] Save result:', saved ? 'success' : 'failed');
                     fetchHistory();
@@ -330,6 +337,7 @@ export default function SeoToolPage() {
             backlinkData: record.backlink_data || null,
             newBacklinks: record.new_backlinks_data || null,
             poorBacklinks: record.poor_backlinks_data || null,
+            rapidApiData: record.rapid_api_data || null,
         });
         setActiveTab('dashboard');
         setIsMenuOpen(false);
@@ -697,7 +705,7 @@ export default function SeoToolPage() {
                                 <div className="max-w-7xl mx-auto mb-8 flex items-center justify-between">
                                     <button
                                         onClick={() => {
-                                            setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null });
+                                            setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null, rapidApiData: null });
                                             setWebsite('');
                                             setError(null);
                                         }}

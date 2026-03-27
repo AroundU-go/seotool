@@ -211,3 +211,70 @@ export async function getNewBacklinks(website: string): Promise<NewBacklinksResu
 export async function getPoorBacklinks(website: string): Promise<PoorBacklinksResult> {
   return callVebApi<PoorBacklinksResult>("seo/poorbacklinks", website);
 }
+
+// ─── Direct API call to RapidAPI ────────────────────────────
+
+export interface RapidApiDataResult {
+  url?: string;
+  pageSize?: number;
+  wordCount?: number;
+  language?: string;
+  openGraph?: {
+    "og:type"?: string;
+    "og:url"?: string;
+    "og:title"?: string;
+    "og:description"?: string;
+    "og:site_name"?: string;
+    "og:image"?: string;
+    [key: string]: unknown;
+  };
+  twitterCard?: {
+    "twitter:card"?: string;
+    "twitter:site"?: string;
+    "twitter:title"?: string;
+    "twitter:description"?: string;
+    "twitter:image"?: string;
+    [key: string]: unknown;
+  };
+  jsonLd?: unknown[];
+  seoScore?: {
+    score?: number;
+    maxPoints?: number;
+    earnedPoints?: number;
+    checks?: Array<{
+      name?: string;
+      pass?: boolean;
+      weight?: number;
+    }>;
+  };
+  [key: string]: unknown;
+}
+
+export async function fetchRapidApiData(website: string): Promise<RapidApiDataResult> {
+  // Website might not have https:// so we add it safely for the URL param
+  const cleanWebsite = website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const targetUrl = `https://${cleanWebsite}`;
+  
+  const url = `https://seo-analyzer8.p.rapidapi.com/analyze?url=${encodeURIComponent(targetUrl)}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'x-rapidapi-key': '98362066a9mshb063c9826e63b5ap157910jsn374d8b77e6f2',
+      'x-rapidapi-host': 'seo-analyzer8.p.rapidapi.com',
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`RapidAPI request failed: ${response.statusText}`);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('[RapidAPI] Error:', error);
+    throw error;
+  }
+}
+

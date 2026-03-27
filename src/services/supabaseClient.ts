@@ -76,6 +76,7 @@ export interface SeoAnalysisRecord {
   backlink_data?: unknown;
   new_backlinks_data?: unknown;
   poor_backlinks_data?: unknown;
+  rapid_api_data?: unknown;
   created_at?: string;
 }
 
