@@ -5,10 +5,10 @@ interface DummyProCardProps {
     icon: React.ElementType;
     title: string;
     description: string;
-    checkoutUrl: string;
+    checkoutUrl?: string;
 }
 
-export function DummyProCard({ icon: Icon, title, description, checkoutUrl }: DummyProCardProps) {
+export function DummyProCard({ icon: Icon, title, description }: DummyProCardProps) {
     return (
         <div className="relative bg-white rounded-xl shadow-lg p-6 border border-gray-200 overflow-hidden">
             {/* Header (Blurred out styling) */}
@@ -42,13 +42,13 @@ export function DummyProCard({ icon: Icon, title, description, checkoutUrl }: Du
                 <p className="text-sm font-medium text-gray-700 bg-white/80 px-4 py-1.5 rounded-full mb-4 shadow-sm border border-gray-100">
                     Pro feature locked
                 </p>
-                <button
-                    onClick={() => window.location.href = checkoutUrl}
+                <a
+                    href="/pricing"
                     className="px-6 py-2.5 bg-accent text-white font-bold rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 inline-flex items-center gap-2 cursor-pointer text-sm"
                 >
                     Upgrade to view
                     <ArrowRight className="w-4 h-4" />
-                </button>
+                </a>
             </div>
         </div>
     );

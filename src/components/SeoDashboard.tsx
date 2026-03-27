@@ -22,10 +22,9 @@ interface SeoDashboardProps {
     results: any;
     website: string;
     hasProAccess?: boolean;
-    checkoutUrl?: string;
 }
 
-export default function SeoDashboard({ results, website, hasProAccess = false, checkoutUrl = '#' }: SeoDashboardProps) {
+export default function SeoDashboard({ results, website, hasProAccess = false }: SeoDashboardProps) {
     const { seoAnalysis, aiVisibility, loadingSpeed, rapidApiData } = results;
 
     // Safe access helpers
@@ -72,11 +71,28 @@ export default function SeoDashboard({ results, website, hasProAccess = false, c
 
     const isPremiumIssue = (severity: string) => {
         const s = severity?.toLowerCase();
-        return s === 'critical' || s === 'error' || s === 'warning' || s === 'high' || s === 'medium';
+        return s === 'critical' || s === 'error' || s === 'high';
     };
 
-    const premiumFindings = findings.filter((f: any) => isPremiumIssue(f.severity));
-    const nonPremiumFindings = findings.filter((f: any) => !isPremiumIssue(f.severity));
+    const isWarningIssue = (severity: string) => {
+        const s = severity?.toLowerCase();
+        return s === 'warning' || s === 'medium';
+    };
+
+    // For free users: show all good/info + first 2 warnings, blur the rest
+    const goodFindings = findings.filter((f: any) => !isPremiumIssue(f.severity) && !isWarningIssue(f.severity));
+    const warningFindings = findings.filter((f: any) => isWarningIssue(f.severity));
+    const criticalFindings = findings.filter((f: any) => isPremiumIssue(f.severity));
+
+    // Free users get good issues + first 2 warnings shown
+    const freeVisibleWarnings = warningFindings.slice(0, 2);
+    const hiddenFindings = [...warningFindings.slice(2), ...criticalFindings];
+
+    // For pro users everything is visible
+    const visibleFindings = hasProAccess
+        ? findings
+        : [...goodFindings, ...freeVisibleWarnings];
+    const blurredFindings = hasProAccess ? [] : hiddenFindings;
 
     const speedScore = loadingSpeed?.summary?.performance_grade?.score || 0;
     const speedGrade = loadingSpeed?.summary?.performance_grade?.grade || '-';
@@ -437,18 +453,18 @@ export default function SeoDashboard({ results, website, hasProAccess = false, c
                     </div>
 
                     <div className="space-y-4">
-                        {/* Non-Premium Findings */}
-                        {nonPremiumFindings.map((f: any, idx: number) => (
-                            <div key={`non-premium-${idx}`} className="flex gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
+                        {/* Visible Findings (good + limited warnings for free, all for pro) */}
+                        {visibleFindings.map((f: any, idx: number) => (
+                            <div key={`visible-${idx}`} className="flex gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
                                 <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full 
                                     ${f.severity === 'critical' || f.severity === 'error' ? 'bg-red-500' :
-                                        f.severity === 'warning' ? 'bg-orange-500' : 'bg-blue-500'}`} />
+                                        f.severity === 'warning' || f.severity === 'high' || f.severity === 'medium' ? 'bg-orange-500' : 'bg-blue-500'}`} />
                                 <div className='flex-1'>
                                     <div className="flex items-start justify-between">
                                         <h5 className="font-semibold text-gray-800">{f.issue}</h5>
                                         <span className={`px-2 py-0.5 rounded text-xs uppercase font-bold tracking-wider 
                                             ${f.severity === 'critical' || f.severity === 'error' ? 'bg-red-100 text-red-700' :
-                                                f.severity === 'warning' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                f.severity === 'warning' || f.severity === 'high' || f.severity === 'medium' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700'}`}>
                                             {f.severity}
                                         </span>
                                     </div>
@@ -462,12 +478,12 @@ export default function SeoDashboard({ results, website, hasProAccess = false, c
                             </div>
                         ))}
 
-                        {/* Premium Findings */}
-                        {premiumFindings.length > 0 && (
+                        {/* Blurred/Hidden Findings for free users */}
+                        {blurredFindings.length > 0 && (
                             <div className="relative mt-8">
                                 <div className={!hasProAccess ? 'space-y-4 filter blur-md select-none pointer-events-none opacity-60' : 'space-y-4'}>
-                                    {premiumFindings.map((f: any, idx: number) => (
-                                        <div key={`premium-${idx}`} className="flex gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
+                                    {blurredFindings.map((f: any, idx: number) => (
+                                        <div key={`blurred-${idx}`} className="flex gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
                                             <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full 
                                                 ${f.severity === 'critical' || f.severity === 'error' ? 'bg-red-500' :
                                                     f.severity === 'warning' || f.severity === 'high' || f.severity === 'medium' ? 'bg-orange-500' : 'bg-blue-500'}`} />
@@ -499,10 +515,10 @@ export default function SeoDashboard({ results, website, hasProAccess = false, c
                                             </div>
                                             <h4 className="text-xl font-bold text-red-900 mb-2">Critical issues found</h4>
                                             <p className="text-red-700 mb-6 text-sm">
-                                                We've detected {premiumFindings.length} critical or warning SEO issues on your website. Upgrade to view them and get detailed fixes.
+                                                We've detected {blurredFindings.length} critical or warning SEO issues on your website. Upgrade to view them and get detailed fixes.
                                             </p>
                                             <a
-                                                href={checkoutUrl}
+                                                href="/pricing"
                                                 className="inline-flex items-center justify-center gap-2 w-full py-3 bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
                                             >
                                                 Upgrade to View <ArrowRight className="w-5 h-5" />

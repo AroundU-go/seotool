@@ -51,8 +51,7 @@ export default function SeoToolPage() {
     const isAdmin = displayEmail === 'go.aroundu@gmail.com';
     const hasProAccess = (isPro && !proExpired) || isAdmin;
 
-    // Build checkout URL with user email for payment tracking
-    const checkoutUrl = `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1${displayEmail ? `&customer[email]=${encodeURIComponent(displayEmail)}` : ''}&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+
 
     // Pro activation popup state
     const [showProActivated, setShowProActivated] = useState(false);
@@ -387,7 +386,7 @@ export default function SeoToolPage() {
 
                         <button
                             onClick={() => {
-                                window.location.href = checkoutUrl;
+                                window.location.href = '/pricing';
                             }}
                             className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                         >
@@ -421,7 +420,7 @@ export default function SeoToolPage() {
                         <button
                             onClick={() => {
                                 setShowUpgradeModal(false);
-                                window.location.href = checkoutUrl;
+                                window.location.href = '/pricing';
                             }}
                             className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                         >
@@ -726,7 +725,7 @@ export default function SeoToolPage() {
                                 <div className="max-w-7xl mx-auto space-y-8">
 
                                     <CardErrorBoundary name="SEO Dashboard">
-                                        <SeoDashboard results={results} website={website} hasProAccess={hasProAccess} checkoutUrl={checkoutUrl} />
+                                        <SeoDashboard results={results} website={website} hasProAccess={hasProAccess} />
                                     </CardErrorBoundary>
 
                                     {hasProAccess && results.aiVisibility && (
@@ -764,19 +763,19 @@ export default function SeoToolPage() {
                                                 icon={Brain}
                                                 title="AI SEO Readiness"
                                                 description="Content optimization for AI systems"
-                                                checkoutUrl={checkoutUrl}
+                                                checkoutUrl="/pricing"
                                             />
                                             <DummyProCard 
                                                 icon={TrendingUp}
                                                 title="Top Search Keywords"
                                                 description="Keyword rankings and search volumes"
-                                                checkoutUrl={checkoutUrl}
+                                                checkoutUrl="/pricing"
                                             />
                                             <DummyProCard 
                                                 icon={Link2}
                                                 title="Backlink Analysis"
                                                 description="Backlink profile overview, new & toxic links"
-                                                checkoutUrl={checkoutUrl}
+                                                checkoutUrl="/pricing"
                                             />
                                         </div>
                                     )}
