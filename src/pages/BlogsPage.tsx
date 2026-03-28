@@ -24,11 +24,13 @@ export default function BlogsPage() {
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
                 >
                     <ArrowLeft className="w-4 h-4" />
-                    <span className="hidden sm:inline">Back</span>
+                    <h6 className="hidden sm:inline font-inherit m-0 p-0 text-base">Back</h6>
                 </button>
-                <a href="https://seozapp.com" className="font-black text-xl tracking-tight text-gray-900">
-                    SEO<span className="text-accent">zapp</span>
-                </a>
+                <h2 className="m-0 p-0 flex items-center">
+                    <a href="https://seozapp.com" className="font-black text-xl tracking-tight text-gray-900">
+                        SEO<span className="text-accent">zapp</span>
+                    </a>
+                </h2>
                 <div className="w-8" /> {/* Spacer */}
             </div>
 
@@ -38,16 +40,17 @@ export default function BlogsPage() {
                         <BookOpen className="w-8 h-8 text-accent" />
                     </div>
                     <h1 className="text-4xl font-bold text-gray-900 mb-3">Blog</h1>
-                    <p className="text-gray-500 text-lg">SEO insights, tips, and industry updates</p>
+                    <h2 className="text-gray-500 text-lg font-normal m-0">SEO insights, tips, and industry updates</h2>
                 </div>
 
                 {loading ? (
                     <div className="text-center py-16">
                         <div className="w-8 h-8 border-3 border-accent/30 border-t-accent rounded-full animate-spin mx-auto mb-4" />
-                        <p className="text-gray-500">Loading articles...</p>
+                        <h5 className="text-gray-500 font-normal m-0">Loading articles...</h5>
                     </div>
                 ) : blogs.length > 0 ? (
                     <div className="space-y-6">
+                        <h2 className="sr-only">Latest SEO Articles and Guides</h2>
                         {blogs.map((blog) => (
                             <Link
                                 key={blog.id}
@@ -66,17 +69,17 @@ export default function BlogsPage() {
                                     )}
                                     <div className="flex-1 min-w-0 flex flex-col justify-center h-full pt-1">
                                         <div className="flex items-start justify-between gap-4 mb-2">
-                                            <h2 className="text-xl font-bold text-gray-900 group-hover:text-accent transition-colors line-clamp-2">
+                                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-accent transition-colors line-clamp-2 m-0">
                                                 {blog.title}
-                                            </h2>
+                                            </h3>
                                             <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-accent transition-colors flex-shrink-0 mt-1 hidden sm:block" />
                                         </div>
-                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{blog.excerpt}</p>
+                                        <h4 className="text-gray-500 text-sm mb-4 line-clamp-2 font-normal m-0">{blog.excerpt}</h4>
                                         <div className="flex items-center gap-3 text-xs text-gray-400 mt-auto">
-                                            <span className="flex items-center gap-1">
+                                            <h5 className="flex items-center gap-1 font-normal m-0 text-inherit text-xs">
                                                 <Calendar className="w-3 h-3" />
                                                 {new Date(blog.created_at || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                            </span>
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -86,8 +89,8 @@ export default function BlogsPage() {
                 ) : (
                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 border-dashed">
                         <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900">No articles yet</h3>
-                        <p className="text-gray-500">Check back soon for SEO insights and tips.</p>
+                        <h3 className="text-lg font-medium text-gray-900 m-0 mb-2">No articles yet</h3>
+                        <h4 className="text-gray-500 font-normal m-0">Check back soon for SEO insights and tips.</h4>
                     </div>
                 )}
             </div>

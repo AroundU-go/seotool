@@ -249,15 +249,15 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                         <StatCard
                             icon={Search}
                             label="On-Page"
-                            score={seoScores?.buckets?.on_page || 0}
-                            subtext={seoScores?.buckets?.on_page >= 80 ? 'Good' : 'Critical'}
+                            score={seoScores?.buckets?.onpage || 0}
+                            subtext={seoScores?.buckets?.onpage >= 80 ? 'Good' : 'Critical'}
                             colorClass={{ bg: 'bg-red-100', text: 'text-red-600' }}
                         />
                         <StatCard
                             icon={Globe}
                             label="AI Readiness"
-                            score={aiScore}
-                            subtext={aiScore >= 80 ? 'Perfect' : 'Low'}
+                            score={seoScores?.buckets?.ai_readiness || aiScore || 0}
+                            subtext={(seoScores?.buckets?.ai_readiness || aiScore) >= 80 ? 'Perfect' : 'Low'}
                             colorClass={{ bg: 'bg-blue-100', text: 'text-blue-600' }}
                         />
                     </div>
