@@ -1,0 +1,104 @@
+pattern_type,url_slug,page_title,target_keyword,search_intent,priority,estimated_pages_in_batch
+INDUSTRY,seo-tools-for-dentists,Best SEO Tools for Dentists,seo tools for dentists,Commercial,High,1
+INDUSTRY,seo-tools-for-restaurants,Best SEO Tools for Restaurants,seo tools for restaurants,Commercial,High,1
+INDUSTRY,seo-tools-for-real-estate-agents,Best SEO Tools for Real Estate Agents,seo tools for real estate agents,Commercial,High,1
+INDUSTRY,seo-tools-for-lawyers,Best SEO Tools for Lawyers,seo tools for lawyers,Commercial,High,1
+INDUSTRY,seo-tools-for-ecommerce,Best SEO Tools for Ecommerce,seo tools for ecommerce,Commercial,High,1
+INDUSTRY,seo-tools-for-bloggers,Best SEO Tools for Bloggers,seo tools for bloggers,Commercial,High,1
+INDUSTRY,seo-tools-for-saas,Best SEO Tools for SaaS Companies,seo tools for saas,Commercial,High,1
+INDUSTRY,seo-tools-for-photographers,Best SEO Tools for Photographers,seo tools for photographers,Commercial,Medium,1
+INDUSTRY,seo-tools-for-doctors,Best SEO Tools for Doctors,seo tools for doctors,Commercial,Medium,1
+INDUSTRY,seo-tools-for-accountants,Best SEO Tools for Accountants,seo tools for accountants,Commercial,Medium,1
+INDUSTRY,seo-tools-for-plumbers,Best SEO Tools for Plumbers,seo tools for plumbers,Commercial,Medium,1
+INDUSTRY,seo-tools-for-freelancers,Best SEO Tools for Freelancers,seo tools for freelancers,Commercial,High,1
+INDUSTRY,seo-tools-for-agencies,Best SEO Tools for Agencies,seo tools for agencies,Commercial,High,1
+INDUSTRY,seo-tools-for-coaches,Best SEO Tools for Coaches,seo tools for coaches,Commercial,Medium,1
+INDUSTRY,seo-tools-for-nonprofits,Best SEO Tools for Nonprofits,seo tools for nonprofits,Commercial,Low,1
+INDUSTRY,seo-tools-for-hotels,Best SEO Tools for Hotels,seo tools for hotels,Commercial,Medium,1
+INDUSTRY,seo-tools-for-gyms,Best SEO Tools for Gyms,seo tools for gyms,Commercial,Low,1
+INDUSTRY,seo-tools-for-startups,Best SEO Tools for Startups,seo tools for startups,Commercial,High,1
+INDUSTRY,seo-tools-for-small-business,Best SEO Tools for Small Business,seo tools for small business,Commercial,High,1
+INDUSTRY,seo-tools-for-youtube,Best SEO Tools for YouTube,seo tools for youtube,Commercial,High,1
+INDUSTRY,seo-tools-for-shopify,Best SEO Tools for Shopify Stores,seo tools for shopify,Commercial,High,1
+INDUSTRY,seo-tools-for-woocommerce,Best SEO Tools for WooCommerce,seo tools for woocommerce,Commercial,Medium,1
+INDUSTRY,seo-tools-for-wordpress,Best SEO Tools for WordPress,seo tools for wordpress,Commercial,High,1
+INDUSTRY,seo-tools-for-healthcare,Best SEO Tools for Healthcare,seo tools for healthcare,Commercial,Medium,1
+INDUSTRY,seo-tools-for-insurance,Best SEO Tools for Insurance Companies,seo tools for insurance,Commercial,Medium,1
+COMPETITOR,seozapp-vs-ahrefs,Seozapp vs Ahrefs: Full Comparison,seozapp vs ahrefs,Transactional,High,1
+COMPETITOR,seozapp-vs-semrush,Seozapp vs Semrush: Full Comparison,seozapp vs semrush,Transactional,High,1
+COMPETITOR,seozapp-vs-moz,Seozapp vs Moz: Full Comparison,seozapp vs moz,Transactional,High,1
+COMPETITOR,seozapp-vs-ubersuggest,Seozapp vs Ubersuggest: Full Comparison,seozapp vs ubersuggest,Transactional,High,1
+COMPETITOR,seozapp-vs-mangools,Seozapp vs Mangools: Full Comparison,seozapp vs mangools,Transactional,Medium,1
+COMPETITOR,seozapp-vs-surfer-seo,Seozapp vs Surfer SEO: Full Comparison,seozapp vs surfer seo,Transactional,Medium,1
+COMPETITOR,seozapp-vs-rankmath,Seozapp vs RankMath: Full Comparison,seozapp vs rankmath,Transactional,Medium,1
+COMPETITOR,seozapp-vs-yoast,Seozapp vs Yoast SEO: Full Comparison,seozapp vs yoast seo,Transactional,Medium,1
+COMPETITOR,seozapp-vs-clearscope,Seozapp vs Clearscope: Full Comparison,seozapp vs clearscope,Transactional,Medium,1
+COMPETITOR,seozapp-vs-frase,Seozapp vs Frase: Full Comparison,seozapp vs frase,Transactional,Medium,1
+COMPETITOR,ahrefs-alternative,Best Ahrefs Alternative,ahrefs alternative,Transactional,High,1
+COMPETITOR,semrush-alternative,Best Semrush Alternative,semrush alternative,Transactional,High,1
+COMPETITOR,moz-alternative,Best Moz Alternative,moz alternative,Transactional,High,1
+COMPETITOR,ubersuggest-alternative,Best Ubersuggest Alternative,ubersuggest alternative,Transactional,Medium,1
+COMPETITOR,mangools-alternative,Best Mangools Alternative,mangools alternative,Transactional,Medium,1
+LOCATION,seo-tools-for-agencies-in-new-york,Best SEO Tools for Agencies in New York,seo tools agencies new york,Commercial,High,1
+LOCATION,seo-tools-for-agencies-in-london,Best SEO Tools for Agencies in London,seo tools agencies london,Commercial,High,1
+LOCATION,seo-tools-for-agencies-in-mumbai,Best SEO Tools for Agencies in Mumbai,seo tools agencies mumbai,Commercial,Medium,1
+LOCATION,seo-tools-for-agencies-in-dubai,Best SEO Tools for Agencies in Dubai,seo tools agencies dubai,Commercial,Medium,1
+LOCATION,seo-tools-for-agencies-in-toronto,Best SEO Tools for Agencies in Toronto,seo tools agencies toronto,Commercial,Medium,1
+LOCATION,seo-tools-for-agencies-in-sydney,Best SEO Tools for Agencies in Sydney,seo tools agencies sydney,Commercial,Medium,1
+LOCATION,seo-tools-for-small-business-usa,Best SEO Tools for Small Business in USA,seo tools small business usa,Commercial,High,1
+LOCATION,seo-tools-for-small-business-uk,Best SEO Tools for Small Business in UK,seo tools small business uk,Commercial,High,1
+LOCATION,seo-tools-for-small-business-india,Best SEO Tools for Small Business in India,seo tools small business india,Commercial,High,1
+LOCATION,seo-tools-for-small-business-australia,Best SEO Tools for Small Business in Australia,seo tools small business australia,Commercial,Medium,1
+LOCATION,free-seo-audit-new-york,Free SEO Audit for Businesses in New York,free seo audit new york,Transactional,High,1
+LOCATION,free-seo-audit-london,Free SEO Audit for Businesses in London,free seo audit london,Transactional,High,1
+LOCATION,free-seo-audit-mumbai,Free SEO Audit for Businesses in Mumbai,free seo audit mumbai,Transactional,Medium,1
+LOCATION,free-seo-audit-chicago,Free SEO Audit for Businesses in Chicago,free seo audit chicago,Transactional,Medium,1
+LOCATION,free-seo-audit-los-angeles,Free SEO Audit for Businesses in Los Angeles,free seo audit los angeles,Transactional,Medium,1
+LOCATION,free-seo-audit-toronto,Free SEO Audit for Businesses in Toronto,free seo audit toronto,Transactional,Medium,1
+KEYWORD_CHECKER,keyword-difficulty-checker-free,Free Keyword Difficulty Checker,keyword difficulty checker free,Transactional,High,1
+KEYWORD_CHECKER,long-tail-keyword-finder,Free Long Tail Keyword Finder,long tail keyword finder,Transactional,High,1
+KEYWORD_CHECKER,keyword-search-volume-checker,Keyword Search Volume Checker,keyword search volume checker,Transactional,High,1
+KEYWORD_CHECKER,lsi-keyword-generator,Free LSI Keyword Generator,lsi keyword generator,Transactional,Medium,1
+KEYWORD_CHECKER,keyword-density-checker,Free Keyword Density Checker,keyword density checker,Transactional,Medium,1
+KEYWORD_CHECKER,keyword-rank-checker,Free Keyword Rank Checker,keyword rank checker,Transactional,High,1
+KEYWORD_CHECKER,keyword-research-tool-free,Free Keyword Research Tool,keyword research tool free,Transactional,High,1
+KEYWORD_CHECKER,competitor-keyword-analysis,Free Competitor Keyword Analysis Tool,competitor keyword analysis tool,Transactional,High,1
+KEYWORD_CHECKER,keyword-gap-analysis-tool,Free Keyword Gap Analysis Tool,keyword gap analysis tool,Transactional,Medium,1
+KEYWORD_CHECKER,youtube-keyword-research-tool,Free YouTube Keyword Research Tool,youtube keyword research tool,Transactional,High,1
+KEYWORD_CHECKER,amazon-keyword-research-tool,Free Amazon Keyword Research Tool,amazon keyword research tool,Transactional,Medium,1
+KEYWORD_CHECKER,local-keyword-research-tool,Free Local SEO Keyword Research Tool,local keyword research tool,Transactional,Medium,1
+USE_CASE,seo-audit-tool-for-blogs,Best SEO Audit Tool for Blogs,seo audit tool for blogs,Commercial,High,1
+USE_CASE,seo-audit-tool-for-ecommerce,Best SEO Audit Tool for Ecommerce,seo audit tool for ecommerce,Commercial,High,1
+USE_CASE,seo-audit-tool-for-local-business,Best SEO Audit Tool for Local Business,seo audit tool for local business,Commercial,High,1
+USE_CASE,seo-audit-tool-for-wordpress,Best SEO Audit Tool for WordPress,seo audit tool for wordpress,Commercial,High,1
+USE_CASE,seo-audit-tool-for-shopify,Best SEO Audit Tool for Shopify,seo audit tool for shopify,Commercial,High,1
+USE_CASE,on-page-seo-checker-free,Free On-Page SEO Checker,on page seo checker free,Transactional,High,1
+USE_CASE,technical-seo-audit-tool-free,Free Technical SEO Audit Tool,technical seo audit tool free,Transactional,High,1
+USE_CASE,backlink-checker-free,Free Backlink Checker Tool,backlink checker free,Transactional,High,1
+USE_CASE,meta-tag-analyzer,Free Meta Tag Analyzer Tool,meta tag analyzer,Transactional,Medium,1
+USE_CASE,website-speed-seo-checker,Website Speed & SEO Checker,website speed seo checker,Transactional,Medium,1
+USE_CASE,mobile-seo-checker,Free Mobile SEO Checker,mobile seo checker,Transactional,Medium,1
+USE_CASE,seo-score-checker,Free SEO Score Checker,seo score checker,Transactional,High,1
+USE_CASE,google-ranking-checker,Free Google Ranking Checker,google ranking checker,Transactional,High,1
+USE_CASE,domain-authority-checker,Free Domain Authority Checker,domain authority checker,Transactional,High,1
+USE_CASE,page-authority-checker,Free Page Authority Checker,page authority checker,Transactional,Medium,1
+CONTENT_SEO,how-to-rank-for-local-keywords,How to Rank for Local Keywords,how to rank for local keywords,Informational,High,1
+CONTENT_SEO,how-to-rank-for-ecommerce-keywords,How to Rank for Ecommerce Keywords,how to rank for ecommerce keywords,Informational,High,1
+CONTENT_SEO,how-to-rank-for-long-tail-keywords,How to Rank for Long Tail Keywords,how to rank for long tail keywords,Informational,High,1
+CONTENT_SEO,how-to-rank-for-competitive-keywords,How to Rank for Competitive Keywords,how to rank for competitive keywords,Informational,High,1
+CONTENT_SEO,how-to-find-low-competition-keywords,How to Find Low Competition Keywords,how to find low competition keywords,Informational,High,1
+CONTENT_SEO,best-seo-strategy-for-dentists,Best SEO Strategy for Dentists in 2025,seo strategy for dentists,Informational,Medium,1
+CONTENT_SEO,best-seo-strategy-for-lawyers,Best SEO Strategy for Lawyers in 2025,seo strategy for lawyers,Informational,Medium,1
+CONTENT_SEO,best-seo-strategy-for-restaurants,Best SEO Strategy for Restaurants in 2025,seo strategy for restaurants,Informational,Medium,1
+CONTENT_SEO,best-seo-strategy-for-ecommerce,Best SEO Strategy for Ecommerce in 2025,seo strategy for ecommerce,Informational,High,1
+CONTENT_SEO,best-seo-strategy-for-saas,Best SEO Strategy for SaaS in 2025,seo strategy for saas,Informational,High,1
+CONTENT_SEO,best-seo-strategy-for-startups,Best SEO Strategy for Startups in 2025,seo strategy for startups,Informational,High,1
+CONTENT_SEO,seo-checklist-for-bloggers,Complete SEO Checklist for Bloggers,seo checklist for bloggers,Informational,High,1
+CONTENT_SEO,seo-checklist-for-ecommerce,Complete SEO Checklist for Ecommerce,seo checklist for ecommerce,Informational,High,1
+CONTENT_SEO,seo-checklist-for-wordpress,Complete SEO Checklist for WordPress,seo checklist for wordpress,Informational,High,1
+CONTENT_SEO,seo-checklist-for-local-business,Complete SEO Checklist for Local Business,seo checklist for local business,Informational,Medium,1
+PRICING,seo-tools-under-50-per-month,Best SEO Tools Under $50/month,affordable seo tools,Commercial,High,1
+PRICING,free-seo-tools-list,Best Free SEO Tools List,free seo tools,Commercial,High,1
+PRICING,seo-tools-for-beginners,Best SEO Tools for Beginners,seo tools for beginners,Commercial,High,1
+PRICING,enterprise-seo-tools,Best Enterprise SEO Tools,enterprise seo tools,Commercial,Medium,1
+PRICING,seo-tools-for-solopreneurs,Best SEO Tools for Solopreneurs,seo tools for solopreneurs,Commercial,Medium,1
