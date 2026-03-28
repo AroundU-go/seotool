@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient, Session, User } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://ilmmqkfcotrmjjqbawhg.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsbW1xa2Zjb3RybWpqcWJhd2hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMTYwODQsImV4cCI6MjA4Njc5MjA4NH0.WiC981b2OZghhJ4Wj7rBSSN4k2dpGla-mG8EfQwqteE';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ilmmqkfcotrmjjqbawhg.supabase.co';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsbW1xa2Zjb3RybWpqcWJhd2hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMTYwODQsImV4cCI6MjA4Njc5MjA4NH0.WiC981b2OZghhJ4Wj7rBSSN4k2dpGla-mG8EfQwqteE';
 
 export const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
 
@@ -10,7 +10,7 @@ export const supabase: SupabaseClient = isSupabaseConfigured
   : (null as unknown as SupabaseClient);
 
 if (!isSupabaseConfigured) {
-  console.warn('Supabase credentials not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in a .env file.');
+  console.warn('Supabase credentials not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in a .env file.');
 }
 
 // ─── Auth helpers ────────────────────────────────────────────

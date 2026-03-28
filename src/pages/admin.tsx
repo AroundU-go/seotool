@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ArrowLeft, Plus, Edit2, Trash2, Eye, EyeOff, Save, X, BookOpen, Link2 } from 'lucide-react';
 import { getAllBlogs, createBlog, updateBlog, deleteBlog, BlogRecord } from '@/services/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,7 +16,7 @@ interface BlogForm {
 const emptyForm: BlogForm = { title: '', slug: '', excerpt: '', content: '', image_url: '', published: false };
 
 export default function AdminPage() {
-    const navigate = useNavigate();
+    const router = useRouter();
     const { user } = useAuth();
     const [blogs, setBlogs] = useState<BlogRecord[]>([]);
     const [loading, setLoading] = useState(true);
@@ -125,7 +125,7 @@ export default function AdminPage() {
             {/* Top Bar */}
             <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
                 <button
-                    onClick={() => navigate('/analyze')}
+                    onClick={() => router.push('/analyze')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
                 >
                     <ArrowLeft className="w-4 h-4" />

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import { getBlogBySlug, BlogRecord } from '@/services/supabaseClient';
 
 export default function BlogPostPage() {
-    const { slug } = useParams<{ slug: string }>();
-    const navigate = useNavigate();
+    const router = useRouter();
+    const { slug } = router.query as { slug: string };
     const [blog, setBlog] = useState<BlogRecord | null>(null);
     const [loading, setLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
@@ -39,7 +39,7 @@ export default function BlogPostPage() {
                 <div className="text-center">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Article not found</h1>
                     <p className="text-gray-500 mb-6">The article you're looking for doesn't exist.</p>
-                    <button onClick={() => navigate('/blogs')} className="text-accent font-semibold hover:underline">
+                    <button onClick={() => router.push('/blogs')} className="text-accent font-semibold hover:underline">
                         ← Back to Blog
                     </button>
                 </div>
@@ -52,7 +52,7 @@ export default function BlogPostPage() {
             {/* Top Bar */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
                 <button
-                    onClick={() => navigate('/blogs')}
+                    onClick={() => router.push('/blogs')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
                 >
                     <ArrowLeft className="w-4 h-4" />

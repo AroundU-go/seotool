@@ -1,10 +1,18 @@
-import { Navigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
+    const router = useRouter();
     const guestEmail = typeof window !== 'undefined' ? localStorage.getItem('guest_email') : null;
+
+    useEffect(() => {
+        if (!loading && !user && !guestEmail) {
+            router.replace('/auth');
+        }
+    }, [loading, user, guestEmail, router]);
 
     if (loading && !guestEmail) {
         return (
@@ -18,7 +26,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     }
 
     if (!user && !guestEmail) {
-        return <Navigate to="/auth" replace />;
+        return null; // Will redirect via useEffect
     }
 
     return <>{children}</>;

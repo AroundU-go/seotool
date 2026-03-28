@@ -1,15 +1,15 @@
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ArrowLeft, MessageSquare } from 'lucide-react';
 
 export default function ContactPage() {
-    const navigate = useNavigate();
+    const router = useRouter();
 
     return (
         <div className="min-h-screen bg-[#f8f9fe]">
             {/* Top Bar */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
                 <button
-                    onClick={() => navigate('/')}
+                    onClick={() => router.push('/')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
                 >
                     <ArrowLeft className="w-4 h-4" />

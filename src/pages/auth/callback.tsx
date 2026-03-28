@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { supabase } from '@/services/supabaseClient';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function AuthCallback() {
-    const navigate = useNavigate();
+    const router = useRouter();
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -50,9 +50,9 @@ export default function AuthCallback() {
                     localStorage.removeItem('pending_analyze_url');
 
                     if (pendingUrl) {
-                        navigate('/analyze', { replace: true, state: { analyzeUrl: pendingUrl } });
+                        router.replace({ pathname: '/analyze', query: { analyzeUrl: pendingUrl } });
                     } else {
-                        navigate('/analyze', { replace: true });
+                        router.replace('/analyze');
                     }
                 };
 
@@ -98,7 +98,7 @@ export default function AuthCallback() {
                 authListener.unsubscribe();
             }
         };
-    }, [navigate]);
+    }, [router]);
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -135,7 +135,7 @@ export default function AuthCallback() {
                             {errorMessage || 'Something went wrong. Please try again.'}
                         </p>
                         <button
-                            onClick={() => navigate('/auth', { replace: true })}
+                            onClick={() => router.replace('/auth')}
                             className="px-6 py-3 bg-accent text-accent-900 font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 hover:scale-[1.01]"
                         >
                             Back to Sign In

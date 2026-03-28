@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Download, AlertCircle, Search, ArrowLeft, LogOut, Lock, ArrowRight, History, LayoutDashboard, Menu, X, ChevronRight, Crown, CheckCircle2, Brain, TrendingUp, Link2, Globe, Loader2 } from 'lucide-react';
 import SeoDashboard from '../components/SeoDashboard';
 import AiVisibilityCard from '../components/AiVisibilityCard';
@@ -43,10 +43,9 @@ class CardErrorBoundary extends Component<{ children: ReactNode; name: string },
 }
 
 export default function SeoToolPage() {
-    const navigate = useNavigate();
-    const location = useLocation();
+    const router = useRouter();
     const { user, signOut: handleSignOut, isPro, proExpired, paymentType, proAuditCount, refreshProStatus } = useAuth();
-    const guestEmail = localStorage.getItem('guest_email');
+    const guestEmail = typeof window !== 'undefined' ? localStorage.getItem('guest_email') : null;
     const displayEmail = user?.email || guestEmail;
     const isAdmin = displayEmail === 'go.aroundu@gmail.com';
     const hasProAccess = (isPro && !proExpired) || isAdmin;
@@ -70,7 +69,7 @@ export default function SeoToolPage() {
     const onSignOut = async () => {
         await handleSignOut();
         localStorage.removeItem('guest_email');
-        navigate('/');
+        router.push('/');
     };
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -182,12 +181,11 @@ export default function SeoToolPage() {
         fetchHistory();
     }, [fetchHistory]);
 
-
     useEffect(() => {
-        if (location.state?.analyzeUrl) {
-            handleAnalyze(location.state.analyzeUrl);
+        if (router.query.analyzeUrl) {
+            handleAnalyze(router.query.analyzeUrl as string);
         }
-    }, [location.state]);
+    }, [router.query]);
 
     // ... imports
 
@@ -464,7 +462,7 @@ export default function SeoToolPage() {
             {/* Top Bar — transparent, matching landing page glass style */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/30 bg-white/60 backdrop-blur-md sticky top-0 z-40">
                 <button
-                    onClick={() => navigate('/')}
+                    onClick={() => router.push('/')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
                 >
                     <ArrowLeft className="w-4 h-4" />

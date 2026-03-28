@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { ArrowLeft, Calendar, ArrowRight, BookOpen } from 'lucide-react';
 import { getPublishedBlogs, BlogRecord } from '@/services/supabaseClient';
 
 export default function BlogsPage() {
-    const navigate = useNavigate();
+    const router = useRouter();
     const [blogs, setBlogs] = useState<BlogRecord[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -20,7 +21,7 @@ export default function BlogsPage() {
             {/* Top Bar */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
                 <button
-                    onClick={() => navigate('/')}
+                    onClick={() => router.push('/')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
                 >
                     <ArrowLeft className="w-4 h-4" />
@@ -54,7 +55,7 @@ export default function BlogsPage() {
                         {blogs.map((blog) => (
                             <Link
                                 key={blog.id}
-                                to={`/blogs/${blog.slug}`}
+                                href={`/blogs/${blog.slug}`}
                                 className="block bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-accent/20 transition-all group"
                             >
                                 <div className="flex flex-col sm:flex-row items-start gap-6">

@@ -1,5 +1,5 @@
 import { Check, Sparkles, Building2, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface PricingTier {
     name: string;
@@ -54,7 +54,7 @@ const tiers: PricingTier[] = [
         icon: <Sparkles className="w-6 h-6" />,
         badge: 'Most Popular',
         cta: 'Get One-Time — $5',
-        href: `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`,
+        href: typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#',
     },
     {
         name: 'Pro',
@@ -72,7 +72,7 @@ const tiers: PricingTier[] = [
         ],
         icon: <Building2 className="w-6 h-6" />,
         cta: 'Upgrade to Pro',
-        href: `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`,
+        href: typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#',
     },
 ];
 
@@ -152,7 +152,7 @@ export function PricingSection() {
                             {/* CTA */}
                             {tier.href?.startsWith('/') ? (
                                 <Link
-                                    to={tier.href}
+                                    href={tier.href}
                                     className={`
                                         block w-full py-3.5 rounded-full font-bold text-sm transition-all duration-300 text-center
                                         ${tier.highlight

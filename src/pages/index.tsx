@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown, Check, Globe } from 'lucide-react';
 
 import { NavBar } from '@/components/ui/NavBar';
@@ -9,7 +9,7 @@ import { PricingSection } from '@/components/landing/PricingSection';
 import { ComparisonSection } from '@/components/landing/ComparisonSection';
 
 export default function LandingPage() {
-    const navigate = useNavigate();
+    const router = useRouter();
 
     // Scroll-spy for navbar
     const [activeSection, setActiveSection] = useState('Home');
@@ -51,7 +51,7 @@ export default function LandingPage() {
         { name: 'Features', url: '#features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'How It Works', url: '#how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'Pricing', url: '#pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'Analyze', url: '/analyze', icon: Search, onClick: () => navigate('/analyze') },
+        { name: 'Analyze', url: '/analyze', icon: Search, onClick: () => router.push('/analyze') },
     ];
 
     const steps = [
@@ -67,7 +67,7 @@ export default function LandingPage() {
         
         // Store the URL so AuthCallback/AuthPage can redirect to /analyze with it
         localStorage.setItem('pending_analyze_url', url.trim());
-        navigate('/auth');
+        router.push('/auth');
     };
 
     return (

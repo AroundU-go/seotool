@@ -112,15 +112,39 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
     const warningFindings = findings.filter((f: any) => isWarningIssue(f.severity));
     const criticalFindings = findings.filter((f: any) => isPremiumIssue(f.severity));
 
+    const securityKeywords = ['security', 'ssl', 'https', 'hsts', 'csp', 'x-frame', 'mixed content', 'x-content'];
+    const isSecurityIssue = (issueText: string) => {
+        const text = issueText?.toLowerCase() || '';
+        return securityKeywords.some(kw => text.includes(kw));
+    };
+
     // Free users get good issues + first 2 warnings shown
     const freeVisibleWarnings = warningFindings.slice(0, 2);
     const hiddenFindings = [...warningFindings.slice(2), ...criticalFindings];
 
-    // For pro users everything is visible
+    // For free users, if a visible warning is a security issue, we want to hide its fix
+    const visibleFindingsForFree = [...goodFindings, ...freeVisibleWarnings].map(f => {
+        if (isSecurityIssue(f.issue) || isSecurityIssue(f.fix)) {
+            return { ...f, fix_blurred: true, _isSecurity: true };
+        }
+        return f;
+    });
+
+    // Mark hidden findings as security if they match
+    const hiddenFindingsTagged = hiddenFindings.map(f => {
+        if (isSecurityIssue(f.issue) || isSecurityIssue(f.fix)) {
+            return { ...f, _isSecurity: true };
+        }
+        return f;
+    });
+
+    const hasSecurityIssuesHidden = hiddenFindingsTagged.some(f => f._isSecurity) || visibleFindingsForFree.some(f => f._isSecurity);
+
+    // For pro users everything is visible exactly as is
     const visibleFindings = hasProAccess
         ? findings
-        : [...goodFindings, ...freeVisibleWarnings];
-    const blurredFindings = hasProAccess ? [] : hiddenFindings;
+        : visibleFindingsForFree;
+    const blurredFindings = hasProAccess ? [] : hiddenFindingsTagged;
 
     const speedScore = loadingSpeed?.summary?.performance_grade?.score || 0;
     const speedGrade = loadingSpeed?.summary?.performance_grade?.grade || '-';
@@ -343,35 +367,47 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                             </span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">X-Frame-Options</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.x_frame_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">X-Frame-Options</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.x_frame_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
+                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
                                 {seoSecurity.x_frame_options ? 'Set' : 'Missing'}
                             </span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">Content-Type-Options</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.x_content_type_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Content-Type-Options</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.x_content_type_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
+                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
                                 {seoSecurity.x_content_type_options ? 'Set' : 'Missing'}
                             </span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">Referrer Policy</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.referrer_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Referrer Policy</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.referrer_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
+                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
                                 {seoSecurity.referrer_policy ? 'Set' : 'Missing'}
                             </span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">CSP</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.content_security_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">CSP</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.content_security_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
+                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
                                 {seoSecurity.content_security_policy ? 'Set' : 'Missing'}
                             </span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">Mixed Content</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${seoSecurity.mixed_content_found ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl mb-2">
+                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Mixed Content</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.mixed_content_found ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
+                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
                                 {seoSecurity.mixed_content_found ? 'Found' : 'Clean'}
                             </span>
                         </div>
+                        {!hasProAccess && (
+                            <a href="/pricing" className="text-sm border-t border-gray-100 pt-3 mt-1 text-accent font-semibold flex items-center justify-center gap-1 hover:underline group">
+                                <Lock className="w-3.5 h-3.5" />
+                                Upgrade for full security report
+                                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </a>
+                        )}
                     </div>
                 </div>
 
@@ -740,10 +776,19 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                         </span>
                                     </div>
                                     {f.fix && (
-                                        <p className="text-sm text-gray-600 mt-2 bg-white/50 p-3 rounded-lg border border-gray-100">
-                                            <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
-                                            {f.fix}
-                                        </p>
+                                        <div className={`mt-2 bg-white/50 p-3 rounded-lg border border-gray-100 relative ${f.fix_blurred ? 'overflow-hidden' : ''}`}>
+                                            <p className={`text-sm text-gray-600 ${f.fix_blurred ? 'blur-[4px] select-none' : ''}`}>
+                                                <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
+                                                {f.fix}
+                                            </p>
+                                            {f.fix_blurred && (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-white/20 backdrop-blur-[1px]">
+                                                    <span className="text-xs font-bold text-gray-700 bg-white/90 px-3 py-1 rounded-full shadow-sm flex items-center gap-1 border border-gray-200">
+                                                        <Lock className="w-3 h-3 text-red-500" /> Security fix hidden. Upgrade to Pro.
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -768,10 +813,17 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                                     </span>
                                                 </div>
                                                 {f.fix && (
-                                                    <p className="text-sm text-gray-600 mt-2 bg-white/50 p-3 rounded-lg border border-gray-100">
-                                                        <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
-                                                        {!hasProAccess ? 'Upgrade to Pro plan to view the detailed fix for this issue.' : f.fix}
-                                                    </p>
+                                                    <div className="mt-2 bg-white/50 p-3 rounded-lg border border-gray-100 relative overflow-hidden">
+                                                        <p className="text-sm text-gray-600 blur-[4px] select-none">
+                                                            <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
+                                                            {f.fix}
+                                                        </p>
+                                                        <div className="absolute inset-0 flex items-center justify-center bg-white/20 backdrop-blur-[1px]">
+                                                            <span className="text-xs font-bold text-gray-700 bg-white/90 px-3 py-1 rounded-full shadow-sm flex items-center gap-1 border border-gray-200">
+                                                                <Lock className="w-3 h-3 text-red-500" /> {!hasProAccess ? 'Upgrade to Pro plan to view the detailed fix for this issue.' : 'Hidden'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
@@ -785,8 +837,15 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                                 <Lock className="w-8 h-8 text-red-600" />
                                             </div>
                                             <h4 className="text-xl font-bold text-red-900 mb-2">Critical issues found</h4>
+                                            
+                                            {hasSecurityIssuesHidden && (
+                                                <div className="bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wide py-1 px-3 rounded-full inline-flex items-center gap-1 mb-3">
+                                                    <Shield className="w-3.5 h-3.5" /> Security vulnerabilities detected
+                                                </div>
+                                            )}
+                                            
                                             <p className="text-red-700 mb-6 text-sm">
-                                                We've detected {blurredFindings.length} critical or warning SEO issues on your website. Upgrade to view them and get detailed fixes.
+                                                We've detected {blurredFindings.length} critical or warning SEO {hasSecurityIssuesHidden ? 'and security ' : ''}issues on your website. Upgrade to view them and get detailed fixes.
                                             </p>
                                             <a
                                                 href="/pricing"

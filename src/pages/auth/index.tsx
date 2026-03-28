@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { ArrowLeft, Mail, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function AuthPage() {
-    const navigate = useNavigate();
+    const router = useRouter();
     const { signInWithOtp, user, signInWithGoogle } = useAuth(); // We need signInWithOtp and Google OAuth
 
     const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ export default function AuthPage() {
 
     // If already logged in (Supabase session), redirect
     if (user) {
-        navigate('/analyze', { replace: true });
+        router.replace('/analyze');
         return null;
     }
 
@@ -168,7 +169,7 @@ export default function AuthPage() {
                     {/* Back link */}
                     <div className="text-center mt-6">
                         <Link
-                            to="/"
+                            href="/"
                             className="inline-flex items-center gap-2 text-sm font-medium text-foreground/50 hover:text-accent transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

@@ -108,7 +108,7 @@ export interface TopKeywordsResult {
 // ─── Direct API calls to VebAPI ─────────────────────────────
 // The Vercel serverless proxy is unreliable, so we call VebAPI directly.
 
-const VEBAPI_KEY = import.meta.env.VITE_VEBAPI_KEY || '';
+const VEBAPI_KEY = process.env.NEXT_PUBLIC_VEBAPI_KEY || '';
 
 const callVebApi = async <T,>(endpoint: string, website: string): Promise<T> => {
   const cleanWebsite = website.replace(/^https?:\/\//, '').replace(/\/$/, '');
@@ -254,7 +254,7 @@ export async function fetchRapidApiData(website: string): Promise<RapidApiDataRe
   // Website might not have https:// so we add it safely for the URL param
   const cleanWebsite = website.replace(/^https?:\/\//, '').replace(/\/$/, '');
   const targetUrl = `https://${cleanWebsite}`;
-  
+
   const url = `https://seo-analyzer8.p.rapidapi.com/analyze?url=${encodeURIComponent(targetUrl)}`;
   const options = {
     method: 'GET',
