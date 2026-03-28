@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { getUseCasePages, getUseCasePage, KeywordRow } from '../../lib/keywords';
+import { getUseCasePages, getUseCasePage } from '../../lib/keywords';
+import type { KeywordRow } from '../../lib/keywords';
+import { NavBar } from '@/components/ui/NavBar';
+import { Home } from 'lucide-react';
 
 interface UseCasePageProps {
   pageData: KeywordRow;
@@ -55,7 +58,12 @@ export default function UseCasePage({ pageData }: UseCasePageProps) {
         />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+      <NavBar 
+        items={[{ name: 'Home', url: '/', icon: Home, onClick: () => window.location.href = '/' }]} 
+        active="Home" 
+      />
+
+      <main className="min-h-screen bg-gray-50 py-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-12">
           {/* Header Section */}
           <div className="text-center space-y-6">
