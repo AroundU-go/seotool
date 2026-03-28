@@ -60,7 +60,7 @@ export default function UseCasePage({ pageData }: UseCasePageProps) {
 
       <NavBar 
         items={[{ name: 'Home', url: '/', icon: Home, onClick: () => window.location.href = '/' }]} 
-        active="Home" 
+        activeTab="Home" 
       />
 
       <main className="min-h-screen bg-gray-50 py-32 px-4 sm:px-6 lg:px-8">
