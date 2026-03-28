@@ -519,42 +519,42 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                 </div>
 
                 {/* Social & Meta Data from RapidAPI */}
-                {rapidApiData && (
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-pink-50 rounded-lg text-pink-600">
-                                <Share2 className="w-5 h-5" />
-                            </div>
-                            <h4 className="font-bold text-gray-800">Social & Content</h4>
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-pink-50 rounded-lg text-pink-600">
+                            <Share2 className="w-5 h-5" />
                         </div>
-                        
-                        <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-gray-100">
-                            <div>
-                                <span className="text-xs text-gray-400 uppercase font-semibold">Word Count</span>
-                                <p className="text-lg font-bold text-gray-800 mt-1">{rapidApiData.wordCount || 0}</p>
-                            </div>
-                            <div>
-                                <span className="text-xs text-gray-400 uppercase font-semibold">Language</span>
-                                <p className="text-lg font-bold text-gray-800 mt-1 uppercase">{rapidApiData.language || 'N/A'}</p>
-                            </div>
+                        <h4 className="font-bold text-gray-800">Social & Content</h4>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-gray-100">
+                        <div>
+                            <span className="text-xs text-gray-400 uppercase font-semibold">Word Count</span>
+                            <p className="text-lg font-bold text-gray-800 mt-1">{rapidApiData?.wordCount || contentStats?.word_count_estimate || 0}</p>
                         </div>
-
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                                <span className="text-sm text-gray-600 font-medium">Open Graph tags</span>
-                                <span className={`px-2 py-1 rounded-lg text-xs font-bold ${rapidApiData.openGraph ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                    {rapidApiData.openGraph ? 'Present' : 'Missing'}
-                                </span>
-                            </div>
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                                <span className="text-sm text-gray-600 font-medium">Twitter Card tags</span>
-                                <span className={`px-2 py-1 rounded-lg text-xs font-bold ${rapidApiData.twitterCard ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
-                                    {rapidApiData.twitterCard ? 'Present' : 'Missing'}
-                                </span>
-                            </div>
+                        <div>
+                            <span className="text-xs text-gray-400 uppercase font-semibold">Language</span>
+                            <p className="text-lg font-bold text-gray-800 mt-1 uppercase">{rapidApiData?.language || 'N/A'}</p>
                         </div>
                     </div>
-                )}
+
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Open Graph tags</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${rapidApiData && rapidApiData.openGraph !== undefined ? (rapidApiData.openGraph ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
+                                {(!rapidApiData || rapidApiData.openGraph === undefined) && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
+                                {rapidApiData && rapidApiData.openGraph !== undefined ? (rapidApiData.openGraph ? 'Present' : 'Missing') : 'Locked'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Twitter Card tags</span>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${rapidApiData && rapidApiData.twitterCard !== undefined ? (rapidApiData.twitterCard ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
+                                {(!rapidApiData || rapidApiData.twitterCard === undefined) && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
+                                {rapidApiData && rapidApiData.twitterCard !== undefined ? (rapidApiData.twitterCard ? 'Present' : 'Missing') : 'Locked'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Crawl Signals */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
