@@ -43,43 +43,14 @@ export default function LandingPage() {
         return () => observer.disconnect();
     }, []);
 
-    // Scroll to section on mount based on URL
-    useEffect(() => {
-        if (!router.isReady) return;
-        
-        const path = router.asPath.split('?')[0].replace(/\/$/, '');
-        let targetId = '';
-        
-        if (path === '/features') targetId = 'features';
-        else if (path === '/how-it-works') targetId = 'how-it-works';
-        else if (path === '/pricing') targetId = 'pricing';
-        else if (path === '/' || path === '') targetId = 'hero';
-        
-        if (targetId) {
-            setTimeout(() => {
-                const el = document.getElementById(targetId);
-                if (el) {
-                    el.scrollIntoView({ behavior: 'smooth' });
-                    const sectionMap: Record<string, string> = {
-                        'hero': 'Home',
-                        'features': 'Features',
-                        'how-it-works': 'How It Works',
-                        'pricing': 'Pricing'
-                    };
-                    setActiveSection(sectionMap[targetId]);
-                }
-            }, 100);
-        }
-    }, [router.isReady, router.asPath]);
-
     // URL & email state
     const [url, setUrl] = useState('');
 
     const navItems = [
-        { name: 'Home', url: '/', icon: Home, onClick: () => { router.push('/', undefined, { shallow: true }); document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }); } },
-        { name: 'Features', url: '/features', icon: Rocket, onClick: () => { router.push('/features', undefined, { shallow: true }); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); } },
-        { name: 'How It Works', url: '/how-it-works', icon: Zap, onClick: () => { router.push('/how-it-works', undefined, { shallow: true }); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); } },
-        { name: 'Pricing', url: '/pricing', icon: DollarSign, onClick: () => { router.push('/pricing', undefined, { shallow: true }); document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); } },
+        { name: 'Home', url: '#hero', icon: Home, onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Features', url: '#features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'How It Works', url: '#how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Pricing', url: '#pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'Analyze', url: '/analyze', icon: Search, onClick: () => router.push('/analyze') },
     ];
 

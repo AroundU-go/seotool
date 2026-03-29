@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { LucideIcon, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import Link from "next/link";
 
 interface NavItem {
     name: string;
@@ -56,15 +55,11 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                         const isActive = activeTab === item.name;
 
                         return (
-                            <Link
+                            <button
                                 key={item.name}
-                                href={item.url}
-                                onClick={(e) => {
-                                    if (item.onClick) {
-                                        e.preventDefault();
-                                        setInternalActiveTab(item.name);
-                                        item.onClick();
-                                    }
+                                onClick={() => {
+                                    setInternalActiveTab(item.name);
+                                    item.onClick?.();
                                 }}
                                 className={cn(
                                     "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
@@ -76,7 +71,7 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                 <span className="md:hidden">
                                     <Icon size={18} strokeWidth={2.5} />
                                 </span>
-                            </Link>
+                            </button>
                         );
                     })}
                 </div>
@@ -131,15 +126,11 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                         const Icon = item.icon;
                                         const isActive = activeTab === item.name;
                                         return (
-                                            <Link
+                                            <button
                                                 key={item.name}
-                                                href={item.url}
-                                                onClick={(e) => {
-                                                    if (item.onClick) {
-                                                        e.preventDefault();
-                                                        setInternalActiveTab(item.name);
-                                                        item.onClick();
-                                                    }
+                                                onClick={() => {
+                                                    setInternalActiveTab(item.name);
+                                                    item.onClick?.();
                                                     setIsMenuOpen(false);
                                                 }}
                                                 className={cn(
@@ -151,7 +142,7 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                             >
                                                 <Icon className={cn("w-5 h-5", isActive ? "text-accent" : "text-foreground/50")} />
                                                 {item.name}
-                                            </Link>
+                                            </button>
                                         );
                                     })}
                                 </div>
