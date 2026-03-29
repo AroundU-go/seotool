@@ -1,0 +1,6 @@
+supabase/functions/dodo-webhook/index.ts(2,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2.46.1' or its corresponding type declarations.
+supabase/functions/dodo-webhook/index.ts(11,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/dodo-webhook/index.ts(12,28): error TS2304: Cannot find name 'Deno'.
+supabase/functions/dodo-webhook/index.ts(13,23): error TS2304: Cannot find name 'Deno'.
+supabase/functions/dodo-webhook/index.ts(183,1): error TS2304: Cannot find name 'Deno'.
+supabase/functions/seo-analyzer/index.ts(76,1): error TS2304: Cannot find name 'Deno'.

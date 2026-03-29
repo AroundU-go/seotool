@@ -119,8 +119,8 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
     };
 
     // Free users get good issues + first 2 warnings shown
-    const freeVisibleWarnings = warningFindings.slice(0, 2);
-    const hiddenFindings = [...warningFindings.slice(2), ...criticalFindings];
+    const freeVisibleWarnings = warningFindings.slice(0, 1);
+    const hiddenFindings = [...warningFindings.slice(1), ...criticalFindings];
 
     // For free users, if a visible warning is a security issue, we want to hide its fix
     const visibleFindingsForFree = [...goodFindings, ...freeVisibleWarnings].map(f => {
@@ -366,41 +366,51 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                 {seoSecurity.hsts ? 'Enabled' : 'Disabled'}
                             </span>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">X-Frame-Options</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.x_frame_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
-                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
-                                {seoSecurity.x_frame_options ? 'Set' : 'Missing'}
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Content-Type-Options</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.x_content_type_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
-                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
-                                {seoSecurity.x_content_type_options ? 'Set' : 'Missing'}
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Referrer Policy</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.referrer_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
-                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
-                                {seoSecurity.referrer_policy ? 'Set' : 'Missing'}
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">CSP</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.content_security_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
-                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
-                                {seoSecurity.content_security_policy ? 'Set' : 'Missing'}
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl mb-2">
-                            <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Mixed Content</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${hasProAccess ? (seoSecurity.mixed_content_found ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') : 'bg-gray-100 text-gray-400 blur-[2px] cursor-not-allowed flex items-center gap-1'}`}>
-                                {!hasProAccess && <Lock className="w-3 h-3 text-gray-500 inline mr-1" />}
-                                {seoSecurity.mixed_content_found ? 'Found' : 'Clean'}
-                            </span>
-                        </div>
+                        {hasProAccess ? (
+                            <>
+                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">X-Frame-Options</span>
+                                    <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${seoSecurity.x_frame_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                        {seoSecurity.x_frame_options ? 'Set' : 'Missing'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Content-Type-Options</span>
+                                    <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${seoSecurity.x_content_type_options ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                        {seoSecurity.x_content_type_options ? 'Set' : 'Missing'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Referrer Policy</span>
+                                    <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${seoSecurity.referrer_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                        {seoSecurity.referrer_policy ? 'Set' : 'Missing'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">CSP</span>
+                                    <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${seoSecurity.content_security_policy ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                        {seoSecurity.content_security_policy ? 'Set' : 'Missing'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl mb-2">
+                                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Mixed Content</span>
+                                    <span className={`px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${seoSecurity.mixed_content_found ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                                        {seoSecurity.mixed_content_found ? 'Found' : 'Clean'}
+                                    </span>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {['X-Frame-Options', 'Content-Type-Options', 'Referrer Policy', 'CSP', 'Mixed Content'].map((item) => (
+                                    <div key={item} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                                        <span className="text-sm text-gray-400 font-medium whitespace-nowrap overflow-hidden text-ellipsis">{item}</span>
+                                        <span className="px-2 py-1 rounded-lg text-xs font-bold whitespace-nowrap bg-gray-100 text-gray-400 flex items-center gap-1">
+                                            <Lock className="w-3 h-3" />
+                                        </span>
+                                    </div>
+                                ))}
+                            </>
+                        )}
                         {!hasProAccess && (
                             <a href="/pricing" className="text-sm border-t border-gray-100 pt-3 mt-1 text-accent font-semibold flex items-center justify-center gap-1 hover:underline group">
                                 <Lock className="w-3.5 h-3.5" />
@@ -566,29 +576,60 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                     </div>
                     <div className="space-y-3">
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">Robots.txt</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${robotsInfo.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                {robotsInfo.found ? 'Found' : 'Missing'}
-                            </span>
+                            <span className={`text-sm font-medium ${hasProAccess ? 'text-gray-600' : 'text-gray-400'}`}>Robots.txt</span>
+                            {hasProAccess ? (
+                                <span className={`px-2 py-1 rounded-lg text-xs font-bold ${robotsInfo.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                    {robotsInfo.found ? 'Found' : 'Missing'}
+                                </span>
+                            ) : (
+                                <span className="px-2 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-400 flex items-center gap-1">
+                                    <Lock className="w-3 h-3" />
+                                </span>
+                            )}
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">Sitemap.xml</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${sitemapInfo.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                {sitemapInfo.found ? 'Found' : 'Missing'}
-                            </span>
+                            <span className={`text-sm font-medium ${hasProAccess ? 'text-gray-600' : 'text-gray-400'}`}>Sitemap.xml</span>
+                            {hasProAccess ? (
+                                <span className={`px-2 py-1 rounded-lg text-xs font-bold ${sitemapInfo.found ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                    {sitemapInfo.found ? 'Found' : 'Missing'}
+                                </span>
+                            ) : (
+                                <span className="px-2 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-400 flex items-center gap-1">
+                                    <Lock className="w-3 h-3" />
+                                </span>
+                            )}
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">llms.txt</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${llmsTxtInfo.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
-                                {llmsTxtInfo.found ? 'Found' : 'Not Found'}
-                            </span>
+                            <span className={`text-sm font-medium ${hasProAccess ? 'text-gray-600' : 'text-gray-400'}`}>llms.txt</span>
+                            {hasProAccess ? (
+                                <span className={`px-2 py-1 rounded-lg text-xs font-bold ${llmsTxtInfo.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                    {llmsTxtInfo.found ? 'Found' : 'Not Found'}
+                                </span>
+                            ) : (
+                                <span className="px-2 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-400 flex items-center gap-1">
+                                    <Lock className="w-3 h-3" />
+                                </span>
+                            )}
                         </div>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                            <span className="text-sm text-gray-600 font-medium">ai.txt</span>
-                            <span className={`px-2 py-1 rounded-lg text-xs font-bold ${aiTxtInfo.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
-                                {aiTxtInfo.found ? 'Found' : 'Not Found'}
-                            </span>
+                            <span className={`text-sm font-medium ${hasProAccess ? 'text-gray-600' : 'text-gray-400'}`}>ai.txt</span>
+                            {hasProAccess ? (
+                                <span className={`px-2 py-1 rounded-lg text-xs font-bold ${aiTxtInfo.found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                    {aiTxtInfo.found ? 'Found' : 'Not Found'}
+                                </span>
+                            ) : (
+                                <span className="px-2 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-400 flex items-center gap-1">
+                                    <Lock className="w-3 h-3" />
+                                </span>
+                            )}
                         </div>
+                        {!hasProAccess && (
+                            <a href="/pricing" className="text-sm border-t border-gray-100 pt-3 mt-1 text-accent font-semibold flex items-center justify-center gap-1 hover:underline group">
+                                <Lock className="w-3.5 h-3.5" />
+                                Upgrade to view crawl data
+                                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </a>
+                        )}
                     </div>
                 </div>
 
@@ -832,26 +873,26 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                 
                                 {!hasProAccess && (
                                     <div className="absolute inset-0 z-10 flex items-center justify-center p-6">
-                                        <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl shadow-red-900/10 backdrop-blur-sm bg-white/60">
-                                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                <Lock className="w-8 h-8 text-red-600" />
+                                        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 sm:p-6 md:p-8 max-w-xs sm:max-w-sm md:max-w-md w-full text-center shadow-2xl shadow-red-900/10 backdrop-blur-sm bg-white/60">
+                                            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                                <Lock className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-red-600" />
                                             </div>
-                                            <h4 className="text-xl font-bold text-red-900 mb-2">Critical issues found</h4>
+                                            <h4 className="text-base sm:text-lg md:text-xl font-bold text-red-900 mb-1 sm:mb-2">Critical issues found</h4>
                                             
                                             {hasSecurityIssuesHidden && (
-                                                <div className="bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wide py-1 px-3 rounded-full inline-flex items-center gap-1 mb-3">
-                                                    <Shield className="w-3.5 h-3.5" /> Security vulnerabilities detected
+                                                <div className="bg-red-100 text-red-800 text-[10px] sm:text-xs font-bold uppercase tracking-wide py-1 px-2 sm:px-3 rounded-full inline-flex items-center gap-1 mb-2 sm:mb-3">
+                                                    <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Security vulnerabilities detected
                                                 </div>
                                             )}
                                             
-                                            <p className="text-red-700 mb-6 text-sm">
+                                            <p className="text-red-700 mb-4 sm:mb-6 text-xs sm:text-sm">
                                                 We've detected {blurredFindings.length} critical or warning SEO {hasSecurityIssuesHidden ? 'and security ' : ''}issues on your website. Upgrade to view them and get detailed fixes.
                                             </p>
                                             <a
                                                 href="/pricing"
-                                                className="inline-flex items-center justify-center gap-2 w-full py-3 bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
+                                                className="inline-flex items-center justify-center gap-2 w-full py-2.5 sm:py-3 bg-red-600 text-white text-sm sm:text-base font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
                                             >
-                                                Upgrade to View <ArrowRight className="w-5 h-5" />
+                                                Upgrade to View <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                                             </a>
                                         </div>
                                     </div>
