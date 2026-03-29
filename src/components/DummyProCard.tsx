@@ -8,7 +8,7 @@ interface DummyProCardProps {
     checkoutUrl?: string;
 }
 
-export function DummyProCard({ icon: Icon, title, description }: DummyProCardProps) {
+export function DummyProCard({ icon: Icon, title, description, checkoutUrl }: DummyProCardProps) {
     return (
         <div className="relative bg-white rounded-xl shadow-lg p-6 border border-gray-200 overflow-hidden">
             {/* Header (Blurred out styling) */}
@@ -43,7 +43,7 @@ export function DummyProCard({ icon: Icon, title, description }: DummyProCardPro
                     Pro feature locked
                 </p>
                 <a
-                    href="/pricing"
+                    href={checkoutUrl || (typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#')}
                     className="px-6 py-2.5 bg-accent text-white font-bold rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 inline-flex items-center gap-2 cursor-pointer text-sm"
                 >
                     Upgrade to view

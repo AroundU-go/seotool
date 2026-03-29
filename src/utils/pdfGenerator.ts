@@ -230,7 +230,7 @@ export function generateFixGuidePdf(website: string, data: {
       'CRITICAL/WARNING',
       'Hidden Issues',
       `${hiddenFindings.length} more critical/warning issues found.`,
-      'Upgrade to Pro at seozapp.com/pricing to view complete details.',
+      'Upgrade to Pro at seozapp.com/#pricing to view complete details.',
     ]);
   }
 

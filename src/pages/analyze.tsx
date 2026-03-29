@@ -384,7 +384,7 @@ export default function SeoToolPage() {
 
                         <button
                             onClick={() => {
-                                window.location.href = '/pricing';
+                                window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
                             }}
                             className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                         >
@@ -418,7 +418,7 @@ export default function SeoToolPage() {
                         <button
                             onClick={() => {
                                 setShowUpgradeModal(false);
-                                window.location.href = '/pricing';
+                                window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
                             }}
                             className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                         >
@@ -761,19 +761,19 @@ export default function SeoToolPage() {
                                                 icon={Brain}
                                                 title="AI SEO Readiness"
                                                 description="Content optimization for AI systems"
-                                                checkoutUrl="/pricing"
+                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                             <DummyProCard 
                                                 icon={TrendingUp}
                                                 title="Top Search Keywords"
                                                 description="Keyword rankings and search volumes"
-                                                checkoutUrl="/pricing"
+                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                             <DummyProCard 
                                                 icon={Link2}
                                                 title="Backlink Analysis"
                                                 description="Backlink profile overview, new & toxic links"
-                                                checkoutUrl="/pricing"
+                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                         </div>
                                     )}

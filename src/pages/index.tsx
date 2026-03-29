@@ -75,10 +75,10 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
     const [url, setUrl] = useState('');
 
     const navItems = [
-        { name: 'Home', url: '/', icon: Home, onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'Features', url: '/features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'How It Works', url: '/how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'Pricing', url: '/pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Home', url: '/#hero', icon: Home, onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Features', url: '/#features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'How It Works', url: '/#how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Pricing', url: '/#pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'Analyze', url: isLoggedIn ? '/analyze' : '/auth', icon: Search, onClick: () => router.push(isLoggedIn ? '/analyze' : '/auth') },
     ];
 

@@ -102,7 +102,13 @@ function extractPayloadFields(event: any) {
         payload.subscription?.subscription_id ||
         "";
 
-    return { payload, customerEmail, customerId, subscriptionId };
+    const productId = 
+        payload.product_id ||
+        payload.product?.product_id ||
+        (payload.line_items && payload.line_items[0]?.product_id) ||
+        "";
+
+    return { payload, customerEmail, customerId, subscriptionId, productId };
 }
 
 // --- Mark user as Pro in profiles table ---
@@ -144,30 +150,59 @@ async function markUserAsPro(
 // --- Domain handlers ---
 
 async function handleOneTimePayment(event: any) {
-    const { customerEmail, customerId } = extractPayloadFields(event);
-    console.log(`[OneTimePayment] email: ${customerEmail}, customer: ${customerId}`);
+    const { customerEmail, customerId, subscriptionId, productId } = extractPayloadFields(event);
+    console.log(`[Payment Event] email: ${customerEmail}, customer: ${customerId}, product: ${productId}`);
 
     if (!customerEmail) {
-        console.warn("[OneTimePayment] No customer email found");
+        console.warn("[Payment Event] No customer email found");
         return { success: false, message: "No customer email in payload" };
     }
 
-    const success = await markUserAsPro(customerEmail, "one_time", customerId);
+    let actualPaymentType: "one_time" | "subscription" = "one_time";
+    
+    // Exact product ID match
+    if (productId === 'pdt_0NYlhH0CqhFDHJIr5v82N') {
+        actualPaymentType = "subscription";
+    } else if (productId === 'pdt_0NaHBvNNtTNxDUEQ1BblK') {
+        actualPaymentType = "one_time";
+    } else if (subscriptionId) {
+        actualPaymentType = "subscription";
+    }
+
+    const success = await markUserAsPro(customerEmail, actualPaymentType, customerId, subscriptionId);
     return {
         success,
         message: success
-            ? `User ${customerEmail} marked as Pro (one_time)`
+            ? `User ${customerEmail} marked as Pro (${actualPaymentType})`
             : `Profile not found for ${customerEmail}`,
     };
 }
 
-async function handleSubscriptionEvent(event: any) {
-    const { customerEmail, customerId, subscriptionId } = extractPayloadFields(event);
-    console.log(`[Subscription] email: ${customerEmail}, customer: ${customerId}, sub: ${subscriptionId}`);
+async function handleSubscriptionEvent(event: any, eventType: string) {
+    const { customerEmail, customerId, subscriptionId, productId } = extractPayloadFields(event);
+    console.log(`[Subscription: ${eventType}] email: ${customerEmail}, customer: ${customerId}, sub: ${subscriptionId}, product: ${productId}`);
 
     if (!customerEmail) {
         console.warn("[Subscription] No customer email found");
         return { success: false, message: "No customer email in payload" };
+    }
+
+    if (eventType.includes("cancel") || eventType.includes("expired") || eventType.includes("failed")) {
+        console.log(`Downgrading user due to ${eventType}`);
+        const { error } = await supabase
+            .from("profiles")
+            .update({
+                is_pro: false,
+                payment_type: null,
+                subscription_id: null
+            })
+            .eq("email", customerEmail);
+        
+        if (error) {
+            console.error(`Error downgrading:`, error);
+        }
+        
+        return { success: true, message: `User ${customerEmail} subscription cancelled or expired` };
     }
 
     const success = await markUserAsPro(customerEmail, "subscription", customerId, subscriptionId);
@@ -227,7 +262,7 @@ Deno.serve(async (req: Request) => {
         if (eventType.startsWith("payment.") || eventType.startsWith("payment_") || eventType === "one_time_payment.completed") {
             result = await handleOneTimePayment(event);
         } else if (eventType.startsWith("subscription.") || eventType.startsWith("subscription_")) {
-            result = await handleSubscriptionEvent(event);
+            result = await handleSubscriptionEvent(event, eventType);
         } else {
             // Unhandled event type — acknowledge receipt
             console.log(`Unhandled event type: ${eventType}`);
