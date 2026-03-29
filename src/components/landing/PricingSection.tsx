@@ -54,7 +54,7 @@ const tiers: PricingTier[] = [
         icon: <Sparkles className="w-6 h-6" />,
         badge: 'Most Popular',
         cta: 'Get One-Time — $5',
-        href: typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#',
+        href: 'https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=https%3A%2F%2Fseozapp.com%2Fanalyze%3Fpayment%3Dsuccess',
     },
     {
         name: 'Pro',
@@ -72,7 +72,7 @@ const tiers: PricingTier[] = [
         ],
         icon: <Building2 className="w-6 h-6" />,
         cta: 'Upgrade to Pro',
-        href: typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#',
+        href: 'https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=https%3A%2F%2Fseozapp.com%2Fanalyze%3Fpayment%3Dsuccess',
     },
 ];
 
