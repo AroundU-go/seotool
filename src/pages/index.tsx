@@ -7,9 +7,17 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { PricingSection } from '@/components/landing/PricingSection';
 import { ComparisonSection } from '@/components/landing/ComparisonSection';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LandingPage({ initialSection }: { initialSection?: string }) {
     const router = useRouter();
+    const { user } = useAuth();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const guestEmail = localStorage.getItem('guest_email');
+        setIsLoggedIn(!!user || !!guestEmail);
+    }, [user]);
 
     // Scroll-spy for navbar
     const [activeSection, setActiveSection] = useState('Home');
@@ -71,7 +79,7 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
         { name: 'Features', url: '/features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'How It Works', url: '/how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'Pricing', url: '/pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'Analyze', url: '/analyze', icon: Search, onClick: () => router.push('/analyze') },
+        { name: 'Analyze', url: isLoggedIn ? '/analyze' : '/auth', icon: Search, onClick: () => router.push(isLoggedIn ? '/analyze' : '/auth') },
     ];
 
     const steps = [
