@@ -55,9 +55,11 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                         const isActive = activeTab === item.name;
 
                         return (
-                            <button
+                            <a
                                 key={item.name}
-                                onClick={() => {
+                                href={item.url}
+                                onClick={(e) => {
+                                    e.preventDefault();
                                     setInternalActiveTab(item.name);
                                     item.onClick?.();
                                 }}
@@ -71,7 +73,7 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                 <span className="md:hidden">
                                     <Icon size={18} strokeWidth={2.5} />
                                 </span>
-                            </button>
+                            </a>
                         );
                     })}
                 </div>
@@ -126,9 +128,11 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                         const Icon = item.icon;
                                         const isActive = activeTab === item.name;
                                         return (
-                                            <button
+                                            <a
                                                 key={item.name}
-                                                onClick={() => {
+                                                href={item.url}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
                                                     setInternalActiveTab(item.name);
                                                     item.onClick?.();
                                                     setIsMenuOpen(false);
@@ -142,7 +146,7 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                             >
                                                 <Icon className={cn("w-5 h-5", isActive ? "text-accent" : "text-foreground/50")} />
                                                 {item.name}
-                                            </button>
+                                            </a>
                                         );
                                     })}
                                 </div>

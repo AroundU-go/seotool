@@ -8,7 +8,7 @@ import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { PricingSection } from '@/components/landing/PricingSection';
 import { ComparisonSection } from '@/components/landing/ComparisonSection';
 
-export default function LandingPage() {
+export default function LandingPage({ initialSection }: { initialSection?: string }) {
     const router = useRouter();
 
     // Scroll-spy for navbar
@@ -43,14 +43,34 @@ export default function LandingPage() {
         return () => observer.disconnect();
     }, []);
 
+    // Scroll to initial section on mount (for /pricing, /features, /how-it-works pages)
+    useEffect(() => {
+        if (initialSection) {
+            const sectionNameMap: Record<string, string> = {
+                features: 'Features',
+                'how-it-works': 'How It Works',
+                pricing: 'Pricing',
+            };
+            setTimeout(() => {
+                const el = document.getElementById(initialSection);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    if (sectionNameMap[initialSection]) {
+                        setActiveSection(sectionNameMap[initialSection]);
+                    }
+                }
+            }, 150);
+        }
+    }, [initialSection]);
+
     // URL & email state
     const [url, setUrl] = useState('');
 
     const navItems = [
-        { name: 'Home', url: '#hero', icon: Home, onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'Features', url: '#features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'How It Works', url: '#how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'Pricing', url: '#pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Home', url: '/', icon: Home, onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Features', url: '/features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'How It Works', url: '/how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Pricing', url: '/pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'Analyze', url: '/analyze', icon: Search, onClick: () => router.push('/analyze') },
     ];
 
