@@ -412,7 +412,7 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                             </>
                         )}
                         {!hasProAccess && (
-                            <a href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'} className="text-sm border-t border-gray-100 pt-3 mt-1 text-accent font-semibold flex items-center justify-center gap-1 hover:underline group">
+                            <a href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'} className="text-sm border-t border-gray-100 pt-3 mt-1 text-accent font-semibold flex items-center justify-center gap-1 hover:underline group">
                                 <Lock className="w-3.5 h-3.5" />
                                 Upgrade for full security report
                                 <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -624,7 +624,7 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                             )}
                         </div>
                         {!hasProAccess && (
-                            <a href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'} className="text-sm border-t border-gray-100 pt-3 mt-1 text-accent font-semibold flex items-center justify-center gap-1 hover:underline group">
+                            <a href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'} className="text-sm border-t border-gray-100 pt-3 mt-1 text-accent font-semibold flex items-center justify-center gap-1 hover:underline group">
                                 <Lock className="w-3.5 h-3.5" />
                                 Upgrade to view crawl data
                                 <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -889,7 +889,7 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                                 We've detected {blurredFindings.length} critical or warning SEO {hasSecurityIssuesHidden ? 'and security ' : ''}issues on your website. Upgrade to view them and get detailed fixes.
                                             </p>
                                             <a
-                                                href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
+                                                href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                                 className="inline-flex items-center justify-center gap-2 w-full py-2.5 sm:py-3 bg-red-600 text-white text-sm sm:text-base font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
                                             >
                                                 Upgrade to View <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />

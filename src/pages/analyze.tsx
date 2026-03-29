@@ -415,16 +415,28 @@ export default function SeoToolPage() {
                             You've used all your free audits. Upgrade to continue analyzing websites.
                         </p>
 
-                        <button
-                            onClick={() => {
-                                setShowUpgradeModal(false);
-                                window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
-                            }}
-                            className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
-                        >
-                            Upgrade to Pro
-                            <ArrowRight className="w-5 h-5" />
-                        </button>
+                        <div className="space-y-3 w-full">
+                            <button
+                                onClick={() => {
+                                    setShowUpgradeModal(false);
+                                    window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+                                }}
+                                className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
+                            >
+                                One-Time — $5
+                                <ArrowRight className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowUpgradeModal(false);
+                                    window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+                                }}
+                                className="w-full py-3.5 bg-white text-accent font-bold rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
+                            >
+                                Pro Subscription — $20/mo
+                                <ArrowRight className="w-5 h-5" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -761,19 +773,19 @@ export default function SeoToolPage() {
                                                 icon={Brain}
                                                 title="AI SEO Readiness"
                                                 description="Content optimization for AI systems"
-                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
+                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                             <DummyProCard 
                                                 icon={TrendingUp}
                                                 title="Top Search Keywords"
                                                 description="Keyword rankings and search volumes"
-                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
+                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                             <DummyProCard 
                                                 icon={Link2}
                                                 title="Backlink Analysis"
                                                 description="Backlink profile overview, new & toxic links"
-                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
+                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                         </div>
                                     )}
