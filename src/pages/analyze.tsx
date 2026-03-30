@@ -126,6 +126,20 @@ export default function SeoToolPage() {
         } catch (err) { console.error('[LocalHistory] Save error:', err); }
     };
 
+    // ── Free audit localStorage counter (backup for Supabase) ──
+    const FREE_AUDIT_KEY = 'seozapp_free_audit_used';
+    const getLocalAuditUsed = (): boolean => {
+        try {
+            return localStorage.getItem(FREE_AUDIT_KEY) === 'true';
+        } catch { return false; }
+    };
+    const markLocalAuditUsed = () => {
+        try {
+            localStorage.setItem(FREE_AUDIT_KEY, 'true');
+            console.log('[AuditLimit] Marked free audit as used in localStorage');
+        } catch (err) { console.error('[AuditLimit] Failed to mark audit:', err); }
+    };
+
     // ── Fetch History ────────────────────────────────────────────
     const fetchHistory = useCallback(async () => {
         setHistoryLoading(true);
@@ -191,10 +205,21 @@ export default function SeoToolPage() {
 
     const handleAnalyze = async (url: string) => {
         // Enforce limits for non-admin users
-        if (!hasProAccess && (user?.email || guestEmail)) {
+        if (!hasProAccess && !isAdmin) {
+            // Check localStorage first (instant, always reliable)
+            const localAuditUsed = getLocalAuditUsed();
+            
+            // Also check Supabase if we have an email
+            let supabaseCount = 0;
             const email = user?.email || guestEmail || '';
-            const count = await getAnalysisCountByEmail(email);
-            if (count >= 1) {
+            if (email) {
+                supabaseCount = await getAnalysisCountByEmail(email);
+            }
+
+            console.log('[AuditLimit] Check — localStorage:', localAuditUsed, 'supabase:', supabaseCount, 'email:', email);
+
+            if (localAuditUsed || supabaseCount >= 1) {
+                console.log('[AuditLimit] Limit reached — showing upgrade modal');
                 setShowUpgradeModal(true);
                 return;
             }
@@ -322,6 +347,11 @@ export default function SeoToolPage() {
                     created_at: new Date().toISOString(),
                 };
                 saveLocalHistory(localRecord);
+
+                // Mark free audit as used in localStorage (backup for Supabase)
+                if (!hasProAccess && !isAdmin) {
+                    markLocalAuditUsed();
+                }
 
                 // Also try Supabase (best-effort)
                 saveAnalysis({
