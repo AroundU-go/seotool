@@ -112,39 +112,16 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
     const warningFindings = findings.filter((f: any) => isWarningIssue(f.severity));
     const criticalFindings = findings.filter((f: any) => isPremiumIssue(f.severity));
 
-    const securityKeywords = ['security', 'ssl', 'https', 'hsts', 'csp', 'x-frame', 'mixed content', 'x-content'];
-    const isSecurityIssue = (issueText: string) => {
-        const text = issueText?.toLowerCase() || '';
-        return securityKeywords.some(kw => text.includes(kw));
-    };
-
     // Free users get good issues + first 2 warnings shown
     const freeVisibleWarnings = warningFindings.slice(0, 1);
+    const visibleFindingsForFree = [...goodFindings, ...freeVisibleWarnings];
     const hiddenFindings = [...warningFindings.slice(1), ...criticalFindings];
-
-    // For free users, if a visible warning is a security issue, we want to hide its fix
-    const visibleFindingsForFree = [...goodFindings, ...freeVisibleWarnings].map(f => {
-        if (isSecurityIssue(f.issue) || isSecurityIssue(f.fix)) {
-            return { ...f, fix_blurred: true, _isSecurity: true };
-        }
-        return f;
-    });
-
-    // Mark hidden findings as security if they match
-    const hiddenFindingsTagged = hiddenFindings.map(f => {
-        if (isSecurityIssue(f.issue) || isSecurityIssue(f.fix)) {
-            return { ...f, _isSecurity: true };
-        }
-        return f;
-    });
-
-    const hasSecurityIssuesHidden = hiddenFindingsTagged.some(f => f._isSecurity) || visibleFindingsForFree.some(f => f._isSecurity);
 
     // For pro users everything is visible exactly as is
     const visibleFindings = hasProAccess
         ? findings
         : visibleFindingsForFree;
-    const blurredFindings = hasProAccess ? [] : hiddenFindingsTagged;
+    const blurredFindings = hasProAccess ? [] : hiddenFindings;
 
     const speedScore = loadingSpeed?.summary?.performance_grade?.score || 0;
     const speedGrade = loadingSpeed?.summary?.performance_grade?.grade || '-';
@@ -817,18 +794,11 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                         </span>
                                     </div>
                                     {f.fix && (
-                                        <div className={`mt-2 bg-white/50 p-3 rounded-lg border border-gray-100 relative ${f.fix_blurred ? 'overflow-hidden' : ''}`}>
-                                            <p className={`text-sm text-gray-600 ${f.fix_blurred ? 'blur-[4px] select-none' : ''}`}>
+                                        <div className="mt-2 bg-white/50 p-3 rounded-lg border border-gray-100">
+                                            <p className="text-sm text-gray-600">
                                                 <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
                                                 {f.fix}
                                             </p>
-                                            {f.fix_blurred && (
-                                                <div className="absolute inset-0 flex items-center justify-center bg-white/20 backdrop-blur-[1px]">
-                                                    <span className="text-xs font-bold text-gray-700 bg-white/90 px-3 py-1 rounded-full shadow-sm flex items-center gap-1 border border-gray-200">
-                                                        <Lock className="w-3 h-3 text-red-500" /> Security fix hidden. Upgrade to Pro.
-                                                    </span>
-                                                </div>
-                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -879,14 +849,8 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                             </div>
                                             <h4 className="text-base sm:text-lg md:text-xl font-bold text-red-900 mb-1 sm:mb-2">Critical issues found</h4>
                                             
-                                            {hasSecurityIssuesHidden && (
-                                                <div className="bg-red-100 text-red-800 text-[10px] sm:text-xs font-bold uppercase tracking-wide py-1 px-2 sm:px-3 rounded-full inline-flex items-center gap-1 mb-2 sm:mb-3">
-                                                    <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Security vulnerabilities detected
-                                                </div>
-                                            )}
-                                            
                                             <p className="text-red-700 mb-4 sm:mb-6 text-xs sm:text-sm">
-                                                We've detected {blurredFindings.length} critical or warning SEO {hasSecurityIssuesHidden ? 'and security ' : ''}issues on your website. Upgrade to view them and get detailed fixes.
+                                                We've detected {blurredFindings.length} critical or warning SEO issues on your website. Upgrade to view them and get detailed fixes.
                                             </p>
                                             <a
                                                 href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
