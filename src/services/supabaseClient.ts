@@ -101,36 +101,61 @@ export async function saveAnalysis(
 
   // Always ensure guest_email is populated for reliable email-based lookups.
   // If we have a user_id but no guest_email, resolve email from the current session.
-  if (data.user_id && !data.guest_email) {
+  if (!data.guest_email) {
     try {
       const { data: sessionData } = await supabase.auth.getSession();
       const sessionEmail = sessionData?.session?.user?.email;
       if (sessionEmail) {
-        data.guest_email = sessionEmail;
+        data.guest_email = sessionEmail.trim().toLowerCase();
       }
     } catch (e) {
       console.warn('[saveAnalysis] Could not resolve email from session:', e);
     }
   }
 
+  // Normalize guest_email
+  if (data.guest_email) {
+    data.guest_email = data.guest_email.trim().toLowerCase();
+  }
+
   if (!data.user_id && !data.guest_email) {
     console.warn('[saveAnalysis] No user_id or guest_email provided, skipping save');
     return null;
   }
+
   console.log('[saveAnalysis] Saving for user:', data.user_id, 'email:', data.guest_email, 'website:', data.website);
+
+  // First attempt: insert with user_id
   const { data: result, error } = await supabase
     .from('seo_analyses')
     .insert([data])
     .select()
     .maybeSingle();
 
-  if (error) {
-    console.error('[saveAnalysis] Error:', error.message, error.details, error.hint);
+  if (!error) {
+    console.log('[saveAnalysis] Saved successfully, id:', result?.id);
+    return result;
+  }
+
+  // If insert failed (likely FK constraint on user_id → profiles.id), retry without user_id
+  console.warn('[saveAnalysis] First insert failed:', error.message, '— retrying without user_id');
+  const dataWithoutUserId = { ...data, user_id: undefined };
+  // Remove undefined keys so Supabase doesn't try to insert them
+  delete (dataWithoutUserId as any).user_id;
+
+  const { data: retryResult, error: retryError } = await supabase
+    .from('seo_analyses')
+    .insert([dataWithoutUserId])
+    .select()
+    .maybeSingle();
+
+  if (retryError) {
+    console.error('[saveAnalysis] Retry also failed:', retryError.message, retryError.details, retryError.hint);
     return null;
   }
 
-  console.log('[saveAnalysis] Saved successfully, id:', result?.id);
-  return result;
+  console.log('[saveAnalysis] Saved successfully on retry (without user_id), id:', retryResult?.id);
+  return retryResult;
 }
 
 export async function getRecentAnalyses(limit = 10): Promise<SeoAnalysisRecord[]> {
