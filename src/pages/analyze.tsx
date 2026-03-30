@@ -237,12 +237,22 @@ export default function SeoToolPage() {
             const seoData = results[0];
             const speedData = results[1];
             const rapidApiDataRes = results[2];
-            const aiBotData = hasProAccess ? results[3] : { status: 'rejected', reason: 'Not requested' };
-            const topKwData = hasProAccess ? results[4] : { status: 'rejected', reason: 'Not requested' };
-            const aiVisData = hasProAccess ? results[5] : { status: 'rejected', reason: 'Not requested' };
-            const backlinkDataRes = hasProAccess ? results[6] : { status: 'rejected', reason: 'Not requested' };
-            const newBacklinksRes = hasProAccess ? results[7] : { status: 'rejected', reason: 'Not requested' };
-            const poorBacklinksRes = hasProAccess ? results[8] : { status: 'rejected', reason: 'Not requested' };
+            const aiBotData = hasProAccess ? results[3] : { status: 'rejected' as const, reason: 'Not requested' };
+            const topKwData = hasProAccess ? results[4] : { status: 'rejected' as const, reason: 'Not requested' };
+            const aiVisData = hasProAccess ? results[5] : { status: 'rejected' as const, reason: 'Not requested' };
+            const backlinkDataRes = hasProAccess ? results[6] : { status: 'rejected' as const, reason: 'Not requested' };
+            const newBacklinksRes = hasProAccess ? results[7] : { status: 'rejected' as const, reason: 'Not requested' };
+            const poorBacklinksRes = hasProAccess ? results[8] : { status: 'rejected' as const, reason: 'Not requested' };
+
+            // Debug: log detailed status for each API call
+            console.log('[Analysis] SEO Data:', seoData.status, seoData.status === 'rejected' ? (seoData as any).reason : 'OK');
+            console.log('[Analysis] Speed Data:', speedData.status, speedData.status === 'rejected' ? (speedData as any).reason : 'OK');
+            console.log('[Analysis] RapidAPI Data:', rapidApiDataRes.status, rapidApiDataRes.status === 'rejected' ? (rapidApiDataRes as any).reason : 'OK');
+            if (hasProAccess) {
+                console.log('[Analysis] AI Bot:', aiBotData.status, aiBotData.status === 'rejected' ? (aiBotData as any).reason : 'OK');
+                console.log('[Analysis] Top Keywords:', topKwData.status, topKwData.status === 'rejected' ? (topKwData as any).reason : 'OK');
+                console.log('[Analysis] AI Visibility:', aiVisData.status, aiVisData.status === 'rejected' ? (aiVisData as any).reason : 'OK');
+            }
 
             const newResults = {
                 seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
@@ -256,12 +266,34 @@ export default function SeoToolPage() {
                 poorBacklinks: poorBacklinksRes.status === 'fulfilled' ? (poorBacklinksRes as any).value : null,
             };
 
-            console.log('API Results:', newResults);
+            console.log('[Analysis] Final Results:', {
+                seoAnalysis: !!newResults.seoAnalysis,
+                loadingSpeed: !!newResults.loadingSpeed,
+                rapidApiData: !!newResults.rapidApiData,
+                aiBotChecker: !!newResults.aiBotChecker,
+                topKeywords: !!newResults.topKeywords,
+                aiVisibility: !!newResults.aiVisibility,
+            });
             setResults(newResults);
 
-            if (seoData.status === 'rejected' && speedData.status === 'rejected') {
-                setError('Failed to analyze website. Please check the URL and try again.');
+            // Check if ANY data source returned results
+            const hasAnyData = newResults.seoAnalysis || newResults.loadingSpeed || newResults.rapidApiData ||
+                newResults.aiBotChecker || newResults.topKeywords || newResults.aiVisibility;
+
+            if (!hasAnyData) {
+                // ALL API calls failed — show detailed error
+                const seoError = seoData.status === 'rejected' ? String((seoData as any).reason?.message || (seoData as any).reason || 'Unknown error') : null;
+                const speedError = speedData.status === 'rejected' ? String((speedData as any).reason?.message || (speedData as any).reason || 'Unknown error') : null;
+                console.error('[Analysis] All APIs failed. SEO:', seoError, 'Speed:', speedError);
+                setError(`Failed to analyze website. ${seoError || 'API error'}. Please check the URL and try again.`);
             } else {
+                // At least some data came through — show partial results with a warning if needed
+                if (seoData.status === 'rejected' || speedData.status === 'rejected') {
+                    const failedApis: string[] = [];
+                    if (seoData.status === 'rejected') failedApis.push('SEO analysis');
+                    if (speedData.status === 'rejected') failedApis.push('speed test');
+                    console.warn(`[Analysis] Partial failure: ${failedApis.join(', ')} failed, but showing available data`);
+                }
 
                 // Increment audit count for one-time Pro users
                 if (hasProAccess && paymentType === 'one_time' && user?.id && !isAdmin) {
@@ -306,9 +338,12 @@ export default function SeoToolPage() {
                     poor_backlinks_data: newResults.poorBacklinks,
                     rapid_api_data: newResults.rapidApiData,
                 }).then((saved) => {
-                    console.log('[SeoToolPage] Save result:', saved ? 'success' : 'failed');
+                    console.log('[SeoToolPage] Save result:', saved ? 'success' : 'failed (check Supabase logs)');
+                    if (!saved) {
+                        console.warn('[SeoToolPage] Supabase save failed — analysis exists in localStorage only');
+                    }
                     fetchHistory();
-                }).catch(err => console.error('Failed to save analysis:', err));
+                }).catch(err => console.error('[SeoToolPage] Save error:', err));
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unexpected error occurred');
@@ -340,7 +375,7 @@ export default function SeoToolPage() {
         setIsMenuOpen(false);
     };
 
-    const hasResults = results.seoAnalysis || results.aiVisibility || results.aiBotChecker || results.loadingSpeed || results.topKeywords || results.backlinkData;
+    const hasResults = results.seoAnalysis || results.aiVisibility || results.aiBotChecker || results.loadingSpeed || results.topKeywords || results.backlinkData || results.rapidApiData;
 
     // Local URL state for the landing-page-style input
     const [inputUrl, setInputUrl] = useState('');

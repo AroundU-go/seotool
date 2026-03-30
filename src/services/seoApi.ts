@@ -114,24 +114,35 @@ const callVebApi = async <T,>(endpoint: string, website: string): Promise<T> => 
   const cleanWebsite = website.replace(/^https?:\/\//, '').replace(/\/$/, '');
   const url = `https://vebapi.com/api/${endpoint}?website=${encodeURIComponent(cleanWebsite)}`;
 
-  console.log('[VebAPI] Calling:', url);
+  console.log('[VebAPI] Calling:', url, 'Key present:', !!VEBAPI_KEY);
 
-  const response = await fetch(url, {
-    headers: {
-      'X-API-KEY': VEBAPI_KEY,
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'X-API-KEY': VEBAPI_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    console.error('[VebAPI] Error:', response.status, errorData);
-    throw new Error(errorData.error || `Request failed: ${response.statusText}`);
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => '');
+      let errorData: any = {};
+      try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
+      console.error(`[VebAPI] Error ${response.status} for ${endpoint}:`, errorData);
+      throw new Error(errorData.error || errorData.message || `VebAPI ${endpoint} failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('[VebAPI] Success for', endpoint);
+    return data;
+  } catch (err: any) {
+    // Distinguish between network errors and API errors
+    if (err.message?.includes('VebAPI')) {
+      throw err; // Already formatted
+    }
+    console.error(`[VebAPI] Network/fetch error for ${endpoint}:`, err.message || err);
+    throw new Error(`VebAPI ${endpoint}: ${err.message || 'Network error'}`);
   }
-
-  const data = await response.json();
-  console.log('[VebAPI] Success for', endpoint);
-  return data;
 };
 
 export async function analyzeSeo(website: string): Promise<SeoAnalysisResult> {
