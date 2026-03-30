@@ -93,9 +93,14 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
         e.preventDefault();
         if (!url.trim()) return;
         
-        // Store the URL so AuthCallback/AuthPage can redirect to /analyze with it
-        localStorage.setItem('pending_analyze_url', url.trim());
-        router.push('/auth');
+        if (isLoggedIn) {
+            // Already logged in — go directly to analyze with the URL
+            router.push({ pathname: '/analyze', query: { analyzeUrl: url.trim() } });
+        } else {
+            // Store the URL so AuthCallback can redirect to /analyze with it
+            localStorage.setItem('pending_analyze_url', url.trim());
+            router.push('/auth');
+        }
     };
 
     return (

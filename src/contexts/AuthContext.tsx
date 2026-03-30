@@ -2,6 +2,12 @@ import { createContext, useContext, useEffect, useState, useCallback, ReactNode 
 import { Session, User } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured, onAuthStateChange, getProStatus, signInWithGoogle as googleSignIn, ProStatusResult } from '@/services/supabaseClient';
 
+// Normalize origin to avoid www vs non-www mismatch with Supabase redirect allowlist
+function getRedirectBase(): string {
+  if (typeof window === 'undefined') return 'https://seozapp.com';
+  return window.location.origin.replace('://www.', '://');
+}
+
 
 interface AuthContextType {
     user: User | null;
@@ -84,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             password,
             options: {
                 data: { full_name: fullName },
-                emailRedirectTo: `${window.location.origin}/auth/callback`,
+                emailRedirectTo: `${getRedirectBase()}/auth/callback`,
             },
         });
         if (!error && data.user) {
@@ -102,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.auth.signInWithOtp({
             email,
             options: {
-                emailRedirectTo: `${window.location.origin}/auth/callback`,
+                emailRedirectTo: `${getRedirectBase()}/auth/callback`,
             },
         });
         return { error: error as Error | null };

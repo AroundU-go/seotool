@@ -16,7 +16,13 @@ export default function AuthPage() {
 
     // If already logged in (Supabase session), redirect
     if (user) {
-        router.replace('/analyze');
+        const pendingUrl = typeof window !== 'undefined' ? localStorage.getItem('pending_analyze_url') : null;
+        if (pendingUrl) {
+            localStorage.removeItem('pending_analyze_url');
+            router.replace({ pathname: '/analyze', query: { analyzeUrl: pendingUrl } });
+        } else {
+            router.replace('/analyze');
+        }
         return null;
     }
 

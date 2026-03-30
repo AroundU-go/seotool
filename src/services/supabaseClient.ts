@@ -13,6 +13,17 @@ if (!isSupabaseConfigured) {
   console.warn('Supabase credentials not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in a .env file.');
 }
 
+// ─── Redirect URL helper ─────────────────────────────────────
+// The site may redirect between seozapp.com and www.seozapp.com.
+// Supabase requires the redirect URL to match its allowlist exactly.
+// We normalize to the canonical domain to avoid mismatches.
+function getRedirectBase(): string {
+  if (typeof window === 'undefined') return 'https://seozapp.com';
+  // Always use the canonical origin (without www) to match Supabase config
+  const origin = window.location.origin;
+  return origin.replace('://www.', '://');
+}
+
 // ─── Auth helpers ────────────────────────────────────────────
 
 export async function signUp(email: string, password: string, fullName?: string) {
@@ -21,7 +32,7 @@ export async function signUp(email: string, password: string, fullName?: string)
     password,
     options: {
       data: { full_name: fullName },
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${getRedirectBase()}/auth/callback`,
     },
   });
   return { data, error };
@@ -31,7 +42,7 @@ export async function signInWithOtp(email: string) {
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${getRedirectBase()}/auth/callback`,
     },
   });
   return { data, error };
@@ -383,7 +394,7 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: `${getRedirectBase()}/auth/callback`,
     },
   });
   return { data, error };
