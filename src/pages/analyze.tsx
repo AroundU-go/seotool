@@ -839,6 +839,7 @@ export default function SeoToolPage() {
                                                 title="AI SEO Readiness"
                                                 description="Content optimization for AI systems"
                                                 backgroundImageUrl="/dummy-ai.png"
+                                                cardClassName="min-h-[700px]"
                                                 checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                             <DummyProCard 

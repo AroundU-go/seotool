@@ -7,14 +7,15 @@ interface DummyProCardProps {
     description: string;
     checkoutUrl?: string;
     backgroundImageUrl?: string;
+    cardClassName?: string;
 }
 
-export function DummyProCard({ icon: Icon, title, description, checkoutUrl, backgroundImageUrl }: DummyProCardProps) {
+export function DummyProCard({ icon: Icon, title, description, checkoutUrl, backgroundImageUrl, cardClassName }: DummyProCardProps) {
     return (
-        <div className="relative bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden min-h-[300px] p-6">
+        <div className={`relative bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden min-h-[300px] p-6 ${cardClassName || ''}`}>
             {backgroundImageUrl ? (
                 <div 
-                    className="absolute inset-0 z-0 bg-cover bg-top opacity-40 select-none pointer-events-none filter blur-[5px]"
+                    className="absolute inset-0 z-0 bg-cover bg-top opacity-50 select-none pointer-events-none filter blur-[2px]"
                     style={{ backgroundImage: `url(${backgroundImageUrl})` }}
                 />
             ) : (
