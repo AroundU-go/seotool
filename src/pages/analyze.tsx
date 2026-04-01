@@ -838,6 +838,7 @@ export default function SeoToolPage() {
                                                 icon={Brain}
                                                 title="AI SEO Readiness"
                                                 description="Content optimization for AI systems"
+                                                backgroundImageUrl="/dummy-ai.png"
                                                 checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
                                             />
                                             <DummyProCard 

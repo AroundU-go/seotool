@@ -795,10 +795,19 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                     </div>
                                     {f.fix && (
                                         <div className="mt-2 bg-white/50 p-3 rounded-lg border border-gray-100">
-                                            <p className="text-sm text-gray-600">
-                                                <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
-                                                {f.fix}
-                                            </p>
+                                            {(!hasProAccess && (f.severity === 'warning' || f.severity === 'critical' || f.severity === 'error' || f.severity === 'high' || f.severity === 'medium')) ? (
+                                                <div className="flex items-center">
+                                                    <a href="/#pricing" className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 text-red-600 text-sm font-semibold rounded-lg hover:bg-red-100 transition-colors border border-red-100">
+                                                        <Lock className="w-4 h-4" />
+                                                        How to fix
+                                                    </a>
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-gray-600">
+                                                    <span className="font-semibold text-gray-900 mr-2">How to fix:</span>
+                                                    {f.fix}
+                                                </p>
+                                            )}
                                         </div>
                                     )}
                                 </div>
