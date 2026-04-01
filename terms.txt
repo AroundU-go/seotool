@@ -1,0 +1,126 @@
+Acceptance of Terms
+By accessing or using SEOzapp ("the Service"), you agree to be bound by these Terms of Service ("Terms"). Please read these Terms carefully before using the Service. If you do not agree to these Terms, you must not access or use the Service.
+
+These Terms constitute a legally binding agreement between you (or the entity you represent) and SEOzapp ("we," "us," or "our"), the operator of seozapp.com.
+
+02 — Terms
+Description of Service
+SEOzapp is a search engine optimization (SEO) platform that provides tools and analytics including, but not limited to, keyword research, site audits, backlink analysis, rank tracking, and SEO reporting. The specific features available to you depend on your subscription plan.
+
+We reserve the right to modify, suspend, or discontinue any aspect of the Service at any time with reasonable notice where feasible.
+
+03 — Terms
+Eligibility
+You must be at least 18 years of age (or the age of majority in your jurisdiction) to use the Service. By using SEOzapp, you represent and warrant that:
+
+You are of legal age and have the legal capacity to enter into these Terms.
+You are not located in a country subject to applicable trade sanctions.
+You are not on any government-prohibited party list.
+If using on behalf of an organization, you have authority to bind that organization to these Terms.
+04 — Terms
+Account Registration
+To access most features of SEOzapp, you must register an account. You agree to:
+
+Provide accurate, complete, and current registration information.
+Maintain the security of your password and account credentials.
+Notify us immediately of any unauthorized access to your account.
+Accept responsibility for all activities occurring under your account.
+Not share your account credentials with third parties or allow others to access your account.
+We reserve the right to suspend or terminate accounts that contain false information or that violate these Terms.
+
+05 — Terms
+Subscription & Payments
+Access to premium features of SEOzapp requires a paid subscription. By subscribing, you agree to the following:
+
+Billing: Subscriptions are billed in advance on a monthly or annual basis, depending on your plan selection.
+Auto-Renewal: Subscriptions automatically renew at the end of each billing cycle unless you cancel before the renewal date.
+Price Changes: We may change subscription prices with at least 30 days' notice. Continued use after the price change takes effect constitutes acceptance.
+Refunds: We offer a 7-day money-back guarantee for first-time subscribers. Refunds beyond this period are at our discretion and evaluated on a case-by-case basis.
+Taxes: Prices are exclusive of applicable taxes (e.g., GST). You are responsible for paying all applicable taxes.
+Failed Payments: If payment fails, we may suspend access to your account until payment is resolved.
+06 — Terms
+Acceptable Use
+You agree to use SEOzapp only for lawful purposes and in accordance with these Terms. You must NOT:
+
+Use the Service in any way that violates applicable local, national, or international law.
+Scrape, crawl, or harvest data from the platform through automated means beyond what is explicitly permitted by our API.
+Attempt to gain unauthorized access to any part of the Service or its underlying infrastructure.
+Use the Service to transmit spam, malware, or any malicious content.
+Reverse engineer, decompile, or disassemble any portion of the Service.
+Resell, sublicense, or redistribute access to the Service without written authorization.
+Use the Service to build a competing product or benchmark against competitors in ways that violate third-party terms.
+Engage in any activity that disrupts or interferes with the integrity or performance of the Service.
+07 — Terms
+Intellectual Property
+All content, features, and functionality of SEOzapp — including but not limited to software, text, graphics, logos, icons, and data compilations — are the exclusive property of SEOzapp or its licensors and are protected by applicable intellectual property laws.
+
+We grant you a limited, non-exclusive, non-transferable, revocable license to access and use the Service for your own internal business purposes, subject to these Terms.
+
+You may not use our trademarks, logos, or brand assets without our prior written consent.
+
+08 — Terms
+User Content
+You retain ownership of any content (e.g., domains, keywords, reports) you submit to the Service ("User Content"). By submitting User Content, you grant SEOzapp a non-exclusive, worldwide, royalty-free license to use, process, and store that content solely to provide the Service to you.
+
+You represent that you have all rights necessary to submit your User Content and that it does not infringe any third-party rights or violate any applicable law.
+
+We do not claim ownership of your User Content and will not sell or share it beyond what is described in our Privacy Policy.
+
+09 — Terms
+Third-Party Services
+SEOzapp may integrate with or link to third-party services (e.g., Google Search Console, Google Analytics). Your use of such integrations is subject to the respective third-party's terms and privacy policies. We are not responsible for the availability, accuracy, or practices of third-party services.
+
+10 — Terms
+Disclaimers
+THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+We do not warrant that:
+
+The Service will be uninterrupted, error-free, or secure at all times.
+Any data, rankings, or results obtained through the Service will be accurate, complete, or reliable.
+Any errors in the Service will be corrected within a specific timeframe.
+SEO results are inherently variable and depend on many factors outside our control. We make no guarantee of specific SEO outcomes or ranking improvements.
+
+11 — Terms
+Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SEOZAPP AND ITS OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES.
+
+Our total cumulative liability to you for any claim arising out of or related to these Terms or the Service shall not exceed the greater of: (a) the amount paid by you to SEOzapp in the 12 months immediately preceding the claim, or (b) INR 1,000.
+
+12 — Terms
+Indemnification
+You agree to indemnify, defend, and hold harmless SEOzapp, its officers, directors, employees, partners, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising from:
+
+Your use of the Service in violation of these Terms.
+Your violation of any applicable law or third-party rights.
+Any User Content you submit that infringes third-party intellectual property or privacy rights.
+13 — Terms
+Termination
+Either party may terminate the agreement at any time:
+
+By you: You may cancel your subscription and delete your account at any time through your account settings.
+By us: We may suspend or terminate your account immediately if you breach these Terms, engage in fraudulent activity, or for any other reason with or without notice at our discretion.
+Upon termination, your right to access the Service ceases immediately. Sections that by their nature should survive termination (including Intellectual Property, Disclaimer, Limitation of Liability, and Indemnification) shall survive.
+
+14 — Terms
+Governing Law & Dispute Resolution
+These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law provisions.
+
+Any dispute arising out of or in connection with these Terms shall first be attempted to be resolved through good-faith negotiation. If unresolved within 30 days, disputes shall be subject to the exclusive jurisdiction of the courts located in India.
+
+15 — Terms
+Changes to Terms
+We reserve the right to modify these Terms at any time. We will provide notice of material changes by:
+
+Emailing registered users at least 14 days before changes take effect.
+Displaying a prominent in-app notification.
+Updating the "Last Updated" date on this page.
+Your continued use of the Service after the effective date of any changes constitutes your acceptance of the new Terms. If you do not agree to the revised Terms, you must stop using the Service.
+
+16 — Terms
+Contact
+For any questions about these Terms of Service, please contact:
+
+Email: hello@seozapp.com
+Website: seozapp.com/contact
+Response time: Within 5 business days
