@@ -22,6 +22,8 @@ import {
     Monitor,
 } from 'lucide-react';
 
+import SpeedAuditDashboard from './SpeedAuditDashboard';
+
 interface SeoDashboardProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     results: any;
@@ -472,38 +474,6 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                     )}
                 </div>
 
-                {/* Speed Data - NEW BOX */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-green-50 rounded-lg text-green-600">
-                            <Clock className="w-5 h-5" />
-                        </div>
-                        <h4 className="font-bold text-gray-800">Speed Results</h4>
-                    </div>
-
-                    <div className="text-center p-4 bg-gray-50 rounded-xl mb-4">
-                        <span className={`text-3xl font-bold ${speedScore >= 80 ? 'text-green-600' : speedScore >= 50 ? 'text-orange-500' : 'text-red-500'}`}>
-                            {speedScore}
-                        </span>
-                        <span className="text-sm text-gray-500 block">Performance Grade: {speedGrade}</span>
-                    </div>
-
-                    <div className="space-y-3">
-                        <div className="flex justify-between items-center text-sm">
-                            <span className="text-gray-600 font-medium">Load Time</span>
-                            <span className="font-bold text-gray-800">{speedLoadTime ? `${(speedLoadTime / 1000).toFixed(2)}s` : 'N/A'}</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-1.5">
-                            <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${Math.min((speedScore), 100)}%` }}></div>
-                        </div>
-                        {loadingSpeed?.summary && (
-                            <div className="flex justify-between items-center text-sm pt-2">
-                                <span className="text-gray-600 font-medium">Page Size</span>
-                                <span className="font-bold text-gray-800">{loadingSpeed.summary.page_size_kb ? `${Math.round(loadingSpeed.summary.page_size_kb)} KB` : 'N/A'}</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
 
                 {/* Social & Meta Data from RapidAPI */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all">
@@ -766,6 +736,10 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                 </div>
 
             </div>
+
+            {loadingSpeed && (
+                <SpeedAuditDashboard data={loadingSpeed} hasProAccess={hasProAccess} website={website} />
+            )}
 
             {/* Issues & Recommendations */}
             {findings && findings.length > 0 ? (

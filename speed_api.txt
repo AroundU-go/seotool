@@ -1,0 +1,243 @@
+{
+    "api": {
+        "name": "website speed check",
+        "provider": "vebapi.com",
+        "engine": "v3-domain-master",
+        "server": "EU-4",
+        "version": "3"
+    },
+    "summary": {
+        "url": "https://vebapi.com/",
+        "performance_grade": {
+            "score": 97,
+            "grade": "A"
+        },
+        "page_size_bytes": 532033,
+        "page_size_kb": 519.6,
+        "load_time_ms": 534,
+        "ttfb_ms": 532,
+        "requests": 29,
+        "unique_domains": 6,
+        "main": {
+            "http_code": 200,
+            "content_type": "text/html; charset=UTF-8",
+            "header_size": 1581,
+            "html_size_bytes": 98218,
+            "redirect_count": 0,
+            "timings": {
+                "namelookup_time": 0.008848,
+                "connect_time": 0.013405,
+                "appconnect_time": null,
+                "pretransfer_time": 0.037235,
+                "starttransfer_time": 0.531967,
+                "total_time": 0.534037,
+                "redirect_time": 0
+            }
+        }
+    },
+    "improve_page_performance": [
+        {
+            "grade": "C",
+            "suggestion": "Add Expires headers / Cache-Control",
+            "detail": "3 asset(s) missing strong caching"
+        }
+    ],
+    "response_codes": [
+        {
+            "response_code": 200,
+            "responses": 29
+        }
+    ],
+    "content_size_by_content_type": [
+        {
+            "content_type": "Script",
+            "percent": 52.31,
+            "size_kb": 271.8
+        },
+        {
+            "content_type": "Image",
+            "percent": 29.18,
+            "size_kb": 151.6
+        },
+        {
+            "content_type": "HTML",
+            "percent": 18.46,
+            "size_kb": 95.9
+        },
+        {
+            "content_type": "CSS",
+            "percent": 0.05,
+            "size_kb": 0.2
+        },
+        {
+            "content_type": "Other",
+            "percent": 0,
+            "size_kb": 0
+        }
+    ],
+    "requests_by_content_type": [
+        {
+            "content_type": "Image",
+            "percent": 79.31,
+            "requests": 23
+        },
+        {
+            "content_type": "Script",
+            "percent": 10.34,
+            "requests": 3
+        },
+        {
+            "content_type": "CSS",
+            "percent": 3.45,
+            "requests": 1
+        },
+        {
+            "content_type": "Other",
+            "percent": 3.45,
+            "requests": 1
+        },
+        {
+            "content_type": "HTML",
+            "percent": 3.45,
+            "requests": 1
+        }
+    ],
+    "content_size_by_domain": [
+        {
+            "domain": "vebapi.com",
+            "percent": 47.64,
+            "size_kb": 247.5
+        },
+        {
+            "domain": "www.googletagmanager.com",
+            "percent": 28.06,
+            "size_kb": 145.8
+        },
+        {
+            "domain": "cdn.tailwindcss.com",
+            "percent": 23.75,
+            "size_kb": 123.4
+        },
+        {
+            "domain": "analytics.ahrefs.com",
+            "percent": 0.51,
+            "size_kb": 2.6
+        },
+        {
+            "domain": "fonts.googleapis.com",
+            "percent": 0.05,
+            "size_kb": 0.2
+        },
+        {
+            "domain": "www.facebook.com",
+            "percent": 0,
+            "size_kb": 0
+        }
+    ],
+    "requests_by_domain": [
+        {
+            "domain": "vebapi.com",
+            "percent": 82.76,
+            "requests": 24
+        },
+        {
+            "domain": "fonts.googleapis.com",
+            "percent": 3.45,
+            "requests": 1
+        },
+        {
+            "domain": "cdn.tailwindcss.com",
+            "percent": 3.45,
+            "requests": 1
+        },
+        {
+            "domain": "www.googletagmanager.com",
+            "percent": 3.45,
+            "requests": 1
+        },
+        {
+            "domain": "analytics.ahrefs.com",
+            "percent": 3.45,
+            "requests": 1
+        },
+        {
+            "domain": "www.facebook.com",
+            "percent": 3.45,
+            "requests": 1
+        }
+    ],
+    "file_requests": [
+        {
+            "url": "https://www.googletagmanager.com/gtag/js?id=G-ZRZKZGFQYL",
+            "domain": "www.googletagmanager.com",
+            "status": 200,
+            "type": "Script",
+            "size_bytes": 149270,
+            "timings": {
+                "namelookup_time": 0.003021,
+                "connect_time": 0.014663,
+                "appconnect_time": null,
+                "pretransfer_time": 0.243868,
+                "starttransfer_time": 0.3015,
+                "total_time": 0.321054,
+                "redirect_time": 0
+            },
+            "content_type": "application/javascript; charset=UTF-8",
+            "error": null
+        },
+        {
+            "url": "https://cdn.tailwindcss.com/3.4.17",
+            "domain": "cdn.tailwindcss.com",
+            "status": 200,
+            "type": "Script",
+            "size_bytes": 126350,
+            "timings": {
+                "namelookup_time": 0.0029,
+                "connect_time": 0.006457,
+                "appconnect_time": null,
+                "pretransfer_time": 0.241844,
+                "starttransfer_time": 0.309898,
+                "total_time": 0.321787,
+                "redirect_time": 0.301471
+            },
+            "content_type": "text/javascript",
+            "error": null
+        },
+        {
+            "url": "https://vebapi.com/",
+            "domain": "vebapi.com",
+            "status": 200,
+            "type": "HTML",
+            "size_bytes": 98218,
+            "timings": {
+                "namelookup_time": 0.008848,
+                "connect_time": 0.013405,
+                "appconnect_time": null,
+                "pretransfer_time": 0.037235,
+                "starttransfer_time": 0.531967,
+                "total_time": 0.534037,
+                "redirect_time": 0
+            },
+            "content_type": "text/html; charset=UTF-8",
+            "error": null
+        },
+        {
+            "url": "https://www.facebook.com/tr?id=759383993705951&ev=PageView&noscript=1",
+            "domain": "www.facebook.com",
+            "status": 200,
+            "type": "Other",
+            "size_bytes": 0,
+            "timings": {
+                "namelookup_time": 0.00386,
+                "connect_time": 0.219957,
+                "appconnect_time": null,
+                "pretransfer_time": 0.29615,
+                "starttransfer_time": 0.310841,
+                "total_time": 0.310867,
+                "redirect_time": 0
+            },
+            "content_type": "text/plain",
+            "error": null
+        }
+    ]
+}
