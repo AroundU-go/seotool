@@ -75,10 +75,11 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
         </div>
     );
 
-    const upgradeLink = typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#';
+    const upgradeLink = '/#pricing';
 
     return (
         <div className="py-6 font-sans antialiased text-gray-900 max-w-5xl mx-auto space-y-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">On-Page and Technical SEO analysis</h1>
             <style jsx>{`
                 .score-ring-wrap circle { transition: stroke-dashoffset 1s ease-out; }
                 .pro-blur-inner { filter: blur(4px); pointer-events: none; user-select: none; }
@@ -135,22 +136,23 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                             { name: 'Security', val: seoScores?.buckets?.security || 0 },
                             { name: 'AI Ready', val: seoScores?.buckets?.ai_readiness || aiScore || 0 },
                             { name: 'Accessibility', val: seoScores?.buckets?.accessibility || 0 },
-                        ].map((bucket, i) => (
+                        ].map((bucket, i) => {
+                            const showLock = !hasProAccess && bucket.name === 'AI Ready';
+                            return (
                             <div key={i} className="bg-[#F9FAFB] border border-[#F3F4F6] rounded-xl p-3.5 relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-[12px] text-gray-600">{bucket.name}</span>
-                                    <span className="text-[14px] font-medium text-gray-900">{bucket.val}</span>
+                                    <span className="text-[14px] font-medium text-gray-900">
+                                        {showLock ? <Lock className="w-3.5 h-3.5 text-gray-400 inline" /> : bucket.val}
+                                    </span>
                                 </div>
-                                <div className="h-1 bg-[#E5E7EB] rounded-full overflow-hidden">
-                                    <div className="h-full rounded-full transition-all" style={{ width: `${bucket.val}%`, backgroundColor: getScoreHex(bucket.val) }}></div>
-                                </div>
-                                {(!hasProAccess && bucket.name === 'AI Ready') && (
-                                    <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] flex items-center justify-center rounded-xl">
-                                        <Lock className="w-4 h-4 text-gray-500" />
+                                {!showLock && (
+                                    <div className="h-1 bg-[#E5E7EB] rounded-full overflow-hidden">
+                                        <div className="h-full rounded-full transition-all" style={{ width: `${bucket.val}%`, backgroundColor: getScoreHex(bucket.val) }}></div>
                                     </div>
                                 )}
                             </div>
-                        ))}
+                        )})}
                     </div>
                 </div>
             </div>
@@ -251,9 +253,10 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                         <span className="free-badge">free</span>
                     </div>
                     <div className="panel">
-                        {renderKvRow('robots.txt', crawlSignals?.robots?.found ? '✓ Found' : '✗ Missing', crawlSignals?.robots?.found, !crawlSignals?.robots?.found)}
-                        {renderKvRow('sitemap.xml', crawlSignals?.sitemap?.found ? '✓ Found' : '✗ Missing', crawlSignals?.sitemap?.found, !crawlSignals?.sitemap?.found)}
-                        {renderKvRow('llms.txt', crawlSignals?.llms_txt?.found ? '✓ Present' : '✗ Missing', crawlSignals?.llms_txt?.found, !crawlSignals?.llms_txt?.found)}
+                        {renderKvRow('robots.txt', hasProAccess ? (crawlSignals?.robots?.found ? '✓ Found' : '✗ Missing') : <span className="flex items-center gap-1"><Lock className="w-3 h-3 text-gray-400" /></span>, hasProAccess && crawlSignals?.robots?.found, hasProAccess && !crawlSignals?.robots?.found)}
+                        {renderKvRow('sitemap.xml', hasProAccess ? (crawlSignals?.sitemap?.found ? '✓ Found' : '✗ Missing') : <span className="flex items-center gap-1"><Lock className="w-3 h-3 text-gray-400" /></span>, hasProAccess && crawlSignals?.sitemap?.found, hasProAccess && !crawlSignals?.sitemap?.found)}
+                        {renderKvRow('llms.txt', hasProAccess ? (crawlSignals?.llms_txt?.found ? '✓ Present' : '✗ Missing') : <span className="flex items-center gap-1"><Lock className="w-3 h-3 text-gray-400" /></span>, hasProAccess && crawlSignals?.llms_txt?.found, hasProAccess && !crawlSignals?.llms_txt?.found)}
+                        {renderKvRow('ai.txt', hasProAccess ? (crawlSignals?.ai_txt?.found ? '✓ Present' : '✗ Missing') : <span className="flex items-center gap-1"><Lock className="w-3 h-3 text-gray-400" /></span>, hasProAccess && crawlSignals?.ai_txt?.found, hasProAccess && !crawlSignals?.ai_txt?.found)}
                         {renderKvRow('Privacy policy', legalPages.privacy_policy?.found ? '✓ Found' : '✗ Missing', legalPages.privacy_policy?.found, !legalPages.privacy_policy?.found)}
                         {renderKvRow('Terms of service', legalPages.terms?.found ? '✓ Found' : '✗ Missing', legalPages.terms?.found, !legalPages.terms?.found)}
                         {renderKvRow('Cookie policy', legalPages.cookie_policy?.found ? '✓ Found' : '✗ Missing', legalPages.cookie_policy?.found, !legalPages.cookie_policy?.found)}
@@ -279,38 +282,35 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                         <span className="pro-badge">pro</span>
                     </div>
                     <div className="relative rounded-xl overflow-hidden">
-                        <div className={`panel h-full ${!hasProAccess ? 'pro-blur-inner' : ''}`}>
-                            {renderKvRow('X-Frame-Options', seoSecurity.x_frame_options ? '✓ Set' : '✗ Missing', seoSecurity.x_frame_options, !seoSecurity.x_frame_options)}
-                            {renderKvRow('Content-Type-Options', seoSecurity.x_content_type_options ? '✓ Set' : '✗ Missing', seoSecurity.x_content_type_options, !seoSecurity.x_content_type_options)}
-                            {renderKvRow('Content-Security-Policy', seoSecurity.content_security_policy ? '✓ Set' : '✗ Missing', seoSecurity.content_security_policy, !seoSecurity.content_security_policy)}
-                            {renderKvRow('Referrer-Policy', seoSecurity.referrer_policy ? '✓ Set' : '✗ Missing', seoSecurity.referrer_policy, !seoSecurity.referrer_policy)}
-                            {renderKvRow('Mixed content', seoSecurity.mixed_content_found ? '⚠ Detected' : '✓ Clean', !seoSecurity.mixed_content_found, seoSecurity.mixed_content_found)}
-                            {renderKvRow('HSTS', seoSecurity.hsts ? '✓ Enabled' : '✗ Disabled', seoSecurity.hsts, !seoSecurity.hsts)}
+                        <div className="panel h-full">
+                            {renderKvRow('X-Frame-Options', hasProAccess ? (seoSecurity.x_frame_options ? '✓ Set' : '✗ Missing') : <Lock className="w-3 h-3 text-gray-400 inline" />, hasProAccess && seoSecurity.x_frame_options, hasProAccess && !seoSecurity.x_frame_options)}
+                            {renderKvRow('Content-Type-Options', hasProAccess ? (seoSecurity.x_content_type_options ? '✓ Set' : '✗ Missing') : <Lock className="w-3 h-3 text-gray-400 inline" />, hasProAccess && seoSecurity.x_content_type_options, hasProAccess && !seoSecurity.x_content_type_options)}
+                            {renderKvRow('Content-Security-Policy', hasProAccess ? (seoSecurity.content_security_policy ? '✓ Set' : '✗ Missing') : <Lock className="w-3 h-3 text-gray-400 inline" />, hasProAccess && seoSecurity.content_security_policy, hasProAccess && !seoSecurity.content_security_policy)}
+                            {renderKvRow('Referrer-Policy', hasProAccess ? (seoSecurity.referrer_policy ? '✓ Set' : '✗ Missing') : <Lock className="w-3 h-3 text-gray-400 inline" />, hasProAccess && seoSecurity.referrer_policy, hasProAccess && !seoSecurity.referrer_policy)}
+                            {renderKvRow('Mixed content', hasProAccess ? (seoSecurity.mixed_content_found ? '⚠ Detected' : '✓ Clean') : <Lock className="w-3 h-3 text-gray-400 inline" />, hasProAccess && !seoSecurity.mixed_content_found, hasProAccess && seoSecurity.mixed_content_found)}
+                            {renderKvRow('HSTS', hasProAccess ? (seoSecurity.hsts ? '✓ Enabled' : '✗ Disabled') : <Lock className="w-3 h-3 text-gray-400 inline" />, hasProAccess && seoSecurity.hsts, hasProAccess && !seoSecurity.hsts)}
                             
                             {/* Suggestions block mapped from on-page-response.txt */}
                             {securitySuggestions.length > 0 && (
-                                <div className="mt-4 pt-4 border-t border-[#E5E7EB]">
-                                    <div className="text-[11px] font-semibold text-gray-500 uppercase mb-2">Suggestions</div>
-                                    <ul className="text-[12px] text-gray-700 space-y-1.5 list-disc pl-4 marker:text-gray-400">
-                                        {securitySuggestions.map((sug: string, i: number) => (
-                                            <li key={i}>{sug}</li>
-                                        ))}
-                                    </ul>
+                                <div className="relative mt-4 pt-4 border-t border-[#E5E7EB]">
+                                    <div className={!hasProAccess ? 'pro-blur-inner' : ''}>
+                                        <div className="text-[11px] font-semibold text-gray-500 uppercase mb-2">Suggestions</div>
+                                        <ul className="text-[12px] text-gray-700 space-y-1.5 list-disc pl-4 marker:text-gray-400">
+                                            {securitySuggestions.map((sug: string, i: number) => (
+                                                <li key={i}>{sug}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    {!hasProAccess && (
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
+                                            <a href={upgradeLink} className="bg-white/90 backdrop-blur-sm border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm text-[11px] font-medium text-gray-700 flex items-center gap-1 hover:bg-gray-50">
+                                                <Lock className="w-3 h-3" /> Unlock Pro to view analysis
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
-                        {!hasProAccess && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/40">
-                                <div className="w-10 h-10 rounded-full bg-white border border-[#E5E7EB] flex items-center justify-center shadow-sm">
-                                    <Lock className="w-4 h-4 text-gray-700" />
-                                </div>
-                                <div className="text-[14px] font-medium text-gray-900">Security audit</div>
-                                <div className="text-[12px] text-gray-600 text-center max-w-[200px] leading-relaxed">See all 6 header checks and exact security suggestions</div>
-                                <a href={upgradeLink} className="mt-2 text-[12px] font-medium px-4 py-1.5 rounded-md border-none cursor-pointer bg-[#534AB7] hover:bg-[#3C3489] text-[#EEEDFE] transition-colors">
-                                    Unlock Pro
-                                </a>
-                            </div>
-                        )}
                     </div>
                 </div>
 
@@ -318,10 +318,10 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                 <div>
                     <div className="section-header">
                         <span>Link health</span>
-                        <span className="pro-badge">pro</span>
+                        <span className="free-badge">free</span>
                     </div>
                     <div className="relative rounded-xl overflow-hidden">
-                        <div className={`panel h-full ${!hasProAccess ? 'pro-blur-inner' : ''}`}>
+                        <div className="panel h-full">
                             {renderKvRow('Total links', seoLinkCounts.total || seoLinks.total || 0)}
                             {renderKvRow('Internal', seoLinkCounts.internal || seoLinks.internal || 0)}
                             {renderKvRow('External', seoLinkCounts.external || seoLinks.external || 0)}
@@ -329,18 +329,6 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                             {renderKvRow('Empty anchors', seoLinkCounts.empty_text || 0, (seoLinkCounts.empty_text || 0) === 0, (seoLinkCounts.empty_text || 0) > 0)}
                             {renderKvRow('Nofollow', seoLinkCounts.nofollow || 0)}
                         </div>
-                        {!hasProAccess && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/40">
-                                <div className="w-10 h-10 rounded-full bg-white border border-[#E5E7EB] flex items-center justify-center shadow-sm">
-                                    <Lock className="w-4 h-4 text-gray-700" />
-                                </div>
-                                <div className="text-[14px] font-medium text-gray-900">Full link audit</div>
-                                <div className="text-[12px] text-gray-600 text-center max-w-[200px] leading-relaxed">View all link URLs, anchor texts, and broken link list</div>
-                                <a href={upgradeLink} className="mt-2 text-[12px] font-medium px-4 py-1.5 rounded-md border-none cursor-pointer bg-[#534AB7] hover:bg-[#3C3489] text-[#EEEDFE] transition-colors">
-                                    Unlock Pro
-                                </a>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>

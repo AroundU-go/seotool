@@ -35,10 +35,7 @@ export default function SpeedAuditDashboard({ data, hasProAccess = false, websit
 
     const timings = summary.main?.timings || {};
 
-    // Generate CTA Link
-    const ctaLink = typeof window !== 'undefined' 
-        ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` 
-        : '#';
+    const ctaLink = '/#pricing';
 
     // Helpers for bar colors based on Content Type
     const getBarColor = (type: string) => {
@@ -213,15 +210,7 @@ export default function SpeedAuditDashboard({ data, hasProAccess = false, websit
                                     <div className="text-sm font-semibold text-gray-900">{impr.suggestion}</div>
                                     <div className="text-xs text-gray-500 mt-1">{impr.detail}</div>
                                 </div>
-                                {hasProAccess ? (
-                                    <a href="#how-to-fix" className="text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 self-start sm:self-center flex-shrink-0">
-                                        How to fix →
-                                    </a>
-                                ) : (
-                                    <a href={ctaLink} className="text-xs font-semibold px-3 py-1.5 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 self-start sm:self-center flex-shrink-0 flex items-center gap-1">
-                                        <Lock className="w-3 h-3" /> How to fix →
-                                    </a>
-                                )}
+
                             </div>
                         ))}
                     </div>
