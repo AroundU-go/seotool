@@ -187,19 +187,21 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
     const StatCard = ({ icon: Icon, label, score, suffix = '', subtext, colorClass, isLocked }: any) => {
         if (isLocked) {
             return (
-                <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col items-center text-center hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <a href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'} className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center transition-all group-hover:backdrop-blur-md cursor-pointer">
-                        <Lock className="w-5 h-5 text-gray-500 mb-1" />
-                        <span className="text-[10px] font-bold text-gray-700 uppercase tracking-widest bg-white/90 px-2 py-0.5 rounded-full border border-gray-200">Pro Only</span>
-                    </a>
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${colorClass.bg} opacity-50`}>
+                <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col items-center text-center hover:shadow-md transition-shadow">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${colorClass.bg}`}>
                         <Icon className={`w-5 h-5 ${colorClass.text}`} />
                     </div>
-                    <span className="text-sm text-gray-500 font-medium mb-1 opacity-50">{label}</span>
-                    <span className="text-3xl font-bold text-gray-800 mb-1 blur-[3px] select-none">{score}{suffix}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500 blur-[3px] select-none">
-                        Locked
-                    </span>
+                    <span className="text-sm text-gray-500 font-medium mb-1">{label}</span>
+                    <div className="relative mt-1 w-full flex flex-col items-center group overflow-hidden">
+                        <a href={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'} className="absolute inset-[-8px] bg-white/40 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center transition-all group-hover:backdrop-blur-[4px] cursor-pointer rounded-xl">
+                            <Lock className="w-5 h-5 text-gray-600 mb-0.5 drop-shadow-sm" />
+                            <span className="text-[10px] font-bold text-gray-700 uppercase tracking-widest bg-white/90 px-2 py-0.5 rounded-full border border-gray-200 shadow-sm">Pro Only</span>
+                        </a>
+                        <span className="text-3xl font-bold text-gray-800/40 mb-1 select-none">{score}{suffix}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-100 text-gray-500/40 select-none">
+                            Locked
+                        </span>
+                    </div>
                 </div>
             );
         }
