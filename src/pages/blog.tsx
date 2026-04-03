@@ -9,8 +9,8 @@ export default function BlogPage() {
     return (
         <div className="min-h-screen bg-[#F8F9FE] font-sans text-gray-800 leading-relaxed">
             <Head>
-                <title>On-Page & Technical SEO: The Complete Guide to Ranking in 2025 | SeoZapp</title>
-                <meta name="description" content="Master on-page and technical SEO with this in-depth, human-written guide. Learn what actually moves the needle in 2025 — and how SeoZapp can fast-track your results." />
+                <title>On-Page & Technical SEO: The Complete Guide to Ranking in 2026 | SeoZapp</title>
+                <meta name="description" content="Master on-page and technical SEO with this in-depth, human-written guide. Learn what actually moves the needle in 2026 — and how SeoZapp can fast-track your results." />
             </Head>
 
             {/* Top Bar */}
@@ -37,7 +37,7 @@ export default function BlogPage() {
                         Technical & On-Page SEO
                     </span>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                        The Only SEO Guide You'll Need in <em className="text-accent not-italic">2025</em>
+                        The Only SEO Guide You'll Need in <em className="text-accent not-italic">2026</em>
                     </h1>
                     <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-8">
                         Most SEO advice reads like a robot wrote it for another robot. This one is different — practical, honest, and built around how search actually works today.
