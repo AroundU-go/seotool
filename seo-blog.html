@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>On-Page & Technical SEO: The Complete Guide to Ranking in 2025 | SeoZapp</title>
+<meta name="description" content="Master on-page and technical SEO with this in-depth, human-written guide. Learn what actually moves the needle in 2025 — and how SeoZapp can fast-track your results." />
+<meta name="keywords" content="on-page SEO, technical SEO, SEO guide 2025, improve website ranking, SeoZapp, site speed, Core Web Vitals, meta tags, structured data" />
+<meta property="og:title" content="On-Page & Technical SEO: The Complete 2025 Guide" />
+<meta property="og:description" content="A human-first, expert-backed guide to dominating search results through on-page and technical SEO strategies." />
+<meta property="og:type" content="article" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://seozapp.com/blog/on-page-technical-seo-guide" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f9f7f2;
+    --cream: #f2ede3;
+    --accent: #c84b2f;
+    --accent-soft: #f5e6e2;
+    --gold: #b8882a;
+    --muted: #6b6560;
+    --rule: #ddd8ce;
+    --green: #2a6b4b;
+    --green-soft: #e3f0ea;
+    --blue: #1a4a7a;
+    --blue-soft: #e3ecf5;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 17px;
+    font-weight: 300;
+  }
+
+  /* ——— HEADER ——— */
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .site-header .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .site-header .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ——— HERO ——— */
+  .hero {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+  }
+  .category-label {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 1.8rem;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 1.15;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+  .byline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .byline strong { color: var(--ink); font-weight: 500; }
+  .byline-dot { opacity: 0.4; }
+  .reading-time {
+    background: var(--cream);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+
+  /* ——— DIVIDER ——— */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 3rem auto;
+    max-width: 860px;
+  }
+  .ornament {
+    text-align: center;
+    color: var(--rule);
+    font-size: 1.2rem;
+    letter-spacing: 8px;
+    margin: 2rem 0;
+  }
+
+  /* ——— MAIN CONTENT ——— */
+  .article-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* ——— TOC ——— */
+  .toc {
+    background: var(--cream);
+    border-left: 3px solid var(--accent);
+    padding: 1.5rem 1.8rem;
+    border-radius: 0 6px 6px 0;
+    margin: 2rem 0 3rem;
+  }
+  .toc-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  .toc ol {
+    padding-left: 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 2rem;
+  }
+  .toc li { font-size: 14px; }
+  .toc a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 400;
+  }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ——— TYPOGRAPHY ——— */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink);
+    margin: 3.5rem 0 1rem;
+    letter-spacing: -0.3px;
+  }
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 2.2rem 0 0.8rem;
+    letter-spacing: 0;
+  }
+  p { margin-bottom: 1.4rem; }
+
+  a { color: var(--accent); }
+
+  /* ——— PULL QUOTE ——— */
+  .pullquote {
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 1.5rem 0;
+    margin: 2.5rem 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink);
+    text-align: center;
+  }
+  .pullquote cite {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 0.8rem;
+  }
+
+  /* ——— CALLOUT BOXES ——— */
+  .callout {
+    padding: 1.4rem 1.6rem;
+    border-radius: 6px;
+    margin: 2rem 0;
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  .callout-tip {
+    background: var(--green-soft);
+    border-left: 3px solid var(--green);
+    color: #1a3d2b;
+  }
+  .callout-info {
+    background: var(--blue-soft);
+    border-left: 3px solid var(--blue);
+    color: #0e2c4a;
+  }
+  .callout-warn {
+    background: #fff8e6;
+    border-left: 3px solid var(--gold);
+    color: #4a3510;
+  }
+  .callout-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 6px;
+    opacity: 0.8;
+  }
+
+  /* ——— PROMO CARD ——— */
+  .promo-card {
+    background: var(--ink);
+    color: #f9f7f2;
+    border-radius: 10px;
+    padding: 2.2rem 2.4rem;
+    margin: 3rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .promo-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 30px solid rgba(200,75,47,0.15);
+    pointer-events: none;
+  }
+  .promo-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+  .promo-card h3 {
+    color: #f9f7f2;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin: 0 0 0.8rem;
+    font-weight: 700;
+  }
+  .promo-card p {
+    font-size: 15px;
+    color: rgba(249,247,242,0.75);
+    margin-bottom: 1.4rem;
+  }
+  .promo-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px 22px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+    transition: background 0.2s;
+  }
+  .promo-btn:hover { background: #a63b22; }
+
+  /* ——— CHECKLIST ——— */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 1.2rem 0 1.8rem;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+  .checklist li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-top: 3px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 9l3.5 3.5L14 6' stroke='white' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-size: cover;
+  }
+
+  /* ——— STAT GRID ——— */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 2rem 0;
+  }
+  .stat-card {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ——— STEP BLOCKS ——— */
+  .step-block {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1.8rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .step-content h4 {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  .step-content p { font-size: 15px; margin-bottom: 0; color: #3a3633; }
+
+  /* ——— INLINE HIGHLIGHT ——— */
+  mark {
+    background: #fde9a0;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-style: normal;
+    color: inherit;
+  }
+
+  /* ——— FOOTER ——— */
+  .article-footer {
+    border-top: 1px solid var(--rule);
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+    text-align: center;
+  }
+  .article-footer p { color: var(--muted); font-size: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 1.5rem; }
+  .tag {
+    font-size: 12px;
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: var(--muted);
+  }
+
+  /* ——— RESPONSIVE ——— */
+  @media (max-width: 600px) {
+    h1 { font-size: 2rem; }
+    .toc ol { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .promo-card { padding: 1.6rem 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header" role="banner">
+  <a href="https://seozapp.com" class="logo">Seo<span>Zapp</span></a>
+  <span class="header-tag">SEO Knowledge Base</span>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="category-label">Technical &amp; On-Page SEO</span>
+  <h1>The Only SEO Guide You'll Need in <em>2025</em></h1>
+  <p class="hero-sub">
+    Most SEO advice reads like a robot wrote it for another robot. This one is different — practical, honest, and built around how search actually works today.
+  </p>
+  <div class="byline">
+    <strong>By the SeoZapp Team</strong>
+    <span class="byline-dot">•</span>
+    <span>April 3, 2025</span>
+    <span class="byline-dot">•</span>
+    <span class="reading-time">14 min read</span>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ARTICLE BODY -->
+<main class="article-body" id="main-content">
+
+  <!-- TOC -->
+  <nav class="toc" aria-label="Table of contents">
+    <p class="toc-label">In this guide</p>
+    <ol>
+      <li><a href="#intro">Why SEO still matters</a></li>
+      <li><a href="#onpage">On-page SEO essentials</a></li>
+      <li><a href="#content">Content that actually ranks</a></li>
+      <li><a href="#technical">Technical SEO deep dive</a></li>
+      <li><a href="#cwv">Core Web Vitals</a></li>
+      <li><a href="#structured">Structured data &amp; schema</a></li>
+      <li><a href="#mobile">Mobile-first indexing</a></li>
+      <li><a href="#tools">Tools to use</a></li>
+    </ol>
+  </nav>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <h2>Let's be honest about SEO for a moment</h2>
+    <p>If you've been doing SEO for any length of time, you know the frustration. You follow all the "rules," publish content, build backlinks — and still watch competitors leapfrog you in the SERPs. It's maddening.</p>
+    <p>Here's the truth: SEO in 2025 is less about gaming algorithms and more about genuinely earning Google's trust. The good news? That's actually easier to work with than it sounds. You don't need dark-arts tricks — you need a clear strategy, solid execution, and a little patience.</p>
+    <p>This guide breaks it down into two pillars that every serious site owner needs to master: <mark>on-page SEO</mark> and <mark>technical SEO</mark>. They work together — think of on-page as what you say, and technical as whether Google can hear you clearly.</p>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-number">68%</div>
+        <div class="stat-label">of all online experiences begin with a search engine</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">#1</div>
+        <div class="stat-label">result in Google gets ~27% of all clicks on that query</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">75%</div>
+        <div class="stat-label">of users never scroll past the first page of results</div>
+      </div>
+    </div>
+
+    <p>Those numbers are why this matters. A small improvement in rankings can translate into dramatically more traffic — without spending another dollar on ads.</p>
+  </section>
+
+  <!-- ON-PAGE -->
+  <section id="onpage">
+    <h2>On-Page SEO: The Art of Speaking Google's Language</h2>
+    <p>On-page SEO refers to everything you control directly on your website — the content, the HTML, the structure. It's the part most people think they understand but often get subtly wrong.</p>
+
+    <h3>Title tags that actually work</h3>
+    <p>Your title tag is the single most important on-page ranking signal. It tells both Google and users what your page is about. And yet — so many people still stuff keywords in there like it's 2011.</p>
+    <p>A great title tag in 2025 is <strong>specific, compelling, and user-first</strong>. It naturally includes your primary keyword, ideally near the front. It's under 60 characters so it doesn't get truncated in the SERPs. And it makes someone want to click it — because <mark>click-through rate is a real ranking signal</mark>.</p>
+    <p><em>Bad:</em> "SEO | Technical SEO | On-Page SEO | Website SEO Tips"<br/>
+    <em>Good:</em> "On-Page SEO Checklist for 2025 (18 Things Most Sites Miss)"</p>
+
+    <h3>Meta descriptions: your mini sales pitch</h3>
+    <p>Google doesn't use the meta description as a ranking factor directly — but it absolutely affects your CTR, which does influence rankings. Think of it as a 155-character billboard for your page. Summarize what the user gets, hint at something valuable, and include a subtle call to action.</p>
+
+    <div class="callout callout-tip">
+      <p class="callout-label">Pro tip</p>
+      <p>Write your meta description for humans, not crawlers. Ask yourself: if someone saw only this text in search results, would they click? If the answer is "probably not," rewrite it.</p>
+    </div>
+
+    <h3>Heading structure (H1, H2, H3)</h3>
+    <p>Your H1 is your page's main headline. Use it once, make it clear, and include your primary keyword naturally. Then use H2s and H3s to logically structure your content into digestible sections — both for readers who skim (most of us) and for Googlebot crawling your page hierarchy.</p>
+    <p>A messy heading structure is a missed opportunity. A clean one signals topical authority.</p>
+
+    <h3>URL structure</h3>
+    <p>Short, clean, keyword-rich URLs outperform URL-soup every time. Keep them lowercase, use hyphens not underscores, and avoid unnecessary parameters or dates if possible. A URL like <code>/blog/on-page-seo-guide</code> beats <code>/blog/2025/04/post?id=1337</code> on every dimension — usability, shareability, and SEO value.</p>
+
+    <h3>Internal linking strategy</h3>
+    <p>This is criminally underused. Every piece of content you publish is a chance to funnel authority and relevance to your other important pages. Link related posts together with descriptive anchor text — not "click here," but something like "our guide to Core Web Vitals" or "how structured data works."</p>
+
+    <div class="pullquote">
+      "The best SEO strategy isn't about tricking Google — it's about making your site so genuinely useful that ranking you feels like Google's job."
+      <cite>SeoZapp Research Team</cite>
+    </div>
+
+    <h3>Image optimization</h3>
+    <p>Images are often a silent performance killer. Compress them (use WebP format wherever possible), always include descriptive alt text with relevant keywords, and name your files something meaningful — <code>on-page-seo-checklist.webp</code> is better than <code>IMG_4829.jpg</code> for both accessibility and SEO.</p>
+
+    <ul class="checklist">
+      <li>Write a compelling, keyword-rich title tag (under 60 chars)</li>
+      <li>Craft a meta description that earns the click</li>
+      <li>Use one H1 and logical H2/H3 hierarchy throughout</li>
+      <li>Keep URLs short, clean, and keyword-focused</li>
+      <li>Add internal links to relevant pages with descriptive anchors</li>
+      <li>Compress images and always write descriptive alt text</li>
+      <li>Include your primary keyword in the first 100 words naturally</li>
+      <li>Use semantic variants and LSI keywords throughout body copy</li>
+    </ul>
+  </section>
+
+  <!-- CONTENT -->
+  <section id="content">
+    <h2>Content That Actually Earns Rankings</h2>
+    <p>Here's something SEO gurus rarely say out loud: you can do everything "right" on the technical side and still fail if your content is mediocre. Google's ranking systems — particularly the helpful content systems — are increasingly good at detecting whether a page genuinely helps people or just pretends to.</p>
+
+    <h3>Search intent is everything</h3>
+    <p>Before writing a single word, understand why someone searches your target keyword. Are they trying to learn something (informational)? Buy something (transactional)? Compare options (commercial investigation)? Navigate to a specific site? Your content format, depth, and tone must match that intent exactly.</p>
+    <p>If someone searches "best running shoes for flat feet," they want a curated list with clear recommendations — not a 400-word article about foot anatomy. Give people what they actually came for.</p>
+
+    <h3>E-E-A-T: Experience, Expertise, Authority, Trust</h3>
+    <p>Google's quality guidelines have long emphasized E-E-A-T. In practice, this means: demonstrate real expertise in your content, back claims with credible sources, show who wrote it and why they're qualified, earn backlinks from trusted sites, and make sure your site has clear contact info, an about page, and a privacy policy.</p>
+    <p>If you're writing about health, finance, or legal topics — YMYL (Your Money or Your Life) categories — the bar is even higher. Thin, anonymous, unsourced content on these topics will not rank.</p>
+
+    <h3>Content depth vs. word count</h3>
+    <p>Stop chasing word counts. "Comprehensive" doesn't mean "long" — it means covering a topic fully enough that the reader doesn't need to go anywhere else. Sometimes that's 600 words. Sometimes it's 3,000. Let the topic and the user's need dictate the length.</p>
+
+    <div class="callout callout-warn">
+      <p class="callout-label">Watch out</p>
+      <p>AI-generated content at scale is increasingly being flagged by Google's helpful content systems. Use AI as a research and drafting aid, but always add human expertise, original insight, and personal experience. Content that reads like it was written by a committee of robots rarely ranks for competitive queries.</p>
+    </div>
+  </section>
+
+  <!-- PROMO CARD 1 -->
+  <div class="promo-card">
+    <p class="promo-eyebrow">Powered by AI · Built for SEO</p>
+    <h3>Let SeoZapp audit your on-page SEO in seconds</h3>
+    <p>Stop guessing what's holding your pages back. SeoZapp's instant audit scans your title tags, meta descriptions, heading structure, content quality, and 50+ other on-page factors — then gives you a prioritized action plan.</p>
+    <a href="https://seozapp.com" class="promo-btn" target="_blank" rel="noopener">Run a free audit →</a>
+  </div>
+
+  <!-- TECHNICAL SEO -->
+  <section id="technical">
+    <h2>Technical SEO: Making Your Site Google-Proof</h2>
+    <p>You can have the best content in the world and still be invisible if your site has technical problems. Technical SEO is about removing obstacles between your content and Google's crawlers — so that when Googlebot shows up, it can understand, index, and rank your pages without friction.</p>
+
+    <h3>Crawlability and indexability</h3>
+    <p>Google can't rank pages it can't crawl or index. Start by checking your <code>robots.txt</code> file — it's surprisingly common for sites to accidentally block important pages. Then review your <code>sitemap.xml</code> to make sure it's up to date, error-free, and submitted in Google Search Console.</p>
+    <p>Use the URL Inspection Tool in GSC to check individual pages. If a page shows "discovered but not indexed" or "crawled but not indexed," that's a signal worth investigating — often it points to thin content, duplicate content, or a low-priority signal from Google's perspective.</p>
+
+    <h3>Site architecture and crawl depth</h3>
+    <p>The closer a page is to your homepage in terms of clicks, the more authority Google assumes it has. Try to keep important pages within three clicks of the homepage. A flat, logical site structure with clear categories and subcategories helps both users and crawlers navigate efficiently.</p>
+    <p>Avoid orphan pages — pages that have no internal links pointing to them. Googlebot finds pages primarily by following links, so if a page is truly orphaned, it may never be properly crawled.</p>
+
+    <div class="step-block">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Audit your robots.txt and sitemap.xml</h4>
+        <p>Confirm no important pages are blocked, and your sitemap only includes indexable, canonical URLs.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Fix crawl errors in Google Search Console</h4>
+        <p>Check for 404s, 301 chains, and redirect loops. Each one wastes your crawl budget.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Resolve duplicate content issues</h4>
+        <p>Use canonical tags to signal the preferred version of duplicate or similar pages. Watch out for URL parameter duplication — it's more common than you think.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Check your HTTPS implementation</h4>
+        <p>HTTPS is a confirmed ranking signal. Make sure all pages load over HTTPS and there are no mixed-content warnings.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Eliminate redirect chains</h4>
+        <p>A redirect chain (A → B → C) wastes crawl budget and dilutes link equity. Consolidate to direct redirects wherever possible.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE WEB VITALS -->
+  <section id="cwv">
+    <h2>Core Web Vitals: Speed Is Not Optional Anymore</h2>
+    <p>Google made it official: page experience is a ranking factor. And Core Web Vitals (CWV) are the metrics at the heart of it. The three you need to care about:</p>
+
+    <h3>Largest Contentful Paint (LCP)</h3>
+    <p>LCP measures how quickly the largest visible element on your page loads — typically a hero image or H1 text. Target under 2.5 seconds. The most common culprits for a poor LCP? Unoptimized images, slow server response times, and render-blocking JavaScript.</p>
+
+    <h3>Interaction to Next Paint (INP)</h3>
+    <p>INP replaced FID in 2024 as the responsiveness metric. It measures how quickly your page responds to any user interaction — clicks, taps, keyboard inputs. Target under 200ms. Heavy JavaScript execution is usually the villain here.</p>
+
+    <h3>Cumulative Layout Shift (CLS)</h3>
+    <p>CLS measures visual stability — how much your page "jumps around" as it loads. You've experienced this: you go to click something and the page shifts, and you end up clicking an ad instead. Always set explicit width and height attributes on images and videos. Avoid inserting content above existing content dynamically.</p>
+
+    <div class="callout callout-info">
+      <p class="callout-label">How to measure</p>
+      <p>Use Google PageSpeed Insights for individual URL tests. For bulk field data reflecting real user experience, pull CWV reports from Google Search Console. Remember: lab data and field data often differ — field data is what actually affects rankings.</p>
+    </div>
+  </section>
+
+  <!-- STRUCTURED DATA -->
+  <section id="structured">
+    <h2>Structured Data &amp; Schema: Talking Directly to Google</h2>
+    <p>Schema markup is a vocabulary you add to your HTML to help Google understand what your content is about — not just its words, but its meaning. It's what powers rich results: star ratings in SERPs, FAQ dropdowns, how-to steps, event dates, product prices, and more.</p>
+    <p>Implementing schema correctly can dramatically improve your click-through rate from search — even if it doesn't directly boost your ranking position. The most impactful schema types for most sites:</p>
+
+    <ul class="checklist">
+      <li><strong>Article / BlogPosting</strong> — for editorial content; helps Google parse author, date, and headline</li>
+      <li><strong>FAQPage</strong> — generates expanded Q&amp;A results directly in SERPs</li>
+      <li><strong>Product</strong> — enables price, availability, and review stars in results</li>
+      <li><strong>LocalBusiness</strong> — critical for any site targeting local search traffic</li>
+      <li><strong>BreadcrumbList</strong> — shows your site's navigation path in search results</li>
+      <li><strong>HowTo</strong> — enables step-by-step instructions to appear in rich results</li>
+    </ul>
+
+    <p>Use JSON-LD format — Google recommends it, it's cleanest to implement, and it sits in the <code>&lt;head&gt;</code> without cluttering your HTML. Validate your markup with Google's Rich Results Test before deploying.</p>
+
+    <div class="callout callout-tip">
+      <p class="callout-label">Efficiency tip</p>
+      <p>Tools like <a href="https://seozapp.com" target="_blank" rel="noopener">SeoZapp</a> can automatically generate and validate schema markup for your pages — saving you from writing JSON-LD by hand and catching implementation errors before they reach Google.</p>
+    </div>
+  </section>
+
+  <!-- MOBILE -->
+  <section id="mobile">
+    <h2>Mobile-First Indexing: Google Sees Your Site Through a Phone</h2>
+    <p>Since 2019, Google has indexed and ranked websites based primarily on their mobile version — not desktop. If your mobile experience is an afterthought, your rankings will reflect that. Full stop.</p>
+    <p>This doesn't just mean "does it look okay on mobile." It means your mobile pages need to have the same content as desktop, the same structured data, the same quality meta tags. Content hidden in tabs or accordions on mobile may carry less weight than content visible by default.</p>
+    <p>Test your site with Google's Mobile-Friendly Test. Check that fonts are readable without zooming, tap targets are large enough (at least 44px × 44px), and there are no horizontal scroll issues. Then do the real test: use your own site on your phone, as a stranger would. You'll find things no automated test will catch.</p>
+  </section>
+
+  <!-- PROMO CARD 2 -->
+  <div class="promo-card">
+    <p class="promo-eyebrow">Trusted by 10,000+ site owners</p>
+    <h3>SeoZapp: Your complete technical SEO co-pilot</h3>
+    <p>From crawl error detection to Core Web Vitals monitoring, schema generation, and keyword gap analysis — SeoZapp brings your entire technical SEO workflow into one clean dashboard. No jargon, no guesswork, just clear fixes and measurable results.</p>
+    <a href="https://seozapp.com" class="promo-btn" target="_blank" rel="noopener">Start free — no credit card needed →</a>
+  </div>
+
+  <!-- TOOLS -->
+  <section id="tools">
+    <h2>The Tools That Actually Move the Needle</h2>
+    <p>Good SEO is part strategy, part execution — and the right tools make both dramatically easier. Here's an honest rundown of what belongs in your stack:</p>
+
+    <h3>For technical auditing</h3>
+    <p><strong>Google Search Console</strong> remains the single most important free tool you can use. It shows you exactly how Google sees your site — crawl errors, index coverage, search performance, and CWV field data. There's no substitute. Use it every week, not once a quarter.</p>
+    <p><strong><a href="https://seozapp.com" target="_blank" rel="noopener">SeoZapp</a></strong> builds on GSC data with deeper automated auditing, prioritized recommendations, and plain-English explanations of what to fix and why. It's particularly strong at bridging the gap between "here are your technical issues" and "here's what to actually do about them" — which is where most auditing tools fall short.</p>
+
+    <h3>For keyword research</h3>
+    <p>Keyword research is still the foundation of strategic content planning. Look for opportunities where search volume is decent, competition is beatable, and the intent aligns with what you offer. Don't obsess over high-volume vanity terms — long-tail keywords with clear intent convert far better and are easier to rank for.</p>
+
+    <h3>For rank tracking and competitor analysis</h3>
+    <p>Track your target keywords regularly. But don't just watch your own rankings — watch your competitors'. When a competitor suddenly ranks for a term you want, look at what they did. SeoZapp's competitor benchmarking features make this painless, surfacing opportunities you'd likely miss doing it manually.</p>
+
+    <div class="callout callout-info">
+      <p class="callout-label">Real talk</p>
+      <p>No tool replaces good judgment. Tools surface data — you still have to interpret it and decide what matters for your specific site, audience, and goals. The sites that win in SEO are the ones that combine good tooling with genuine strategic thinking. Use <a href="https://seozapp.com" target="_blank" rel="noopener">SeoZapp</a> for the heavy lifting, then apply your own expertise to the decisions.</p>
+    </div>
+  </section>
+
+  <div class="ornament">· · ·</div>
+
+  <h2>Pulling it all together</h2>
+  <p>SEO is a long game — anyone telling you otherwise is selling something. But it's also one of the most durable investments you can make in your website. Unlike paid traffic, organic search rankings compound over time. A page that ranks well today can continue driving traffic for years with minimal maintenance.</p>
+  <p>The approach that works: get your technical foundation solid first (crawlability, speed, indexation, mobile), then layer in a consistent on-page strategy built around genuine user intent and quality content. Measure relentlessly. Iterate. Don't panic when rankings fluctuate — they always do.</p>
+  <p>And if you want to shortcut the learning curve, let the tools do the heavy lifting on the diagnostic side. <a href="https://seozapp.com" target="_blank" rel="noopener">SeoZapp</a> was built specifically for this — combining the technical depth of enterprise SEO tools with the approachability of a tool anyone can actually use, whether you're a solo blogger or running a multi-site operation.</p>
+  <p>Rank well, create honestly, and think long-term. That's it. That's the whole game.</p>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="article-footer">
+  <p>Published by <a href="https://seozapp.com" target="_blank" rel="noopener">SeoZapp</a> · Helping sites rank smarter since day one.</p>
+  <div class="tags">
+    <span class="tag">On-Page SEO</span>
+    <span class="tag">Technical SEO</span>
+    <span class="tag">Core Web Vitals</span>
+    <span class="tag">Structured Data</span>
+    <span class="tag">Schema Markup</span>
+    <span class="tag">Mobile SEO</span>
+    <span class="tag">E-E-A-T</span>
+    <span class="tag">Google Search Console</span>
+    <span class="tag">SEO 2025</span>
+  </div>
+</footer>
+
+</body>
+</html>
