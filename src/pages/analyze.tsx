@@ -853,19 +853,19 @@ export default function SeoToolPage() {
                                                 description="Content optimization for AI systems"
                                                 backgroundImageUrl="/dummy-ai.png"
                                                 cardClassName="min-h-[700px]"
-                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
+                                                checkoutUrl="/#pricing"
                                             />
                                             <DummyProCard 
                                                 icon={TrendingUp}
                                                 title="Top Search Keywords"
                                                 description="Keyword rankings and search volumes"
-                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
+                                                checkoutUrl="/#pricing"
                                             />
                                             <DummyProCard 
                                                 icon={Link2}
                                                 title="Backlink Analysis"
                                                 description="Backlink profile overview, new & toxic links"
-                                                checkoutUrl={typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#'}
+                                                checkoutUrl="/#pricing"
                                             />
                                         </div>
                                     )}

@@ -54,7 +54,7 @@ export function DummyProCard({ icon: Icon, title, description, checkoutUrl, back
                     Pro feature locked
                 </p>
                 <a
-                    href={checkoutUrl || (typeof window !== 'undefined' ? `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}` : '#')}
+                    href={checkoutUrl || '/#pricing'}
                     className="px-6 py-2.5 bg-accent text-white font-bold rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 inline-flex items-center gap-2 cursor-pointer text-sm"
                 >
                     Upgrade to view
