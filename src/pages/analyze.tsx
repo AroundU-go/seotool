@@ -79,6 +79,7 @@ export default function SeoToolPage() {
     const [historyLoading, setHistoryLoading] = useState(false);
     const [historyError, setHistoryError] = useState<string | null>(null);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [upgradeModalSource, setUpgradeModalSource] = useState<'audit_limit' | 'download_report'>('audit_limit');
 
     // Menu state
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -220,6 +221,7 @@ export default function SeoToolPage() {
 
             if (localAuditUsed || supabaseCount >= 1) {
                 console.log('[AuditLimit] Limit reached — showing upgrade modal');
+                setUpgradeModalSource('audit_limit');
                 setShowUpgradeModal(true);
                 return;
             }
@@ -227,6 +229,7 @@ export default function SeoToolPage() {
 
         // Enforce 2-audit limit for one-time Pro users
         if (hasProAccess && paymentType === 'one_time' && proAuditCount >= 2 && !isAdmin) {
+            setUpgradeModalSource('audit_limit');
             setShowUpgradeModal(true);
             return;
         }
@@ -383,6 +386,12 @@ export default function SeoToolPage() {
     };
 
     const handleDownloadGuide = () => {
+        if (!hasProAccess) {
+            setUpgradeModalSource('download_report');
+            setShowUpgradeModal(true);
+            return;
+        }
+        
         if (results.seoAnalysis || results.aiVisibility || results.aiBotChecker || results.loadingSpeed) {
             generateFixGuidePdf(website, results, hasProAccess);
         }
@@ -475,9 +484,13 @@ export default function SeoToolPage() {
                             <Lock className="w-8 h-8 text-accent" />
                         </div>
 
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Audit Limit Reached</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            {upgradeModalSource === 'download_report' ? 'Upgrade Required' : 'Audit Limit Reached'}
+                        </h3>
                         <p className="text-gray-500 mb-8">
-                            You've used all your free audits. Upgrade to continue analyzing websites.
+                            {upgradeModalSource === 'download_report'
+                                ? 'Upgrade to pro to download report.'
+                                : "You've used all your free audits. Upgrade to continue analyzing websites."}
                         </p>
 
                         <div className="space-y-3 w-full">
@@ -792,7 +805,7 @@ export default function SeoToolPage() {
                                         onClick={handleDownloadGuide}
                                         className="bg-accent text-white px-6 py-3 rounded-full hover:bg-accent-600 transition-all flex items-center gap-2 shadow-lg shadow-accent/20 font-semibold text-sm transform hover:-translate-y-0.5"
                                     >
-                                        <Download className="w-4 h-4" />
+                                        {!hasProAccess ? <Lock className="w-4 h-4" /> : <Download className="w-4 h-4" />}
                                         Download Report
                                     </button>
                                 </div>

@@ -1,0 +1,293 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.dash { padding: 1.5rem 0; }
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 12px; }
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.site-pill { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; }
+.site-dot { width: 7px; height: 7px; border-radius: 50%; background: #3a9e6e; }
+.grade-badge { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: var(--border-radius-md); background: #C0DD97; color: #27500A; }
+.btn-pro { font-size: 12px; font-weight: 500; padding: 7px 16px; border-radius: var(--border-radius-md); border: none; cursor: pointer; background: #3C3489; color: #EEEDFE; }
+.section-label { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
+
+.score-row { display: grid; grid-template-columns: 180px 1fr; gap: 16px; margin-bottom: 1.5rem; }
+.big-score-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.score-ring-wrap { position: relative; width: 96px; height: 96px; margin-bottom: 8px; }
+.score-ring-wrap svg { width: 96px; height: 96px; }
+.score-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.score-num { font-size: 28px; font-weight: 500; color: var(--color-text-primary); }
+.score-of { font-size: 11px; color: var(--color-text-tertiary); }
+.big-score-label { font-size: 13px; color: var(--color-text-secondary); }
+
+.buckets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.bucket-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .85rem; }
+.bucket-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.bucket-name { font-size: 12px; color: var(--color-text-secondary); }
+.bucket-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.bar-bg { height: 4px; border-radius: 2px; background: var(--color-border-tertiary); }
+.bar-fill { height: 4px; border-radius: 2px; }
+
+.issues-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
+.issue-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.issue-row:last-child { border-bottom: none; padding-bottom: 0; }
+.issue-icon { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+.ic-warn { background: #FAEEDA; color: #854F0B; }
+.ic-good { background: #EAF3DE; color: #3B6D11; }
+.issue-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; flex: 1; }
+.issue-cat { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.lock-btn { font-size: 11px; padding: 4px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; white-space: nowrap; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+.panel { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+.kv-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.kv-row:last-child { border-bottom: none; }
+.kv-key { font-size: 12px; color: var(--color-text-secondary); }
+.kv-val { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+.kv-good { color: #3B6D11; }
+.kv-warn { color: #854F0B; }
+
+.pro-blur-wrap { position: relative; border-radius: var(--border-radius-lg); overflow: hidden; }
+.pro-blur-inner { filter: blur(3px); pointer-events: none; user-select: none; }
+.pro-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+.pro-lock-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.pro-label { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.pro-sublabel { font-size: 12px; color: var(--color-text-secondary); text-align: center; max-width: 200px; line-height: 1.5; }
+.pro-cta { font-size: 12px; font-weight: 500; padding: 7px 18px; border-radius: var(--border-radius-md); border: none; cursor: pointer; background: #534AB7; color: #EEEDFE; }
+
+.tech-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.tech-row:last-child { border-bottom: none; }
+.tech-tag { font-size: 11px; padding: 3px 8px; border-radius: var(--border-radius-md); background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); }
+.tech-label { font-size: 12px; color: var(--color-text-secondary); }
+
+.history-teaser { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
+.spark-row { display: flex; align-items: flex-end; gap: 5px; height: 48px; margin-top: 12px; }
+.spark-bar { flex: 1; border-radius: 2px 2px 0 0; }
+
+.free-badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; background: #EAF3DE; color: #3B6D11; border: 0.5px solid #C0DD97; }
+.pro-badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; background: #EEEDFE; color: #3C3489; border: 0.5px solid #CECBF6; }
+</style>
+
+<div class="dash">
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="site-pill"><span class="site-dot"></span>vebapi.com</div>
+    <span style="font-size:11px;color:var(--color-text-tertiary)">Audited Feb 14, 2026</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="grade-badge">Grade B</div>
+    <button class="btn-pro">Upgrade to Pro</button>
+  </div>
+</div>
+
+<div class="score-row">
+  <div class="big-score-card">
+    <div class="score-ring-wrap">
+      <svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="var(--color-border-tertiary)" stroke-width="8"/><circle cx="48" cy="48" r="40" fill="none" stroke="#639922" stroke-width="8" stroke-dasharray="251.3" stroke-dashoffset="37.7" stroke-linecap="round" transform="rotate(-90 48 48)"/></svg>
+      <div class="score-center"><div class="score-num">87</div><div class="score-of">/100</div></div>
+    </div>
+    <div class="big-score-label">Overall score</div>
+    <span class="free-badge">free</span>
+  </div>
+
+  <div>
+    <div class="section-label">Score breakdown</div>
+    <div class="buckets-grid">
+      <div class="bucket-card">
+        <div class="bucket-top"><span class="bucket-name">Performance</span><span class="bucket-val">85</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:85%;background:#639922;"></div></div>
+      </div>
+      <div class="bucket-card">
+        <div class="bucket-top"><span class="bucket-name">Technical</span><span class="bucket-val">70</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:70%;background:#BA7517;"></div></div>
+      </div>
+      <div class="bucket-card">
+        <div class="bucket-top"><span class="bucket-name">On-page</span><span class="bucket-val">85</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:85%;background:#639922;"></div></div>
+      </div>
+      <div class="bucket-card">
+        <div class="bucket-top"><span class="bucket-name">Security</span><span class="bucket-val">100</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%;background:#1D9E75;"></div></div>
+      </div>
+      <div class="bucket-card">
+        <div class="bucket-top"><span class="bucket-name">AI Ready</span><span class="bucket-val">100</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%;background:#1D9E75;"></div></div>
+      </div>
+      <div class="bucket-card">
+        <div class="bucket-top"><span class="bucket-name">Accessibility</span><span class="bucket-val">100</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%;background:#1D9E75;"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between;">
+  <div class="section-label" style="margin-bottom:0;">Priority issues</div>
+  <span class="free-badge">free — 4 of 4 shown</span>
+</div>
+<div class="issues-card">
+  <div class="issue-row">
+    <div class="issue-icon ic-warn">!</div>
+    <div style="flex:1;">
+      <div class="issue-text">Canonical tag missing</div>
+      <div class="issue-cat">technical · canonical</div>
+    </div>
+    <button class="lock-btn">🔒 How to fix →</button>
+  </div>
+  <div class="issue-row">
+    <div class="issue-icon ic-warn">!</div>
+    <div style="flex:1;">
+      <div class="issue-text">Missing alt text on 1 image</div>
+      <div class="issue-cat">accessibility · images</div>
+    </div>
+    <button class="lock-btn">🔒 How to fix →</button>
+  </div>
+  <div class="issue-row">
+    <div class="issue-icon ic-warn">!</div>
+    <div style="flex:1;">
+      <div class="issue-text">No JSON-LD schema found</div>
+      <div class="issue-cat">technical · structured data</div>
+    </div>
+    <button class="lock-btn">🔒 How to fix →</button>
+  </div>
+  <div class="issue-row">
+    <div class="issue-icon ic-warn">!</div>
+    <div style="flex:1;">
+      <div class="issue-text">Render-blocking scripts found (1)</div>
+      <div class="issue-cat">performance · scripts</div>
+    </div>
+    <button class="lock-btn">🔒 How to fix →</button>
+  </div>
+</div>
+
+<div class="two-col">
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="section-label" style="margin-bottom:0;">Page basics</div>
+      <span class="free-badge">free</span>
+    </div>
+    <div class="panel">
+      <div class="kv-row"><span class="kv-key">HTTP status</span><span class="kv-val kv-good">200 OK</span></div>
+      <div class="kv-row"><span class="kv-key">Title</span><span class="kv-val kv-good">✓ Good length</span></div>
+      <div class="kv-row"><span class="kv-key">Meta description</span><span class="kv-val kv-good">✓ Good length</span></div>
+      <div class="kv-row"><span class="kv-key">Canonical tag</span><span class="kv-val kv-warn">✗ Missing</span></div>
+      <div class="kv-row"><span class="kv-key">HTTPS</span><span class="kv-val kv-good">✓ Yes</span></div>
+      <div class="kv-row"><span class="kv-key">H1 count</span><span class="kv-val kv-good">1</span></div>
+      <div class="kv-row"><span class="kv-key">Word count</span><span class="kv-val">~1,415</span></div>
+      <div class="kv-row"><span class="kv-key">TTFB</span><span class="kv-val kv-good">280ms</span></div>
+    </div>
+  </div>
+
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="section-label" style="margin-bottom:0;">Crawl signals</div>
+      <span class="free-badge">free</span>
+    </div>
+    <div class="panel">
+      <div class="kv-row"><span class="kv-key">robots.txt</span><span class="kv-val kv-good">✓ Found</span></div>
+      <div class="kv-row"><span class="kv-key">sitemap.xml</span><span class="kv-val kv-warn">✗ 404</span></div>
+      <div class="kv-row"><span class="kv-key">llms.txt</span><span class="kv-val kv-good">✓ Present</span></div>
+      <div class="kv-row"><span class="kv-key">Privacy policy</span><span class="kv-val kv-good">✓ Found</span></div>
+      <div class="kv-row"><span class="kv-key">Terms of service</span><span class="kv-val kv-good">✓ Found</span></div>
+      <div class="kv-row"><span class="kv-key">Cookie policy</span><span class="kv-val kv-warn">✗ Missing</span></div>
+      <div class="kv-row"><span class="kv-key">CDN / WAF</span><span class="kv-val">Cloudflare</span></div>
+      <div class="kv-row"><span class="kv-key">Content encoding</span><span class="kv-val">Brotli</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="two-col">
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="section-label" style="margin-bottom:0;">Security headers</div>
+      <span class="pro-badge">pro</span>
+    </div>
+    <div class="pro-blur-wrap">
+      <div class="pro-blur-inner panel">
+        <div class="kv-row"><span class="kv-key">X-Frame-Options</span><span class="kv-val kv-warn">✗ Missing</span></div>
+        <div class="kv-row"><span class="kv-key">X-Content-Type-Options</span><span class="kv-val kv-warn">✗ Missing</span></div>
+        <div class="kv-row"><span class="kv-key">Content-Security-Policy</span><span class="kv-val kv-warn">✗ Missing</span></div>
+        <div class="kv-row"><span class="kv-key">Referrer-Policy</span><span class="kv-val kv-warn">✗ Missing</span></div>
+        <div class="kv-row"><span class="kv-key">Mixed content</span><span class="kv-val kv-warn">⚠ Detected</span></div>
+        <div class="kv-row"><span class="kv-key">HSTS</span><span class="kv-val kv-good">✓ Enabled</span></div>
+      </div>
+      <div class="pro-overlay">
+        <div class="pro-lock-icon">🔒</div>
+        <div class="pro-label">Security audit</div>
+        <div class="pro-sublabel">See all 6 header checks and exact fix instructions</div>
+        <button class="pro-cta">Unlock Pro</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="section-label" style="margin-bottom:0;">Link health</div>
+      <span class="pro-badge">pro</span>
+    </div>
+    <div class="pro-blur-wrap">
+      <div class="pro-blur-inner panel">
+        <div class="kv-row"><span class="kv-key">Total links</span><span class="kv-val">69</span></div>
+        <div class="kv-row"><span class="kv-key">Internal</span><span class="kv-val">68</span></div>
+        <div class="kv-row"><span class="kv-key">External</span><span class="kv-val">1</span></div>
+        <div class="kv-row"><span class="kv-key">Broken (est.)</span><span class="kv-val kv-good">0</span></div>
+        <div class="kv-row"><span class="kv-key">Empty anchors</span><span class="kv-val kv-warn">1 found</span></div>
+        <div class="kv-row"><span class="kv-key">Nofollow</span><span class="kv-val">0</span></div>
+      </div>
+      <div class="pro-overlay">
+        <div class="pro-lock-icon">🔒</div>
+        <div class="pro-label">Full link audit</div>
+        <div class="pro-sublabel">View all link URLs, anchor texts, and broken link list</div>
+        <button class="pro-cta">Unlock Pro</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+  <div class="section-label" style="margin-bottom:0;">Score history</div>
+  <span class="pro-badge">pro</span>
+</div>
+<div class="pro-blur-wrap" style="margin-bottom:1.5rem;">
+  <div class="pro-blur-inner history-teaser">
+    <div style="display:flex;justify-content:space-between;">
+      <span style="font-size:13px;color:var(--color-text-secondary);">Last 6 audits</span>
+      <span style="font-size:13px;font-weight:500;color:var(--color-text-primary);">↑ +5 pts this month</span>
+    </div>
+    <div class="spark-row">
+      <div class="spark-bar" style="height:52%;background:#C0DD97;"></div>
+      <div class="spark-bar" style="height:60%;background:#C0DD97;"></div>
+      <div class="spark-bar" style="height:65%;background:#97C459;"></div>
+      <div class="spark-bar" style="height:72%;background:#97C459;"></div>
+      <div class="spark-bar" style="height:80%;background:#639922;"></div>
+      <div class="spark-bar" style="height:87%;background:#3B6D11;"></div>
+    </div>
+  </div>
+  <div class="pro-overlay">
+    <div class="pro-lock-icon">🔒</div>
+    <div class="pro-label">Score history & trends</div>
+    <div class="pro-sublabel">Track improvements over time across all categories</div>
+    <button class="pro-cta">Unlock Pro</button>
+  </div>
+</div>
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+  <div class="section-label" style="margin-bottom:0;">Competitor comparison</div>
+  <span class="pro-badge">pro</span>
+</div>
+<div class="pro-blur-wrap" style="margin-bottom:.5rem;">
+  <div class="pro-blur-inner panel" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+    <div style="text-align:center;padding:.5rem 0;"><div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">Your site</div><div style="font-size:22px;font-weight:500;">87</div></div>
+    <div style="text-align:center;padding:.5rem 0;"><div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">Competitor A</div><div style="font-size:22px;font-weight:500;">91</div></div>
+    <div style="text-align:center;padding:.5rem 0;"><div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">Competitor B</div><div style="font-size:22px;font-weight:500;">78</div></div>
+  </div>
+  <div class="pro-overlay">
+    <div class="pro-lock-icon">🔒</div>
+    <div class="pro-label">Competitor analysis</div>
+    <div class="pro-sublabel">Compare your SEO score vs up to 3 competitors</div>
+    <button class="pro-cta">Unlock Pro</button>
+  </div>
+</div>
+
+</div>

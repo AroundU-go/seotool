@@ -1,0 +1,561 @@
+{
+    "summary": {
+        "overall_score": 87,
+        "grade": "B",
+        "priority_issues": [
+            "Canonical tag missing.",
+            "Missing alt text on 1 images.",
+            "No JSON-LD schema found.",
+            "Render-blocking scripts found (1)."
+        ]
+    },
+    "scores": {
+        "overall": 87,
+        "buckets": {
+            "performance": 85,
+            "technical": 70,
+            "onpage": 85,
+            "security": 100,
+            "ai_readiness": 100,
+            "accessibility": 100
+        },
+        "weights": {
+            "performance": 15,
+            "technical": 25,
+            "onpage": 25,
+            "security": 10,
+            "ai_readiness": 15,
+            "accessibility": 10
+        }
+    },
+    "basic": {
+        "requested_url": "https://vebapi.com/",
+        "final_url": "https://vebapi.com/",
+        "http_code": 200,
+        "title": "VebAPI \u2013 All\u2011in\u2011One SEO API for Developers & SaaS",
+        "favicon": "https://vebapi.com/1favicon.png",
+        "canonical": null
+    },
+    "meta": {
+        "analyzed_url": "https://vebapi.com/",
+        "generated_at_utc": "2026-02-14T01:33:17+00:00",
+        "duration_ms": 4038,
+        "engine": "single-page-seo-ai-audit-v3",
+        "server": "Europe",
+        "handler": "Vebapi.com"
+    },
+    "headings": {
+        "counts": {
+            "h1": 1,
+            "h2": 4,
+            "h3": 42,
+            "h4": 0,
+            "h5": 0,
+            "h6": 0
+        },
+        "data": {
+            "h1": [
+                "Complete SEO Analysis in One Powerful API"
+            ],
+            "h2": [
+                "Most Popular APIs",
+                "Why developers choose VebAPI",
+                "Simple, Transparent Pricing",
+                "Frequently Asked Questions"
+            ],
+            "h3": [
+                "On Page SEO Analysis",
+                "Search Keyword Research",
+                "Keyword Research Youtube",
+                "Website Speed Check",
+                "Keyword Research Endpoints",
+                "Related Keywords",
+                "Keyword Research - Single",
+                "Keyword Density Checker",
+                "SEO API Endpoints",
+                "On Page Analysis",
+                "Onpage Website Audit"
+            ],
+            "h4": [],
+            "h5": [],
+            "h6": []
+        },
+        "hierarchy": {
+            "ok": true,
+            "issues": []
+        }
+    },
+    "links": {
+        "counts": {
+            "total": 69,
+            "internal": 68,
+            "external": 1,
+            "nofollow": 0,
+            "sponsored": 0,
+            "ugc": 0,
+            "empty_text": 1,
+            "hash_only": 1,
+            "mailto_tel_js": 0
+        },
+        "empty_anchors": [
+            "/"
+        ],
+        "sample": [
+            {
+                "href": "/",
+                "abs": "https://vebapi.com/",
+                "text": "",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/#features",
+                "abs": "https://vebapi.com/#features",
+                "text": "Features",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/#endpoints",
+                "abs": "https://vebapi.com/#endpoints",
+                "text": "Endpoints",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/#pricing",
+                "abs": "https://vebapi.com/#pricing",
+                "text": "Pricing",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/playground",
+                "abs": "https://vebapi.com/playground",
+                "text": "API Playground \ud83d\ude80",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/updates",
+                "abs": "https://vebapi.com/updates",
+                "text": "Updates",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/#faq",
+                "abs": "https://vebapi.com/#faq",
+                "text": "FAQ",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/register",
+                "abs": "https://vebapi.com/register",
+                "text": "Get API Key",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/#pricing",
+                "abs": "https://vebapi.com/#pricing",
+                "text": "View Plans",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/dashboard",
+                "abs": "https://vebapi.com/dashboard",
+                "text": "Get Your API Key",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/apis",
+                "abs": "https://vebapi.com/apis",
+                "text": "View Docs",
+                "rel": "",
+                "internal": true
+            },
+            {
+                "href": "/apis",
+                "abs": "https://vebapi.com/apis",
+                "text": "Explore Docs",
+                "rel": "",
+                "internal": true
+            }
+        ],
+        "health_sample": {
+            "checked": 10,
+            "broken_estimate": 0,
+            "results": [
+                {
+                    "url": "https://vebapi.com/",
+                    "http_code": 200
+                },
+                {
+                    "url": "https://vebapi.com/#features",
+                    "http_code": 200
+                },
+                {
+                    "url": "https://vebapi.com/#endpoints",
+                    "http_code": 200
+                },
+                {
+                    "url": "https://vebapi.com/#pricing",
+                    "http_code": 200
+                },
+                {
+                    "url": "https://vebapi.com/register",
+                    "http_code": 200
+                }
+            ]
+        }
+    },
+    "images": {
+        "counts": {
+            "total": 25,
+            "lazy": 0
+        },
+        "alt": {
+            "missing": 1,
+            "coverage_pct": 96
+        },
+        "formats": {
+            "jpg_jpeg": 0,
+            "png": 24,
+            "gif": 0,
+            "webp": 0,
+            "avif": 0,
+            "svg": 0,
+            "unknown": 1,
+            "data_uri": 0
+        },
+        "sample": [
+            {
+                "src": "https://vebapi.com/logo1.png",
+                "data_src": null,
+                "abs": "https://vebapi.com/logo1.png",
+                "alt": "VebAPI",
+                "loading": null,
+                "format": "png"
+            },
+            {
+                "src": "/icons/857fe87f-89c6-48b4-a698-9625f15cb493.png",
+                "data_src": null,
+                "abs": "https://vebapi.com/icons/857fe87f-89c6-48b4-a698-9625f15cb493.png",
+                "alt": "Related Keywords icon",
+                "loading": null,
+                "format": "png"
+            },
+            {
+                "src": "/icons/e4a1020b-6013-46fb-8f57-db3a9bed2854.png",
+                "data_src": null,
+                "abs": "https://vebapi.com/icons/e4a1020b-6013-46fb-8f57-db3a9bed2854.png",
+                "alt": "Keyword Research - Single icon",
+                "loading": null,
+                "format": "png"
+            },
+            {
+                "src": "/icons/4b9854f0-8243-4d3d-a987-7d0ffb3dc358.png",
+                "data_src": null,
+                "abs": "https://vebapi.com/icons/4b9854f0-8243-4d3d-a987-7d0ffb3dc358.png",
+                "alt": "Keyword Density Checker icon",
+                "loading": null,
+                "format": "png"
+            },
+            {
+                "src": "https://www.facebook.com/tr?id=759383993705951&ev=PageView&noscript=1",
+                "data_src": null,
+                "abs": "https://www.facebook.com/tr?id=759383993705951&ev=PageView&noscript=1",
+                "alt": "",
+                "loading": null,
+                "format": null
+            }
+        ]
+    },
+    "resources": {
+        "scripts": {
+            "count": 3,
+            "blocking_count": 1,
+            "inline_bytes_estimate": 2602,
+            "data": [
+                {
+                    "src": "https://cdn.tailwindcss.com",
+                    "abs": "https://cdn.tailwindcss.com",
+                    "defer": false,
+                    "async": false,
+                    "type": null
+                },
+                {
+                    "src": "https://www.googletagmanager.com/gtag/js?id=G-ZRZKZGFQYL",
+                    "abs": "https://www.googletagmanager.com/gtag/js?id=G-ZRZKZGFQYL",
+                    "defer": false,
+                    "async": true,
+                    "type": null
+                },
+                {
+                    "src": "https://analytics.ahrefs.com/analytics.js",
+                    "abs": "https://analytics.ahrefs.com/analytics.js",
+                    "defer": false,
+                    "async": true,
+                    "type": null
+                }
+            ]
+        },
+        "styles": {
+            "count": 1,
+            "inline_bytes_estimate": 928,
+            "data": [
+                {
+                    "href": "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap",
+                    "abs": "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap",
+                    "media": null
+                }
+            ]
+        }
+    },
+    "structured_data": {
+        "jsonld_count": 0,
+        "jsonld_errors": 0,
+        "detected_types": [],
+        "items": []
+    },
+    "content": {
+        "word_count_estimate": 1415,
+        "content_to_html_ratio_pct": 11,
+        "avg_sentence_words": 7,
+        "avg_paragraph_words": 11,
+        "paragraph_count": 50
+    },
+    "performance": {
+        "ttfb_seconds": 0.280479,
+        "total_time_seconds": 0.281223,
+        "content_encoding": "br",
+        "cache_control": "no-cache, private",
+        "server": "cloudflare",
+        "scripts": {
+            "count": 3,
+            "blocking_count": 1
+        },
+        "stylesheets": {
+            "count": 1
+        },
+        "images": {
+            "count": 25,
+            "lazy_count": 0
+        },
+        "suggestions": [
+            "Reduce render-blocking scripts: add defer/async where safe.",
+            "Enable lazy-loading for below-the-fold images."
+        ]
+    },
+    "security": {
+        "https": true,
+        "hsts": true,
+        "x_frame_options": false,
+        "x_content_type_options": false,
+        "referrer_policy": false,
+        "content_security_policy": false,
+        "permissions_policy": false,
+        "mixed_content_found": true,
+        "suggestions": [
+            "Add X-Frame-Options or CSP frame-ancestors to prevent clickjacking.",
+            "Add X-Content-Type-Options: nosniff to reduce MIME sniffing risks.",
+            "Add a Content-Security-Policy (start with report-only if needed).",
+            "Fix mixed-content: remove http:// resources on an https:// page."
+        ]
+    },
+    "crawl_signals": {
+        "robots": {
+            "url": "https://vebapi.com/robots.txt",
+            "found": true,
+            "http_code": 200,
+            "mentions_sitemap": false,
+            "ai_bots": {
+                "gptbot": "no-specific-rules",
+                "anthropic-ai": "no-specific-rules",
+                "claudebot": "no-specific-rules",
+                "google-extended": "no-specific-rules",
+                "ccbot": "no-specific-rules",
+                "bingbot": "no-specific-rules"
+            }
+        },
+        "sitemap": {
+            "url": "https://vebapi.com/sitemap.xml",
+            "found": false,
+            "http_code": 404,
+            "looks_like_xml": false
+        },
+        "llms_txt": {
+            "url": "https://vebapi.com/llms.txt",
+            "found": true,
+            "http_code": 200,
+            "notes": "llms.txt present (AI indexing readiness)."
+        },
+        "ai_txt": {
+            "url": "https://vebapi.com/ai.txt",
+            "found": false,
+            "http_code": 404
+        }
+    },
+    "accessibility": {
+        "images_missing_alt": 1,
+        "form_controls_missing_label": 0,
+        "heading_hierarchy_ok": true
+    },
+    "technology": {
+        "detected": {
+            "server": null,
+            "cms": null,
+            "framework": [],
+            "js": [],
+            "css": [
+                "Tailwind (heuristic)"
+            ],
+            "analytics": [
+                "Google Tag Manager",
+                "Google Analytics"
+            ],
+            "cdn_waf": [
+                "Cloudflare"
+            ]
+        },
+        "confidence": 65,
+        "evidence": [
+            {
+                "type": "header",
+                "key": "server",
+                "value": "cloudflare"
+            },
+            {
+                "type": "header",
+                "key": "cloudflare",
+                "value": "cf-ray/cf-cache-status"
+            },
+            {
+                "type": "html",
+                "key": "tailwind",
+                "value": "utility classes detected"
+            }
+        ]
+    },
+    "hosting": {
+        "ip": "104.21.15.84",
+        "ipv6": [
+            "2606:4700:3035::ac43:a1f9",
+            "2606:4700:3033::6815:f54"
+        ],
+        "reverse_dns": "104.21.15.84",
+        "nameservers": [
+            "kimora.ns.cloudflare.com",
+            "valentin.ns.cloudflare.com"
+        ],
+        "cname": [],
+        "limitations": "Exact hosting provider/ASN requires whois/ASN lookup (external source)."
+    },
+    "legal_pages": {
+        "privacy_policy": {
+            "found": true,
+            "url": "https://vebapi.com/privacy",
+            "match": "privacy"
+        },
+        "terms": {
+            "found": true,
+            "url": "https://vebapi.com/terms",
+            "match": "terms"
+        },
+        "cookie_policy": {
+            "found": false,
+            "url": null,
+            "match": null
+        },
+        "refund_policy": {
+            "found": false,
+            "url": null,
+            "match": null
+        },
+        "gdpr": {
+            "found": false,
+            "url": null,
+            "match": null
+        },
+        "imprint": {
+            "found": false,
+            "url": null,
+            "match": null
+        }
+    },
+    "raw": {
+        "timings": {
+            "total_time": 0.281223,
+            "namelookup_time": 0.012193,
+            "connect_time": 0.015762,
+            "pretransfer_time": 0.033347,
+            "starttransfer_time": 0.280479
+        },
+        "response_headers": {
+            "date": "Sat, 14 Feb 2026 01:33:13 GMT",
+            "content-type": "text/html; charset=UTF-8",
+            "transfer-encoding": "chunked",
+            "connection": "keep-alive",
+            "server": "cloudflare",
+            "vary": "Accept-Encoding",
+            "cache-control": "no-cache, private",
+            "set-cookie": "XSRF-TOKEN=eyJpdiI6ImV2Q0owdjExQzOGNkNWEyoiIn0%3D; expires=Sat, 14 Feb 2026 03:33:13 GMT; Max-Age=7200; path=/; secure; httponly; samesite=lax",
+            "strict-transport-security": "max-age=31536000",
+            "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=aY2pajx1ylckJtbU8KXD91NSBe6ImKvZJkRSzcKHHwSiFxgZRqstsm78HpsO6JiZPBd7zoK2mgnuV4tG9YV0yHh3n9f5s2PCXWg%3D\"}]}",
+            "cf-cache-status": "DYNAMIC",
+            "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+            "content-encoding": "br",
+            "cf-ray": "9cd8d0f0bc2de7b2-FRA",
+            "alt-svc": "h3=\":443\"; ma=86400"
+        },
+        "html_bytes": 98224
+    },
+    "findings": [
+        {
+            "category": "title",
+            "severity": "good",
+            "issue": "Title length looks fine.",
+            "fix": "Keep it unique per page."
+        },
+        {
+            "category": "meta_description",
+            "severity": "good",
+            "issue": "Meta description length looks fine.",
+            "fix": "Avoid duplicates across pages."
+        },
+        {
+            "category": "canonical",
+            "severity": "warning",
+            "issue": "Canonical tag missing.",
+            "fix": "Add <link rel=\"canonical\" href=\"...\"> to avoid duplicate URL issues."
+        },
+        {
+            "category": "images",
+            "severity": "warning",
+            "issue": "Missing alt text on 1 images.",
+            "fix": "Add descriptive ALT text (helps SEO + accessibility)."
+        },
+        {
+            "category": "structured_data",
+            "severity": "warning",
+            "issue": "No JSON-LD schema found.",
+            "fix": "Add Organization + WebSite + Breadcrumb + Article/Product schema where relevant."
+        },
+        {
+            "category": "performance",
+            "severity": "warning",
+            "issue": "Render-blocking scripts found (1).",
+            "fix": "Use defer/async and remove unnecessary scripts."
+        },
+        {
+            "category": "ai_readiness",
+            "severity": "good",
+            "issue": "llms.txt detected.",
+            "fix": "Keep it updated with key sections and canonical URLs."
+        }
+    ]
+}
