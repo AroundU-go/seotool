@@ -7,6 +7,7 @@ import AiBotCheckerCard from '../components/AiBotCheckerCard';
 import TopKeywordsCard from '../components/TopKeywordsCard';
 import BacklinksCard from '../components/BacklinksCard';
 import { DummyProCard } from '../components/DummyProCard';
+import PricingModal from '../components/PricingModal';
 import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks, fetchRapidApiData } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
 import { saveAnalysis, getUserAnalysesByEmailOrId, getAnalysisCountByEmail, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
@@ -80,6 +81,7 @@ export default function SeoToolPage() {
     const [historyError, setHistoryError] = useState<string | null>(null);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const [upgradeModalSource, setUpgradeModalSource] = useState<'audit_limit' | 'download_report'>('audit_limit');
+    const [showPricingModal, setShowPricingModal] = useState(false);
 
     // Menu state
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -813,7 +815,7 @@ export default function SeoToolPage() {
                                 <div className="max-w-7xl mx-auto space-y-8">
 
                                     <CardErrorBoundary name="SEO Dashboard">
-                                        <SeoDashboard results={results} website={website} hasProAccess={hasProAccess} />
+                                        <SeoDashboard results={results} website={website} hasProAccess={hasProAccess} onUpgradeClick={() => setShowPricingModal(true)} />
                                     </CardErrorBoundary>
 
                                     {hasProAccess && results.aiVisibility && (
@@ -853,19 +855,19 @@ export default function SeoToolPage() {
                                                 description="Content optimization for AI systems"
                                                 backgroundImageUrl="/dummy-ai.png"
                                                 cardClassName="min-h-[700px]"
-                                                checkoutUrl="/#pricing"
+                                                onUpgradeClick={() => setShowPricingModal(true)}
                                             />
                                             <DummyProCard 
                                                 icon={TrendingUp}
                                                 title="Top Search Keywords"
                                                 description="Keyword rankings and search volumes"
-                                                checkoutUrl="/#pricing"
+                                                onUpgradeClick={() => setShowPricingModal(true)}
                                             />
                                             <DummyProCard 
                                                 icon={Link2}
                                                 title="Backlink Analysis"
                                                 description="Backlink profile overview, new & toxic links"
-                                                checkoutUrl="/#pricing"
+                                                onUpgradeClick={() => setShowPricingModal(true)}
                                             />
                                         </div>
                                     )}
@@ -875,6 +877,9 @@ export default function SeoToolPage() {
                     </>
                 )}
             </div>
+
+            {/* Pricing Modal for upgrade buttons on dashboard */}
+            <PricingModal isOpen={showPricingModal} onClose={() => setShowPricingModal(false)} />
         </div>
     );
 }

@@ -6,9 +6,10 @@ interface SpeedAuditDashboardProps {
     data: any;
     hasProAccess?: boolean;
     website?: string;
+    onUpgradeClick?: () => void;
 }
 
-export default function SpeedAuditDashboard({ data, hasProAccess = false, website }: SpeedAuditDashboardProps) {
+export default function SpeedAuditDashboard({ data, hasProAccess = false, website, onUpgradeClick }: SpeedAuditDashboardProps) {
     if (!data || !data.summary) return null;
 
     const summary = data.summary;
@@ -35,7 +36,10 @@ export default function SpeedAuditDashboard({ data, hasProAccess = false, websit
 
     const timings = summary.main?.timings || {};
 
-    const ctaLink = '/#pricing';
+    const handleUpgrade = (e?: React.MouseEvent) => {
+        if (e) e.preventDefault();
+        onUpgradeClick?.();
+    };
 
     // Helpers for bar colors based on Content Type
     const getBarColor = (type: string) => {
@@ -85,9 +89,9 @@ export default function SpeedAuditDashboard({ data, hasProAccess = false, websit
                         Grade {grade}
                     </div>
                     {!hasProAccess && (
-                        <a href={ctaLink} className="text-xs font-semibold px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition">
+                        <button onClick={handleUpgrade} className="text-xs font-semibold px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition">
                             Upgrade to Pro
-                        </a>
+                        </button>
                     )}
                 </div>
             </div>
@@ -296,9 +300,9 @@ export default function SpeedAuditDashboard({ data, hasProAccess = false, websit
                                 </div>
                                 <div className="text-sm font-bold text-gray-900 mb-1">Full timing waterfall</div>
                                 <div className="text-xs text-gray-600 mb-3 max-w-[200px]">Per-request DNS, connect, TLS, TTFB breakdown.</div>
-                                <a href={ctaLink} className="text-xs font-semibold px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition flex items-center gap-1 shadow-md">
+                                <button onClick={handleUpgrade} className="text-xs font-semibold px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition flex items-center gap-1 shadow-md">
                                     Unlock Pro
-                                </a>
+                                </button>
                             </div>
                         )}
                     </div>
@@ -340,9 +344,9 @@ export default function SpeedAuditDashboard({ data, hasProAccess = false, websit
                                 </div>
                                 <div className="text-sm font-bold text-gray-900 mb-1">Third-party audit</div>
                                 <div className="text-xs text-gray-600 mb-3 max-w-[200px]">See exactly which domains are slowing you down.</div>
-                                <a href={ctaLink} className="text-xs font-semibold px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition flex items-center gap-1 shadow-md">
+                                <button onClick={handleUpgrade} className="text-xs font-semibold px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition flex items-center gap-1 shadow-md">
                                     Unlock Pro
-                                </a>
+                                </button>
                             </div>
                         )}
                     </div>
@@ -389,9 +393,9 @@ export default function SpeedAuditDashboard({ data, hasProAccess = false, websit
                             </div>
                             <div className="text-lg font-bold text-gray-900 mb-2">Full request log</div>
                             <div className="text-sm text-gray-600 mb-4 max-w-sm">All {fileRequests.length || 29} requests with sortable size, timing, status, and type.</div>
-                            <a href={ctaLink} className="text-sm font-semibold px-5 py-2.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition flex items-center gap-2 shadow-md">
+                            <button onClick={handleUpgrade} className="text-sm font-semibold px-5 py-2.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition flex items-center gap-2 shadow-md">
                                 Unlock Pro <ArrowRight className="w-4 h-4" />
-                            </a>
+                            </button>
                         </div>
                     )}
                 </div>

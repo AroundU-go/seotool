@@ -6,9 +6,10 @@ interface SeoDashboardProps {
     results: any;
     website: string;
     hasProAccess?: boolean;
+    onUpgradeClick?: () => void;
 }
 
-export default function SeoDashboard({ results, website, hasProAccess = false }: SeoDashboardProps) {
+export default function SeoDashboard({ results, website, hasProAccess = false, onUpgradeClick }: SeoDashboardProps) {
     const { seoAnalysis, aiVisibility, loadingSpeed, rapidApiData } = results;
 
     const seoSummary = seoAnalysis?.summary || {};
@@ -75,7 +76,10 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
         </div>
     );
 
-    const upgradeLink = '/#pricing';
+    const handleUpgrade = (e?: React.MouseEvent) => {
+        if (e) e.preventDefault();
+        onUpgradeClick?.();
+    };
 
     return (
         <div className="py-6 font-sans antialiased text-gray-900 max-w-5xl mx-auto space-y-6">
@@ -100,9 +104,9 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                 <div className="flex items-center gap-2">
                     <div className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#C0DD97] text-[#27500A]">Grade {seoSummary.grade || '-'}</div>
                     {!hasProAccess && (
-                        <a href={upgradeLink} className="text-[12px] font-medium px-4 py-1.5 rounded-md border-none cursor-pointer bg-[#3C3489] text-[#EEEDFE] hover:bg-[#2d266d] transition-colors">
+                        <button onClick={handleUpgrade} className="text-[12px] font-medium px-4 py-1.5 rounded-md border-none cursor-pointer bg-[#3C3489] text-[#EEEDFE] hover:bg-[#2d266d] transition-colors">
                             Upgrade to Pro
-                        </a>
+                        </button>
                     )}
                 </div>
             </div>
@@ -188,9 +192,9 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                             )}
                                         </div>
                                         {!hasProAccess && (isWarn || isCrit) ? (
-                                            <a href={upgradeLink} className="text-[11px] px-2.5 py-1.5 rounded-md border border-[#E5E7EB] bg-transparent text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap hidden sm:block">
+                                            <button onClick={handleUpgrade} className="text-[11px] px-2.5 py-1.5 rounded-md border border-[#E5E7EB] bg-transparent text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap hidden sm:block">
                                                 🔒 How to fix &rarr;
-                                            </a>
+                                            </button>
                                         ) : null}
                                     </div>
                                 );
@@ -220,9 +224,9 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                                      )}
                                                  </div>
                                                  {!hasProAccess && (isWarn || isCrit) ? (
-                                                     <a href={upgradeLink} className="text-[11px] px-2.5 py-1.5 rounded-md border border-[#E5E7EB] bg-transparent text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap hidden sm:block">
+                                                     <button onClick={handleUpgrade} className="text-[11px] px-2.5 py-1.5 rounded-md border border-[#E5E7EB] bg-transparent text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap hidden sm:block">
                                                          🔒 How to fix &rarr;
-                                                     </a>
+                                                     </button>
                                                  ) : null}
                                             </div>
                                         )})}
@@ -237,12 +241,12 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                             <p className="text-red-700 mb-4 sm:mb-6 text-xs sm:text-sm">
                                                 We've detected {blurredFindings.length} critical or warning SEO issues on your website. Upgrade to view them and get detailed fixes.
                                             </p>
-                                            <a
-                                                href={upgradeLink}
+                                            <button
+                                                onClick={handleUpgrade}
                                                 className="inline-flex items-center justify-center gap-2 w-full py-2.5 sm:py-3 bg-red-600 text-white text-sm sm:text-base font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
                                             >
                                                 Upgrade to View <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -301,7 +305,7 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
             
             {loadingSpeed && (
                 <div className="mb-6">
-                    <SpeedAuditDashboard data={loadingSpeed} hasProAccess={hasProAccess} website={website} />
+                    <SpeedAuditDashboard data={loadingSpeed} hasProAccess={hasProAccess} website={website} onUpgradeClick={onUpgradeClick} />
                 </div>
             )}
 
@@ -334,9 +338,9 @@ export default function SeoDashboard({ results, website, hasProAccess = false }:
                                     </div>
                                     {!hasProAccess && (
                                         <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
-                                            <a href={upgradeLink} className="bg-white/90 backdrop-blur-sm border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm text-[11px] font-medium text-gray-700 flex items-center gap-1 hover:bg-gray-50">
+                                            <button onClick={handleUpgrade} className="bg-white/90 backdrop-blur-sm border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm text-[11px] font-medium text-gray-700 flex items-center gap-1 hover:bg-gray-50">
                                                 <Lock className="w-3 h-3" /> Unlock Pro to view analysis
-                                            </a>
+                                            </button>
                                         </div>
                                     )}
                                 </div>

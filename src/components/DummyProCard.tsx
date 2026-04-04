@@ -5,16 +5,16 @@ interface DummyProCardProps {
     icon: React.ElementType;
     title: string;
     description: string;
-    checkoutUrl?: string;
+    onUpgradeClick?: () => void;
     backgroundImageUrl?: string;
     cardClassName?: string;
 }
 
-export function DummyProCard({ icon: Icon, title, description, checkoutUrl, backgroundImageUrl, cardClassName }: DummyProCardProps) {
+export function DummyProCard({ icon: Icon, title, description, onUpgradeClick, backgroundImageUrl, cardClassName }: DummyProCardProps) {
     return (
         <div className={`relative bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden min-h-[300px] p-6 ${cardClassName || ''}`}>
             {backgroundImageUrl ? (
-                <div 
+                <div
                     className="absolute inset-0 z-0 bg-cover bg-top opacity-50 select-none pointer-events-none filter blur-[2px]"
                     style={{ backgroundImage: `url(${backgroundImageUrl})` }}
                 />
@@ -53,14 +53,15 @@ export function DummyProCard({ icon: Icon, title, description, checkoutUrl, back
                 <p className="text-sm font-medium text-gray-700 bg-white/80 px-4 py-1.5 rounded-full mb-4 shadow-sm border border-gray-100">
                     Pro feature locked
                 </p>
-                <a
-                    href={checkoutUrl || '/#pricing'}
+                <button
+                    onClick={onUpgradeClick}
                     className="px-6 py-2.5 bg-accent text-white font-bold rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 inline-flex items-center gap-2 cursor-pointer text-sm"
                 >
                     Upgrade to view
                     <ArrowRight className="w-4 h-4" />
-                </a>
+                </button>
             </div>
         </div>
     );
 }
+
