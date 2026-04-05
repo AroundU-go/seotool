@@ -14,7 +14,6 @@ const paidTiers = [
         features: [
             'Everything in Free',
             'Pdf exports',
-            'Certified report page',
             'On-page & Technical analysis',
             'AI Visibility analysis',
             'AI keyword suggestions',
@@ -39,6 +38,7 @@ const paidTiers = [
             'Everything in One-Time',
             'Email alerts',
             'AEO & GEO optimization',
+            'Certified report page',
             'Bulk URL analysis',
             'Unlimited audits',
             'Priority support',
