@@ -39,7 +39,6 @@ const tiers: PricingTier[] = [
         features: [
             'Everything in Free',
             'Pdf exports',
-            'Certified report page',
             'On-page & Technical analysis',
             'AI Visibility analysis',
             'AI keyword suggestions',
@@ -66,6 +65,7 @@ const tiers: PricingTier[] = [
             'AEO & GEO optimization',
             'Bulk URL analysis',
             'Unlimited audits',
+            'Certified report page',
             'Priority support',
             'Cancel anytime',
         ],
