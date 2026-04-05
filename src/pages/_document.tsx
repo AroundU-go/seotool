@@ -9,7 +9,6 @@ export default function Document() {
         
         <meta name="description"
           content="SEOzapp analyzes 25+ on-page SEO factors instantly. Get AI readiness scores, keyword insights, backlink analysis, and a prioritized fix action plan — all in one click." />
-        <link rel="canonical" href="https://seozapp.com/" />
         <meta name="theme-color" content="#75DDFF" />
 
         {/* Open Graph */}
