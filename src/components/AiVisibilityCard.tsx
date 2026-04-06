@@ -63,51 +63,57 @@ export default function AiVisibilityCard({ data }: AiVisibilityCardProps) {
   ] : [];
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-          <Brain className="w-6 h-6 text-purple-600" />
-        </div>
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold text-gray-900">AI SEO Readiness</h2>
-          <p className="text-gray-600">Content optimization for AI systems</p>
-        </div>
+    <div className="py-6 font-sans antialiased text-gray-900 max-w-5xl mx-auto space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">AI SEO Readiness</h1>
         {aiScore?.grade && (
-          <div className={`px-4 py-2 rounded-xl font-bold text-2xl ${gradeColor(aiScore.grade)}`}>
-            {aiScore.grade}
+          <div className={`px-4 py-1.5 rounded-lg font-bold text-lg ${gradeColor(aiScore.grade)}`}>
+            Grade {aiScore.grade}
           </div>
         )}
       </div>
+      <style jsx>{`
+          .section-header { font-size: 11px; font-weight: 500; color: #6B7280; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+          .panel { background: #F9FAFB; border-radius: 12px; padding: 16px; border: 1px solid #F3F4F6; }
+          .pro-badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; background: #EEEDFE; color: #3C3489; border: 0.5px solid #CECBF6; }
+      `}</style>
+
 
       {/* AI Score */}
       {aiScore?.total !== undefined && (
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
-              <h3 className="font-semibold text-gray-900">AI Score</h3>
-            </div>
-            <span className="text-2xl font-bold text-gray-900">{aiScore.total}/100</span>
+        <div className="mb-6">
+          <div className="section-header">
+            <span>AI Score</span>
+            <span className="pro-badge">pro</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-            <div
-              className={`h-3 rounded-full transition-all ${scoreColor(aiScore.total, 100)}`}
-              style={{ width: `${aiScore.total}%` }}
-            />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-            {scoreBreakdown.map(item => (
-              <div key={item.label} className="text-center">
-                <p className="text-xs text-gray-500">{item.label}</p>
-                <p className="text-sm font-bold text-gray-900">{item.value}/{item.max}</p>
-                <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
-                  <div
-                    className={`h-1 rounded-full ${scoreColor(item.value, item.max)}`}
-                    style={{ width: `${(item.value / item.max) * 100}%` }}
-                  />
-                </div>
+          <div className="panel">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-purple-600" />
+                <h3 className="font-semibold text-gray-900">Overall Score</h3>
               </div>
-            ))}
+              <span className="text-2xl font-bold text-gray-900">{aiScore.total}/100</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+              <div
+                className={`h-3 rounded-full transition-all ${scoreColor(aiScore.total, 100)}`}
+                style={{ width: `${aiScore.total}%` }}
+              />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {scoreBreakdown.map(item => (
+                <div key={item.label} className="text-center">
+                  <p className="text-xs text-gray-500">{item.label}</p>
+                  <p className="text-sm font-bold text-gray-900">{item.value}/{item.max}</p>
+                  <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
+                    <div
+                      className={`h-1 rounded-full ${scoreColor(item.value, item.max)}`}
+                      style={{ width: `${(item.value / item.max) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -115,138 +121,173 @@ export default function AiVisibilityCard({ data }: AiVisibilityCardProps) {
       {/* Status Grid */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         {/* AI Visibility Status */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <FileSearch className="w-5 h-5 text-gray-700" />
-            <h3 className="font-semibold text-gray-900">AI Visibility</h3>
+        <div>
+          <div className="section-header">
+            <span>AI Visibility</span>
           </div>
-          <div className="space-y-2">
-            <p className="text-sm text-gray-700 flex items-center gap-1">
-              {aiVisibility?.indexable ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertCircle className="w-4 h-4 text-red-500" />}
-              Indexable: {aiVisibility?.indexable ? 'Yes' : 'No'}
-            </p>
-            {aiScrapable !== undefined && (
+          <div className="panel h-full">
+            <div className="flex items-center gap-2 mb-3">
+              <FileSearch className="w-5 h-5 text-gray-700" />
+              <h3 className="font-semibold text-gray-900">Status</h3>
+            </div>
+            <div className="space-y-2">
               <p className="text-sm text-gray-700 flex items-center gap-1">
-                {aiScrapable ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertCircle className="w-4 h-4 text-red-500" />}
-                AI Scrapable: {aiScrapable ? 'Yes' : 'No'}
+                {aiVisibility?.indexable ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertCircle className="w-4 h-4 text-red-500" />}
+                Indexable: {aiVisibility?.indexable ? 'Yes' : 'No'}
               </p>
-            )}
-            {structure?.title && <p className="text-sm text-gray-700">Title: {structure.title}</p>}
-            {structure?.meta_description && <p className="text-sm text-gray-700 truncate">Description: {structure.meta_description}</p>}
+              {aiScrapable !== undefined && (
+                <p className="text-sm text-gray-700 flex items-center gap-1">
+                  {aiScrapable ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertCircle className="w-4 h-4 text-red-500" />}
+                  AI Scrapable: {aiScrapable ? 'Yes' : 'No'}
+                </p>
+              )}
+              {structure?.title && <p className="text-sm text-gray-700">Title: {structure.title}</p>}
+              {structure?.meta_description && <p className="text-sm text-gray-700 truncate">Description: {structure.meta_description}</p>}
+            </div>
           </div>
         </div>
 
         {/* Content Analysis */}
         {content && (
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="w-5 h-5 text-gray-700" />
-              <h3 className="font-semibold text-gray-900">Content</h3>
+          <div>
+            <div className="section-header">
+              <span>Content</span>
             </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-700">Word count: {content.main_word_count ?? 'N/A'}</p>
-              <p className="text-sm text-gray-700">Reading time: {content.reading_time_minutes ?? 'N/A'} min</p>
-              <p className="text-sm text-gray-700">Text density: {content.text_density_percent?.toFixed(1)}%</p>
-              <p className="text-sm text-gray-700 flex items-center gap-1">
-                {content.js_heavy ? <AlertCircle className="w-4 h-4 text-orange-500" /> : <CheckCircle className="w-4 h-4 text-green-500" />}
-                JS Heavy: {content.js_heavy ? 'Yes' : 'No'}
-              </p>
+            <div className="panel h-full">
+              <div className="flex items-center gap-2 mb-3">
+                <BookOpen className="w-5 h-5 text-gray-700" />
+                <h3 className="font-semibold text-gray-900">Metrics</h3>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-700">Word count: {content.main_word_count ?? 'N/A'}</p>
+                <p className="text-sm text-gray-700">Reading time: {content.reading_time_minutes ?? 'N/A'} min</p>
+                <p className="text-sm text-gray-700">Text density: {content.text_density_percent?.toFixed(1)}%</p>
+                <p className="text-sm text-gray-700 flex items-center gap-1">
+                  {content.js_heavy ? <AlertCircle className="w-4 h-4 text-orange-500" /> : <CheckCircle className="w-4 h-4 text-green-500" />}
+                  JS Heavy: {content.js_heavy ? 'Yes' : 'No'}
+                </p>
+              </div>
             </div>
           </div>
         )}
 
         {/* Schema / Structured Data */}
         {schema && (
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-2">Structured Data</h3>
-            <p className="text-sm text-gray-700">JSON-LD blocks: {schema.jsonld_count ?? 0}</p>
-            {schema.types_found && schema.types_found.length > 0 && (
-              <p className="text-sm text-gray-700">Types: {schema.types_found.join(', ')}</p>
-            )}
+          <div>
+            <div className="section-header">
+              <span>Structured Data</span>
+            </div>
+            <div className="panel h-full">
+              <h3 className="font-semibold text-gray-900 mb-2">Schema</h3>
+              <p className="text-sm text-gray-700">JSON-LD blocks: {schema.jsonld_count ?? 0}</p>
+              {schema.types_found && schema.types_found.length > 0 && (
+                <p className="text-sm text-gray-700">Types: {schema.types_found.join(', ')}</p>
+              )}
+            </div>
           </div>
         )}
 
         {/* Links & Trust */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Link2 className="w-5 h-5 text-gray-700" />
-            <h3 className="font-semibold text-gray-900">Links & Trust</h3>
+        <div>
+          <div className="section-header">
+            <span>Links & Trust</span>
           </div>
-          <div className="space-y-1">
-            {linksData && (
-              <p className="text-sm text-gray-700">Links: {linksData.total} total ({linksData.internal} internal, {linksData.external} external)</p>
-            )}
-            {trustSignals?.pages_found && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {Object.entries(trustSignals.pages_found).map(([page, found]) => (
-                  <span key={page} className={`text-xs px-2 py-0.5 rounded ${found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
-                    {found ? '✓' : '✗'} {page}
-                  </span>
-                ))}
-              </div>
-            )}
+          <div className="panel h-full">
+            <div className="flex items-center gap-2 mb-3">
+              <Link2 className="w-5 h-5 text-gray-700" />
+              <h3 className="font-semibold text-gray-900">Signals</h3>
+            </div>
+            <div className="space-y-1">
+              {linksData && (
+                <p className="text-sm text-gray-700">Links: {linksData.total} total ({linksData.internal} internal, {linksData.external} external)</p>
+              )}
+              {trustSignals?.pages_found && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {Object.entries(trustSignals.pages_found).map(([page, found]) => (
+                    <span key={page} className={`text-xs px-2 py-0.5 rounded ${found ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
+                      {found ? '✓' : '✗'} {page}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* AI Bots */}
       {aiSimulation?.ai_bots && (
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold text-gray-900 mb-3">AI Bot Access</h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-            {Object.entries(aiSimulation.ai_bots).map(([name, info]) => (
-              <div key={name} className="text-center bg-white rounded-lg p-2 border border-gray-100">
-                <p className="text-xs font-medium text-gray-900 capitalize">{name.replace(/_/g, ' ')}</p>
-                <p className="text-xs text-gray-500">{info.bot}</p>
-                <p className={`text-xs mt-1 ${info.allowed_by_robots === false ? 'text-red-600' : info.allowed_by_robots === true ? 'text-green-600' : 'text-gray-400'}`}>
-                  {info.allowed_by_robots === false ? '✗ Blocked' : info.allowed_by_robots === true ? '✓ Allowed' : '— No rule'}
-                </p>
-              </div>
-            ))}
+        <div className="mb-6">
+          <div className="section-header">
+            <span>AI Bot Access</span>
+          </div>
+          <div className="panel">
+            <h3 className="font-semibold text-gray-900 mb-3">Bot Simulation</h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {Object.entries(aiSimulation.ai_bots).map(([name, info]) => (
+                <div key={name} className="text-center bg-white rounded-lg p-2 border border-gray-100">
+                  <p className="text-xs font-medium text-gray-900 capitalize">{name.replace(/_/g, ' ')}</p>
+                  <p className="text-xs text-gray-500">{info.bot}</p>
+                  <p className={`text-xs mt-1 ${info.allowed_by_robots === false ? 'text-red-600' : info.allowed_by_robots === true ? 'text-green-600' : 'text-gray-400'}`}>
+                    {info.allowed_by_robots === false ? '✗ Blocked' : info.allowed_by_robots === true ? '✓ Allowed' : '— No rule'}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {/* Issues */}
       {sortedIssues.length > 0 && (
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-          <h4 className="font-semibold text-orange-900 mb-2 flex items-center gap-2">
-            <AlertCircle className="w-5 h-5" />
-            Issues ({sortedIssues.length})
-          </h4>
-          <div className="space-y-2">
-            {sortedIssues.map((issue, idx) => (
-              <div key={idx} className="bg-white bg-opacity-60 rounded-lg p-2">
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs px-2 py-0.5 rounded ${issue.severity === 'high' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`}>{issue.severity}</span>
-                  <span className="text-sm font-medium text-orange-900">{issue.id?.replace(/_/g, ' ')}</span>
+        <div className="mb-4">
+          <div className="section-header">
+            <span>Issues</span>
+          </div>
+          <div className="panel bg-[#FFF8F1] border-[#FFEDD5]">
+            <h4 className="font-semibold text-orange-900 mb-2 flex items-center gap-2">
+              <AlertCircle className="w-5 h-5" />
+              Found ({sortedIssues.length})
+            </h4>
+            <div className="space-y-2">
+              {sortedIssues.map((issue, idx) => (
+                <div key={idx} className="bg-white bg-opacity-60 rounded-lg p-2 border border-orange-100">
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs px-2 py-0.5 rounded ${issue.severity === 'high' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`}>{issue.severity}</span>
+                    <span className="text-sm font-medium text-orange-900">{issue.id?.replace(/_/g, ' ')}</span>
+                  </div>
+                  <p className="text-xs text-orange-700 mt-1">{issue.evidence}</p>
+                  {issue.impact && <p className="text-xs text-orange-600 mt-0.5">Impact: {issue.impact}</p>}
                 </div>
-                <p className="text-xs text-orange-700 mt-1">{issue.evidence}</p>
-                {issue.impact && <p className="text-xs text-orange-600 mt-0.5">Impact: {issue.impact}</p>}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {/* Suggestions */}
       {sortedSuggestions.length > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-semibold text-blue-900 mb-2">Suggestions ({sortedSuggestions.length})</h4>
-          <div className="space-y-2">
-            {sortedSuggestions.map((s, idx) => (
-              <div key={idx} className="flex items-start gap-2">
-                <span className={`text-xs px-2 py-0.5 rounded mt-0.5 flex-shrink-0 ${priorityColor(s.priority)}`}>
-                  {s.priority}
-                </span>
-                <div>
-                  <p className="text-sm text-blue-800">
-                    <span className="font-medium">{s.category}:</span> {s.message}
-                  </p>
-                  {s.impact && <p className="text-xs text-blue-600">{s.impact}</p>}
+        <div>
+          <div className="section-header">
+            <span>Suggestions</span>
+          </div>
+          <div className="panel bg-[#F0F9FF] border-[#E0F2FE]">
+            <h4 className="font-semibold text-blue-900 mb-2">Actions ({sortedSuggestions.length})</h4>
+            <div className="space-y-2">
+              {sortedSuggestions.map((s, idx) => (
+                <div key={idx} className="flex items-start gap-2 bg-white/60 p-2 rounded-lg border border-blue-100">
+                  <span className={`text-xs px-2 py-0.5 rounded mt-0.5 flex-shrink-0 ${priorityColor(s.priority)}`}>
+                    {s.priority}
+                  </span>
+                  <div>
+                    <p className="text-sm text-blue-800">
+                      <span className="font-medium">{s.category}:</span> {s.message}
+                    </p>
+                    {s.impact && <p className="text-xs text-blue-600">{s.impact}</p>}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}

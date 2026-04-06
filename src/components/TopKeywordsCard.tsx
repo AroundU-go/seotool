@@ -68,106 +68,111 @@ export default function TopKeywordsCard({ data }: TopKeywordsCardProps) {
 
     return (
         <CardErrorBoundary>
-            <div className="bg-white rounded-3xl shadow-lg shadow-black/5 border border-gray-100 overflow-hidden">
+            <div className="py-6 font-sans antialiased text-gray-900 max-w-5xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-purple-50">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                                <Search className="w-5 h-5 text-indigo-600" />
+                <div className="flex items-center justify-between mb-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Top Keywords</h1>
+                    {totalKeywords > 0 && (
+                        <span className="text-sm font-semibold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">
+                            {totalKeywords} total
+                        </span>
+                    )}
+                </div>
+                <style jsx>{`
+                    .section-header { font-size: 11px; font-weight: 500; color: #6B7280; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+                    .panel { background: #F9FAFB; border-radius: 12px; padding: 16px; border: 1px solid #F3F4F6; }
+                `}</style>
+
+
+                {/* Content */}
+                <div className="mb-6">
+                    <div className="section-header">
+                        <span>Keyword Rankings</span>
+                    </div>
+                    <div className="panel p-0 overflow-hidden pt-4 pb-2">
+                        {keywordList.length > 0 ? (
+                            <>
+                                {/* Table Header */}
+                                <div className="grid grid-cols-12 gap-2 px-6 pb-3 border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                    <div className="col-span-5">Keyword</div>
+                                    <div className="col-span-2 text-center">Position</div>
+                                    <div className="col-span-2 text-right">Volume</div>
+                                    <div className="col-span-2 text-right">Traffic</div>
+                                    <div className="col-span-1 text-right">CPC</div>
+                                </div>
+
+                                {/* Keyword Rows */}
+                                <div className="divide-y divide-gray-50 max-h-[480px] overflow-y-auto px-3">
+                                    {keywordList.slice(0, 30).map((kw, idx) => (
+                                        <div key={idx} className="grid grid-cols-12 gap-2 px-3 py-3 items-center hover:bg-gray-50/50 transition-colors group">
+                                            <div className="col-span-5 flex items-center gap-2 min-w-0">
+                                                <span className="text-sm font-medium text-gray-900 truncate">
+                                                    {kw.keyword || '-'}
+                                                </span>
+                                                {kw.topRankedUrl && (
+                                                    <a
+                                                        href={kw.topRankedUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                                                    >
+                                                        <ExternalLink className="w-3 h-3 text-gray-400" />
+                                                    </a>
+                                                )}
+                                            </div>
+                                            <div className="col-span-2 flex justify-center">
+                                                <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getPositionColor(kw.rank || 99)}`}>
+                                                    #{kw.rank ?? '-'}
+                                                </span>
+                                            </div>
+                                            <div className="col-span-2 text-right text-sm text-gray-600">
+                                                {formatNumber(kw.searchVolume)}
+                                            </div>
+                                            <div className="col-span-2 text-right text-sm text-gray-600 flex items-center justify-end gap-1">
+                                                {kw.seoClicks !== undefined && kw.seoClicks > 0 && (
+                                                    <TrendingUp className="w-3 h-3 text-green-500" />
+                                                )}
+                                                {formatNumber(kw.seoClicks)}
+                                            </div>
+                                            <div className="col-span-1 text-right text-sm text-gray-500">
+                                                {kw.exactCostPerClick !== undefined && kw.exactCostPerClick !== null ? `$${kw.exactCostPerClick.toFixed(2)}` : kw.broadCostPerClick !== undefined && kw.broadCostPerClick !== null ? `$${kw.broadCostPerClick.toFixed(2)}` : '-'}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {keywordList.length > 30 && (
+                                    <div className="text-center mt-4 pt-4 border-t border-gray-100 mx-6">
+                                        <p className="text-sm text-gray-400">
+                                            Showing top 30 of {keywordList.length} keywords
+                                        </p>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div className="text-center py-8">
+                                <Search className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500 font-medium">No keyword data available</p>
+                                <p className="text-gray-400 text-sm mt-1">This site may not have indexed keywords yet</p>
                             </div>
-                            <div>
-                                <h3 className="text-lg font-bold text-gray-900">Top Keywords</h3>
-                                <p className="text-sm text-gray-500">Search keywords ranking for this site</p>
-                            </div>
-                        </div>
-                        {totalKeywords > 0 && (
-                            <span className="text-sm font-semibold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">
-                                {totalKeywords} total
-                            </span>
                         )}
                     </div>
                 </div>
 
-                {/* Content */}
-                <div className="p-6">
-                    {keywordList.length > 0 ? (
-                        <>
-                            {/* Table Header */}
-                            <div className="grid grid-cols-12 gap-2 px-3 pb-3 border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                <div className="col-span-5">Keyword</div>
-                                <div className="col-span-2 text-center">Position</div>
-                                <div className="col-span-2 text-right">Volume</div>
-                                <div className="col-span-2 text-right">Traffic</div>
-                                <div className="col-span-1 text-right">CPC</div>
-                            </div>
-
-                            {/* Keyword Rows */}
-                            <div className="divide-y divide-gray-50 max-h-[480px] overflow-y-auto">
-                                {keywordList.slice(0, 30).map((kw, idx) => (
-                                    <div key={idx} className="grid grid-cols-12 gap-2 px-3 py-3 items-center hover:bg-gray-50/50 transition-colors group">
-                                        <div className="col-span-5 flex items-center gap-2 min-w-0">
-                                            <span className="text-sm font-medium text-gray-900 truncate">
-                                                {kw.keyword || '-'}
-                                            </span>
-                                            {kw.topRankedUrl && (
-                                                <a
-                                                    href={kw.topRankedUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                                                >
-                                                    <ExternalLink className="w-3 h-3 text-gray-400" />
-                                                </a>
-                                            )}
-                                        </div>
-                                        <div className="col-span-2 flex justify-center">
-                                            <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getPositionColor(kw.rank || 99)}`}>
-                                                #{kw.rank ?? '-'}
-                                            </span>
-                                        </div>
-                                        <div className="col-span-2 text-right text-sm text-gray-600">
-                                            {formatNumber(kw.searchVolume)}
-                                        </div>
-                                        <div className="col-span-2 text-right text-sm text-gray-600 flex items-center justify-end gap-1">
-                                            {kw.seoClicks !== undefined && kw.seoClicks > 0 && (
-                                                <TrendingUp className="w-3 h-3 text-green-500" />
-                                            )}
-                                            {formatNumber(kw.seoClicks)}
-                                        </div>
-                                        <div className="col-span-1 text-right text-sm text-gray-500">
-                                            {kw.exactCostPerClick !== undefined && kw.exactCostPerClick !== null ? `$${kw.exactCostPerClick.toFixed(2)}` : kw.broadCostPerClick !== undefined && kw.broadCostPerClick !== null ? `$${kw.broadCostPerClick.toFixed(2)}` : '-'}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {keywordList.length > 30 && (
-                                <div className="text-center mt-4 pt-4 border-t border-gray-100">
-                                    <p className="text-sm text-gray-400">
-                                        Showing top 30 of {keywordList.length} keywords
-                                    </p>
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <div className="text-center py-8">
-                            <Search className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                            <p className="text-gray-500 font-medium">No keyword data available</p>
-                            <p className="text-gray-400 text-sm mt-1">This site may not have indexed keywords yet</p>
+                {/* Summary Stats */}
+                {keywordList.length > 0 && (
+                    <div className="mb-6">
+                        <div className="section-header">
+                            <span>Summary Stats</span>
                         </div>
-                    )}
-
-                    {/* Summary Stats */}
-                    {keywordList.length > 0 && (
-                        <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t border-gray-100">
+                        <div className="panel grid grid-cols-3 gap-4">
                             <div className="text-center">
                                 <div className="text-2xl font-bold text-gray-900">
                                     {keywordList.filter(k => (k.rank || 99) <= 10).length}
                                 </div>
                                 <div className="text-xs text-gray-500 mt-1">Top 10 Keywords</div>
                             </div>
-                            <div className="text-center">
+                            <div className="text-center border-l border-r border-[#E5E7EB]">
                                 <div className="text-2xl font-bold text-gray-900">
                                     {formatNumber(keywordList.reduce((sum, k) => sum + (k.seoClicks || 0), 0))}
                                 </div>
@@ -181,8 +186,8 @@ export default function TopKeywordsCard({ data }: TopKeywordsCardProps) {
                                 <div className="text-xs text-gray-500 mt-1">Top 3 Rankings</div>
                             </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </CardErrorBoundary>
     );

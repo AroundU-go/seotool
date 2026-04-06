@@ -385,8 +385,8 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
                                     <h3 className="text-lg font-semibold text-foreground pr-4">{item.q}</h3>
                                     <ChevronDown className={`w-5 h-5 text-foreground/40 flex-shrink-0 transition-transform duration-300 ${faqOpen === idx ? 'rotate-180' : ''}`} />
                                 </button>
-                                <div className={`overflow-hidden transition-all duration-300 ${faqOpen === idx ? 'max-h-96 pb-6' : 'max-h-0'}`}>
-                                    <p className="px-6 text-foreground/60 leading-relaxed">{item.a}</p>
+                                <div className={`overflow-hidden transition-all duration-300 ${faqOpen === idx ? 'max-h-[800px] pb-6' : 'max-h-0'}`}>
+                                    <p className="px-6 text-foreground/60 leading-relaxed whitespace-pre-line">{item.a}</p>
                                 </div>
                             </div>
                         ))}

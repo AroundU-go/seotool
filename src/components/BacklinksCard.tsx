@@ -29,153 +29,159 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                    <Link2 className="w-6 h-6 text-indigo-600" />
-                </div>
-                <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-900">Backlink Analysis</h2>
-                    <p className="text-gray-600">Backlink profile overview, new & toxic links</p>
-                </div>
-            </div>
+        <div className="py-6 font-sans antialiased text-gray-900 max-w-5xl mx-auto space-y-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">Backlink Analysis</h1>
+            <style jsx>{`
+                .section-header { font-size: 11px; font-weight: 500; color: #6B7280; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+                .panel { background: #F9FAFB; border-radius: 12px; padding: 16px; border: 1px solid #F3F4F6; }
+            `}</style>
+
 
             {/* Overview Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-indigo-50 rounded-xl p-4 text-center">
-                    <Link2 className="w-5 h-5 text-indigo-600 mx-auto mb-2" />
-                    <span className="text-2xl font-bold text-gray-900 block">{totalBacklinks}</span>
-                    <span className="text-xs text-gray-500 font-medium">Total Backlinks</span>
+            <div className="mb-6">
+                <div className="section-header">
+                    <span>Overview Stats</span>
                 </div>
-                <div className="bg-green-50 rounded-xl p-4 text-center">
-                    <TrendingUp className="w-5 h-5 text-green-600 mx-auto mb-2" />
-                    <span className="text-2xl font-bold text-gray-900 block">{newTotal}</span>
-                    <span className="text-xs text-gray-500 font-medium">New Backlinks</span>
-                </div>
-                <div className="bg-red-50 rounded-xl p-4 text-center">
-                    <ShieldAlert className="w-5 h-5 text-red-500 mx-auto mb-2" />
-                    <span className="text-2xl font-bold text-gray-900 block">{poorTotal}</span>
-                    <span className="text-xs text-gray-500 font-medium">Toxic Backlinks</span>
+                <div className="panel grid grid-cols-3 gap-4">
+                    <div className="text-center border-r border-[#E5E7EB]">
+                        <Link2 className="w-5 h-5 text-indigo-600 mx-auto mb-2" />
+                        <span className="text-2xl font-bold text-gray-900 block">{totalBacklinks}</span>
+                        <span className="text-xs text-gray-500 font-medium">Total Backlinks</span>
+                    </div>
+                    <div className="text-center border-r border-[#E5E7EB]">
+                        <TrendingUp className="w-5 h-5 text-green-600 mx-auto mb-2" />
+                        <span className="text-2xl font-bold text-gray-900 block">{newTotal}</span>
+                        <span className="text-xs text-gray-500 font-medium">New Backlinks</span>
+                    </div>
+                    <div className="text-center">
+                        <ShieldAlert className="w-5 h-5 text-red-500 mx-auto mb-2" />
+                        <span className="text-2xl font-bold text-gray-900 block">{poorTotal}</span>
+                        <span className="text-xs text-gray-500 font-medium">Toxic Backlinks</span>
+                    </div>
                 </div>
             </div>
 
             {referringDomains > 0 && (
-                <div className="bg-gray-50 rounded-lg p-3 mb-6 flex items-center justify-between">
-                    <span className="text-sm text-gray-600 font-medium">Referring Domains</span>
-                    <span className="text-lg font-bold text-gray-900">{referringDomains}</span>
+                <div className="mb-6">
+                    <div className="panel flex items-center justify-between">
+                        <span className="text-sm text-gray-600 font-medium">Referring Domains</span>
+                        <span className="text-lg font-bold text-gray-900">{referringDomains}</span>
+                    </div>
                 </div>
             )}
 
             {/* Backlink List */}
             {backlinks.length > 0 && (
                 <div className="mb-6">
-                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                        <ExternalLink className="w-4 h-4 text-indigo-600" />
-                        Backlinks ({backlinks.length})
-                    </h3>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr className="bg-gray-50 text-left">
-                                    <th className="px-3 py-2 font-semibold text-gray-600 rounded-tl-lg">Source</th>
-                                    <th className="px-3 py-2 font-semibold text-gray-600">Anchor</th>
-                                    <th className="px-3 py-2 font-semibold text-gray-600">DA</th>
-                                    <th className="px-3 py-2 font-semibold text-gray-600 rounded-tr-lg">Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {backlinks.slice(0, 15).map((bl, i) => (
-                                    <tr key={i} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
-                                        <td className="px-3 py-2 text-indigo-600 max-w-[200px]">
-                                            <a href={(bl.url_from || bl.source_url) as string} target="_blank" rel="noreferrer" className="hover:underline" title={(bl.url_from || bl.source_url) as string}>
-                                                {truncateUrl((bl.url_from || bl.source_url) as string)}
-                                            </a>
-                                        </td>
-                                        <td className="px-3 py-2 text-gray-700 max-w-[150px] truncate">{((bl.anchor || bl.anchor_text) as string) || '-'}</td>
-                                        <td className="px-3 py-2">
-                                            <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium text-xs">
-                                                {String(bl.domain_inlink_rank ?? bl.domain_authority ?? '-')}
-                                            </span>
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${bl.nofollow ? 'bg-gray-200 text-gray-600' : 'bg-green-100 text-green-700'}`}>
-                                                {bl.nofollow ? 'nofollow' : 'dofollow'}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="section-header">
+                        <span>All Backlinks ({backlinks.length})</span>
                     </div>
-                    {backlinks.length > 15 && (
-                        <p className="text-xs text-gray-400 mt-2 text-center">Showing 15 of {backlinks.length} backlinks</p>
-                    )}
+                    <div className="panel p-0 overflow-hidden pt-4 pb-2">
+                        <div className="overflow-x-auto px-2">
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="border-b border-gray-100 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                        <th className="px-4 py-2">Source</th>
+                                        <th className="px-4 py-2">Anchor</th>
+                                        <th className="px-4 py-2">DA</th>
+                                        <th className="px-4 py-2">Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {backlinks.slice(0, 15).map((bl, i) => (
+                                        <tr key={i} className="hover:bg-gray-50/50 transition-colors">
+                                            <td className="px-4 py-3 text-indigo-600 max-w-[200px]">
+                                                <a href={(bl.url_from || bl.source_url) as string} target="_blank" rel="noreferrer" className="hover:underline" title={(bl.url_from || bl.source_url) as string}>
+                                                    {truncateUrl((bl.url_from || bl.source_url) as string)}
+                                                </a>
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-700 max-w-[150px] truncate">{((bl.anchor || bl.anchor_text) as string) || '-'}</td>
+                                            <td className="px-4 py-3">
+                                                <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium text-xs">
+                                                    {String(bl.domain_inlink_rank ?? bl.domain_authority ?? '-')}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className={`px-2 py-0.5 rounded text-xs font-medium ${bl.nofollow ? 'bg-gray-200 text-gray-600' : 'bg-green-100 text-green-700'}`}>
+                                                    {bl.nofollow ? 'nofollow' : 'dofollow'}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {backlinks.length > 15 && (
+                            <p className="text-xs text-gray-400 mt-4 pt-4 border-t border-gray-100 text-center mx-6">Showing 15 of {backlinks.length} backlinks</p>
+                        )}
+                    </div>
                 </div>
             )}
 
             {/* New Backlinks */}
             {newList.length > 0 && (
                 <div className="mb-6">
-                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-green-600" />
-                        New Backlinks ({newList.length})
-                    </h3>
-                    <div className="space-y-2">
-                        {newList.slice(0, 10).map((nl, i) => (
-                            <div key={i} className="bg-green-50/60 rounded-lg p-3 flex items-center justify-between gap-4">
-                                <div className="flex-1 min-w-0">
-                                    <a href={(nl.url_from || nl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-green-700 hover:underline font-medium truncate block">
-                                        {truncateUrl((nl.url_from || nl.source_url) as string)}
-                                    </a>
-                                    {Boolean(nl.anchor || nl.anchor_text) && (
-                                        <span className="text-xs text-gray-500">Anchor: {String(nl.anchor || nl.anchor_text)}</span>
+                    <div className="section-header">
+                        <span>New Backlinks ({newList.length})</span>
+                    </div>
+                    <div className="panel bg-[#F0FDF4] border-[#BBF7D0]">
+                        <div className="space-y-2">
+                            {newList.slice(0, 10).map((nl, i) => (
+                                <div key={i} className="bg-white/60 p-3 rounded-lg border border-green-100 flex items-center justify-between gap-4">
+                                    <div className="flex-1 min-w-0">
+                                        <a href={(nl.url_from || nl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-green-700 hover:underline font-medium truncate block">
+                                            {truncateUrl((nl.url_from || nl.source_url) as string)}
+                                        </a>
+                                        {Boolean(nl.anchor || nl.anchor_text) && (
+                                            <span className="text-xs text-gray-500">Anchor: {String(nl.anchor || nl.anchor_text)}</span>
+                                        )}
+                                    </div>
+                                    {Boolean(nl.first_seen) && (
+                                        <span className="text-xs text-gray-400 shrink-0">{new Date(String(nl.first_seen)).toLocaleDateString()}</span>
                                     )}
                                 </div>
-                                {Boolean(nl.first_seen) && (
-                                    <span className="text-xs text-gray-400 shrink-0">{new Date(String(nl.first_seen)).toLocaleDateString()}</span>
-                                )}
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+                        {newList.length > 10 && (
+                            <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-green-100 text-center">Showing 10 of {newList.length} new backlinks</p>
+                        )}
                     </div>
-                    {newList.length > 10 && (
-                        <p className="text-xs text-gray-400 mt-2 text-center">Showing 10 of {newList.length} new backlinks</p>
-                    )}
                 </div>
             )}
 
             {/* Poor / Toxic Backlinks */}
             {poorList.length > 0 && (
                 <div>
-                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-red-500" />
-                        Toxic Backlinks ({poorList.length})
-                    </h3>
-                    <div className="space-y-2">
-                        {poorList.slice(0, 10).map((pl, i) => (
-                            <div key={i} className="bg-red-50/60 rounded-lg p-3">
-                                <div className="flex items-center justify-between gap-4">
-                                    <a href={(pl.url_from || pl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-red-700 hover:underline font-medium truncate flex-1">
-                                        {truncateUrl((pl.url_from || pl.source_url) as string)}
-                                    </a>
-                                    {pl.spam_score !== undefined && (
-                                        <span className="px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs font-bold shrink-0">
-                                            Spam: {pl.spam_score as number}
-                                        </span>
+                    <div className="section-header">
+                        <span>Toxic Backlinks ({poorList.length})</span>
+                    </div>
+                    <div className="panel bg-[#FFF8F1] border-[#FFEDD5]">
+                        <div className="space-y-2">
+                            {poorList.slice(0, 10).map((pl, i) => (
+                                <div key={i} className="bg-white/60 p-3 rounded-lg border border-orange-100">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <a href={(pl.url_from || pl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-red-700 hover:underline font-medium truncate flex-1">
+                                            {truncateUrl((pl.url_from || pl.source_url) as string)}
+                                        </a>
+                                        {pl.spam_score !== undefined && (
+                                            <span className="px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs font-bold shrink-0">
+                                                Spam: {pl.spam_score as number}
+                                            </span>
+                                        )}
+                                    </div>
+                                    {Boolean(pl.reason) && (
+                                        <p className="text-xs text-red-600 mt-1">{String(pl.reason)}</p>
+                                    )}
+                                    {Boolean(pl.anchor || pl.anchor_text) && (
+                                        <p className="text-xs text-gray-500 mt-0.5">Anchor: {String(pl.anchor || pl.anchor_text)}</p>
                                     )}
                                 </div>
-                                {Boolean(pl.reason) && (
-                                    <p className="text-xs text-red-600 mt-1">{String(pl.reason)}</p>
-                                )}
-                                {Boolean(pl.anchor || pl.anchor_text) && (
-                                    <p className="text-xs text-gray-500 mt-0.5">Anchor: {String(pl.anchor || pl.anchor_text)}</p>
-                                )}
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+                        {poorList.length > 10 && (
+                            <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-orange-100 text-center">Showing 10 of {poorList.length} toxic backlinks</p>
+                        )}
                     </div>
-                    {poorList.length > 10 && (
-                        <p className="text-xs text-gray-400 mt-2 text-center">Showing 10 of {poorList.length} toxic backlinks</p>
-                    )}
                 </div>
             )}
         </div>
