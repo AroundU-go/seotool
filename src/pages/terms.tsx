@@ -59,7 +59,7 @@ export default function TermsPage() {
             "Billing: Subscriptions are billed in advance on a monthly or annual basis, depending on your plan selection.",
             "Auto-Renewal: Subscriptions automatically renew at the end of each billing cycle unless you cancel before the renewal date.",
             "Price Changes: We may change subscription prices with at least 30 days' notice. Continued use after the price change takes effect constitutes acceptance.",
-            "Refunds: We offer a 7-day money-back guarantee for first-time subscribers. Refunds beyond this period are at our discretion and evaluated on a case-by-case basis.",
+            "Refunds: We offer a 24-hour money-back guarantee for first-time subscribers. Refunds beyond this period are rejected.",
             "Taxes: Prices are exclusive of applicable taxes (e.g., GST). You are responsible for paying all applicable taxes.",
             "Failed Payments: If payment fails, we may suspend access to your account until payment is resolved."
           ]
