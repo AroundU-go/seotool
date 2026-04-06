@@ -14,8 +14,9 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
     if (!bd && !nb && !pb) return null;
 
     const backlinks = (bd?.backlinks || bd?.data || []) as Array<Record<string, unknown>>;
-    const totalBacklinks = (bd?.total_backlinks ?? bd?.total ?? backlinks.length ?? 0) as number;
-    const referringDomains = (bd?.referring_domains ?? bd?.ref_domains ?? 0) as number;
+    const counts = bd?.counts as any;
+    const totalBacklinks = (counts?.backlinks?.total ?? bd?.total_backlinks ?? bd?.total ?? backlinks.length ?? 0) as number;
+    const referringDomains = (counts?.domains?.total ?? bd?.referring_domains ?? bd?.ref_domains ?? 0) as number;
 
     const newList = (nb?.new_backlinks || nb?.data || []) as Array<Record<string, unknown>>;
     const newTotal = (nb?.total ?? newList.length ?? 0) as number;
@@ -77,10 +78,10 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                         <span>All Backlinks ({backlinks.length})</span>
                     </div>
                     <div className="panel p-0 overflow-hidden pt-4 pb-2">
-                        <div className="overflow-x-auto px-2">
+                        <div className="overflow-auto px-2 max-h-[600px]">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="border-b border-gray-100 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                    <tr className="border-b border-gray-100 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider sticky top-0 bg-[#F9FAFB] shadow-sm">
                                         <th className="px-4 py-2">Source</th>
                                         <th className="px-4 py-2">Anchor</th>
                                         <th className="px-4 py-2">DA</th>
@@ -88,7 +89,7 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
-                                    {backlinks.slice(0, 15).map((bl, i) => (
+                                    {backlinks.map((bl, i) => (
                                         <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                                             <td className="px-4 py-3 text-indigo-600 max-w-[200px]">
                                                 <a href={(bl.url_from || bl.source_url) as string} target="_blank" rel="noreferrer" className="hover:underline" title={(bl.url_from || bl.source_url) as string}>
@@ -111,9 +112,6 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                                 </tbody>
                             </table>
                         </div>
-                        {backlinks.length > 15 && (
-                            <p className="text-xs text-gray-400 mt-4 pt-4 border-t border-gray-100 text-center mx-6">Showing 15 of {backlinks.length} backlinks</p>
-                        )}
                     </div>
                 </div>
             )}
@@ -125,8 +123,8 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                         <span>New Backlinks ({newList.length})</span>
                     </div>
                     <div className="panel bg-[#F0FDF4] border-[#BBF7D0]">
-                        <div className="space-y-2">
-                            {newList.slice(0, 10).map((nl, i) => (
+                        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+                            {newList.map((nl, i) => (
                                 <div key={i} className="bg-white/60 p-3 rounded-lg border border-green-100 flex items-center justify-between gap-4">
                                     <div className="flex-1 min-w-0">
                                         <a href={(nl.url_from || nl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-green-700 hover:underline font-medium truncate block">
@@ -142,9 +140,6 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                                 </div>
                             ))}
                         </div>
-                        {newList.length > 10 && (
-                            <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-green-100 text-center">Showing 10 of {newList.length} new backlinks</p>
-                        )}
                     </div>
                 </div>
             )}
@@ -156,8 +151,8 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                         <span>Toxic Backlinks ({poorList.length})</span>
                     </div>
                     <div className="panel bg-[#FFF8F1] border-[#FFEDD5]">
-                        <div className="space-y-2">
-                            {poorList.slice(0, 10).map((pl, i) => (
+                        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+                            {poorList.map((pl, i) => (
                                 <div key={i} className="bg-white/60 p-3 rounded-lg border border-orange-100">
                                     <div className="flex items-center justify-between gap-4">
                                         <a href={(pl.url_from || pl.source_url) as string} target="_blank" rel="noreferrer" className="text-sm text-red-700 hover:underline font-medium truncate flex-1">
@@ -178,9 +173,6 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                                 </div>
                             ))}
                         </div>
-                        {poorList.length > 10 && (
-                            <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-orange-100 text-center">Showing 10 of {poorList.length} toxic backlinks</p>
-                        )}
                     </div>
                 </div>
             )}
