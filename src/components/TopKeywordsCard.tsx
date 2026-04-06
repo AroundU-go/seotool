@@ -68,19 +68,29 @@ export default function TopKeywordsCard({ data }: TopKeywordsCardProps) {
 
     return (
         <CardErrorBoundary>
-            <div>
-                <div className="text-[11px] font-medium text-[#6B7280] tracking-[0.05em] uppercase mb-2 flex items-center justify-between">
-                    <span>Top Keywords</span>
-                    <div className="flex gap-2 items-center">
+            <div className="bg-white rounded-3xl shadow-lg shadow-black/5 border border-gray-100 overflow-hidden">
+                {/* Header */}
+                <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-purple-50">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+                                <Search className="w-5 h-5 text-indigo-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900">Top Keywords</h3>
+                                <p className="text-sm text-gray-500">Search keywords ranking for this site</p>
+                            </div>
+                        </div>
                         {totalKeywords > 0 && (
-                            <span className="text-[#6B7280] normal-case lowercase bg-[#F3F4F6] px-2 py-0.5 rounded text-[10px]">
+                            <span className="text-sm font-semibold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">
                                 {totalKeywords} total
                             </span>
                         )}
-                        <span className="text-[10px] font-medium px-[7px] py-[2px] rounded-[10px] bg-[#EEEDFE] text-[#3C3489] border border-[#CECBF6]">pro</span>
                     </div>
                 </div>
-                <div className="bg-[#F9FAFB] rounded-xl p-4 md:p-6 border border-[#F3F4F6]">
+
+                {/* Content */}
+                <div className="p-6">
                     {keywordList.length > 0 ? (
                         <>
                             {/* Table Header */}

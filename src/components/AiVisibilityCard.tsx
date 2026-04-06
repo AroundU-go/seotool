@@ -63,12 +63,21 @@ export default function AiVisibilityCard({ data }: AiVisibilityCardProps) {
   ] : [];
 
   return (
-    <div>
-      <div className="text-[11px] font-medium text-[#6B7280] tracking-[0.05em] uppercase mb-2 flex items-center justify-between">
-          <span>AI SEO Readiness</span>
-          <span className="text-[10px] font-medium px-[7px] py-[2px] rounded-[10px] bg-[#EEEDFE] text-[#3C3489] border border-[#CECBF6]">pro</span>
+    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+          <Brain className="w-6 h-6 text-purple-600" />
+        </div>
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-gray-900">AI SEO Readiness</h2>
+          <p className="text-gray-600">Content optimization for AI systems</p>
+        </div>
+        {aiScore?.grade && (
+          <div className={`px-4 py-2 rounded-xl font-bold text-2xl ${gradeColor(aiScore.grade)}`}>
+            {aiScore.grade}
+          </div>
+        )}
       </div>
-      <div className="bg-[#F9FAFB] rounded-xl p-4 md:p-6 border border-[#F3F4F6]">
 
       {/* AI Score */}
       {aiScore?.total !== undefined && (
@@ -242,5 +251,5 @@ export default function AiVisibilityCard({ data }: AiVisibilityCardProps) {
         </div>
       )}
     </div>
-  </div>
+  );
 }

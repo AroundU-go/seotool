@@ -17,12 +17,16 @@ export default function AiBotCheckerCard({ data }: AiBotCheckerCardProps) {
   const bots = d.bots as Record<string, { allowed?: boolean; rule?: string }> | undefined;
 
   return (
-    <div>
-      <div className="text-[11px] font-medium text-[#6B7280] tracking-[0.05em] uppercase mb-2 flex items-center justify-between">
-          <span>AI Bot Access</span>
-          <span className="text-[10px] font-medium px-[7px] py-[2px] rounded-[10px] bg-[#EEEDFE] text-[#3C3489] border border-[#CECBF6]">pro</span>
+    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+          <Bot className="w-6 h-6 text-green-600" />
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">AI Bot Access</h2>
+          <p className="text-gray-600">{url ? `robots.txt analysis for ${url}` : 'robots.txt configuration analysis'}</p>
+        </div>
       </div>
-      <div className="bg-[#F9FAFB] rounded-xl p-4 md:p-6 border border-[#F3F4F6]">
 
       {/* robots.txt Status */}
       <div className="bg-gray-50 rounded-lg p-4 mb-4">
@@ -111,5 +115,5 @@ export default function AiBotCheckerCard({ data }: AiBotCheckerCardProps) {
         </div>
       )}
     </div>
-  </div>
+  );
 }
