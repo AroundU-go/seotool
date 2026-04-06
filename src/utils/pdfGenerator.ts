@@ -57,6 +57,7 @@ export function generateFixGuidePdf(website: string, data: {
   backlinkData?: unknown;
   newBacklinks?: unknown;
   poorBacklinks?: unknown;
+  rapidApiData?: unknown;
 }, hasProAccess: boolean = false) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
@@ -185,6 +186,78 @@ export function generateFixGuidePdf(website: string, data: {
     }
   }
 
+  // ── ON-PAGE & SECURITY ──────────────────────────────────────
+  const rapidData = data.rapidApiData as Record<string, unknown> | null;
+  const seoDataRaw = data.seoAnalysis as Record<string, unknown> | null;
+  
+  if (rapidData || seoDataRaw) {
+    const wordCount = rapidData?.wordCount as number | undefined;
+    const language = rapidData?.language as string | undefined;
+    const internalLinks = (seoDataRaw?.links as any)?.internal;
+    const externalLinks = (seoDataRaw?.links as any)?.external;
+    const brokenLinks = (seoDataRaw?.links as any)?.broken;
+    const totalImages = (seoDataRaw?.images as any)?.total;
+    const imagesNoAlt = (seoDataRaw?.images as any)?.without_alt;
+
+    yPos = checkPageBreak(doc, yPos, 45);
+    yPos = drawSectionHeading(doc, 'On-Page Metrics', yPos);
+
+    const onPageBody: string[][] = [];
+    if (wordCount !== undefined) onPageBody.push(['Word Count', String(wordCount)]);
+    if (language) onPageBody.push(['Language', language.toUpperCase()]);
+    if (internalLinks !== undefined) onPageBody.push(['Internal Links', String(internalLinks)]);
+    if (externalLinks !== undefined) onPageBody.push(['External Links', String(externalLinks)]);
+    if (brokenLinks !== undefined) onPageBody.push(['Broken Links', String(brokenLinks)]);
+    if (totalImages !== undefined) onPageBody.push(['Total Images', String(totalImages)]);
+    if (imagesNoAlt !== undefined) onPageBody.push(['Images Missing Alt', String(imagesNoAlt)]);
+
+    if (onPageBody.length > 0) {
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Metric', 'Value']],
+        body: onPageBody,
+        theme: 'grid',
+        headStyles: { fillColor: [52, 152, 219] },
+        columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' }, 1: { cellWidth: 'auto' } },
+        styles: { fontSize: 9, cellPadding: 4, overflow: 'linebreak' },
+        margin: { left: 14, right: 14 },
+      });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    const checks = (rapidData?.seoScore as any)?.checks as Array<any> | undefined;
+    if (checks && checks.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      yPos = drawSectionHeading(doc, 'Security & Quality Checks', yPos);
+
+      const checksBody = checks.map(c => [
+         c.name || 'Unknown Check',
+         c.pass ? 'PASS' : 'FAIL',
+      ]);
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Action / Check', 'Status']],
+        body: checksBody,
+        theme: 'grid',
+        headStyles: { fillColor: [155, 89, 182] },
+        columnStyles: { 0: { cellWidth: 120 }, 1: { cellWidth: 'auto', fontStyle: 'bold' } },
+        styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
+        margin: { left: 14, right: 14 },
+        didParseCell: (data) => {
+            if (data.section === 'body' && data.column.index === 1) {
+               if (data.cell.raw === 'PASS') {
+                   data.cell.styles.textColor = '#27ae60'; // green
+               } else if (data.cell.raw === 'FAIL') {
+                   data.cell.styles.textColor = '#e74c3c'; // red
+               }
+            }
+        }
+      });
+      yPos = getTableEndY(doc, yPos);
+    }
+  }
+
   // ── ISSUES & FINDINGS ───────────────────────────────────────
   yPos = checkPageBreak(doc, yPos, 30);
   yPos = drawSectionHeading(doc, 'Issues & Recommendations', yPos);
@@ -294,7 +367,7 @@ export function generateFixGuidePdf(website: string, data: {
       doc.text(`Top 3 Rankings: ${top3}`, 160, yPos);
       yPos += 10;
 
-      const kwBody = kwList.slice(0, 15).map((kw) => {
+      const kwBody = kwList.slice(0, 500).map((kw) => {
         const cpc = kw.exactCostPerClick ?? kw.broadCostPerClick;
         return [
           (kw.keyword as string) || '-',
@@ -364,7 +437,7 @@ export function generateFixGuidePdf(website: string, data: {
       doc.text('Top Backlinks', 14, yPos);
       yPos += 5;
 
-      const blBody = backlinks.slice(0, 10).map((bl) => [
+      const blBody = backlinks.slice(0, 500).map((bl) => [
         (bl.source_url as string) || '-',
         (bl.anchor_text as string) || '-',
         String(bl.domain_authority ?? '-'),
@@ -398,7 +471,7 @@ export function generateFixGuidePdf(website: string, data: {
       doc.text('New Backlinks', 14, yPos);
       yPos += 5;
 
-      const nlBody = newList.slice(0, 5).map((nl) => [
+      const nlBody = newList.slice(0, 500).map((nl) => [
         (nl.source_url as string) || '-',
         (nl.anchor_text as string) || '-',
         nl.first_seen ? new Date(nl.first_seen as string).toLocaleDateString() : '-'
@@ -430,7 +503,7 @@ export function generateFixGuidePdf(website: string, data: {
       doc.text('Toxic / Poor Backlinks', 14, yPos);
       yPos += 5;
 
-      const plBody = poorList.slice(0, 5).map((pl) => [
+      const plBody = poorList.slice(0, 500).map((pl) => [
         (pl.source_url as string) || '-',
         String(pl.spam_score ?? '-'),
         (pl.reason as string) || '-'
