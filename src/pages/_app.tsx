@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const canonicalPath = router.asPath.split('?')[0];
-  const canonicalUrl = `https://seozapp.com${canonicalPath === '/' ? '' : canonicalPath}`;
+  const canonicalUrl = `https://www.seozapp.com${canonicalPath === '/' ? '' : canonicalPath}`;
   return (
     <AuthProvider>
       <Head>
