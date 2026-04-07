@@ -29,7 +29,7 @@ const tiers: PricingTier[] = [
         ],
         icon: <Zap className="w-6 h-6" />,
         cta: 'Get Started Free',
-        href: '/analyze',
+        href: '/auth',
     },
     {
         name: 'One-Time',
