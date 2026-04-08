@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+
 import { cn } from "@/lib/utils";
 import {
     IconCloud,
@@ -13,21 +13,6 @@ import {
 } from "@tabler/icons-react";
 
 export function FeaturesSection() {
-    const slides = [
-        "/features/media__1773560310384.jpg",
-        "/features/media__1773560310427.jpg",
-        "/features/media__1773560310440.jpg",
-        "/features/media__1773560834379.jpg",
-        "/features/media__1773561046838.jpg",
-    ];
-    const [currentSlide, setCurrentSlide] = useState(0);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slides.length);
-        }, 3000);
-        return () => clearInterval(timer);
-    }, []);
 
     const features = [
         {
@@ -85,42 +70,10 @@ export function FeaturesSection() {
     ];
 
     return (
-        <div className="flex flex-col gap-12 w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 relative z-10 py-10 max-w-7xl mx-auto">
-                {features.map((feature, index) => (
-                    <Feature key={feature.title} {...feature} index={index} />
-                ))}
-            </div>
-
-            {/* Slideshow */}
-            <div className="max-w-4xl w-full mx-auto pb-10 px-4">
-                <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-4 border-slate-800 bg-slate-950">
-                    {slides.map((slide, idx) => (
-                        <img
-                            key={slide}
-                            src={slide}
-                            alt={`Slide ${idx + 1}`}
-                            className={cn(
-                                "absolute inset-0 w-full h-full object-contain transition-opacity duration-1000",
-                                currentSlide === idx ? "opacity-100 z-10" : "opacity-0 z-0"
-                            )}
-                        />
-                    ))}
-                </div>
-                {/* Dots indicator */}
-                <div className="flex items-center justify-center gap-2 mt-6">
-                    {slides.map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setCurrentSlide(idx)}
-                            className={cn(
-                                "h-2 rounded-full transition-all duration-300",
-                                currentSlide === idx ? "bg-accent w-6" : "bg-foreground/20 hover:bg-foreground/40 w-2"
-                            )}
-                        />
-                    ))}
-                </div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 relative z-10 py-10 max-w-7xl mx-auto">
+            {features.map((feature, index) => (
+                <Feature key={feature.title} {...feature} index={index} />
+            ))}
         </div>
     );
 }
