@@ -1,120 +1,277 @@
-
-import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 import {
-    IconCloud,
-    IconEaseInOut,
     IconTerminal2,
-    IconFlame,
-    IconSearch,
+    IconBrain,
     IconLink,
-    IconTool,
+    IconSearch,
+    IconFlame,
+    IconRobot,
+    IconShieldCheck,
+    IconHistory,
     IconWorld,
-    IconArrowDown,
 } from "@tabler/icons-react";
 
-export function FeaturesSection() {
+interface FeatureData {
+    title: string;
+    icon: React.ReactNode;
+    whatItDoes: string;
+    bullets: string[];
+    whyItMatters: string;
+    matterBullets: string[];
+}
 
-    const features = [
-        {
-            title: "Deep On-Page SEO Analysis",
-            description:
-                "Comprehensive on-page analysis covering meta tags, headings, links, images, content structure and many more.",
-            icon: <IconTerminal2 />,
-        },
-        {
-            title: "AI Engine Optimization",
-            description:
-                "See how AI search engines perceive your content. Optimize for ChatGPT, Perplexity, and more.",
-            icon: <IconEaseInOut />,
-        },
-        {
-            title: "Blazing Fast Results",
-            description: "Get detailed analysis and action plan in seconds. All checks run in parallel for speed.",
-            icon: <IconCloud />,
-        },
-        {
-            title: "Top Search Keywords",
-            description: "Get top search keywords for your site, including ranking and volume.",
-            icon: <IconSearch />,
-        },
-        {
-            title: "Speed Optimization",
-            description:
-                "Detailed loading speed metrics — TTFB, page size, request breakdown — with actionable fixes.",
-            icon: <IconFlame />,
-        },
-        {
-            title: "Downloadable Reports",
-            description:
-                "Export a comprehensive fix guide with prioritized issues and step-by-step recommendations.",
-            icon: <IconArrowDown />,
-        },
-        {
-            title: "Backlink Analysis",
-            description:
-                "Backlink analysis including new backlinks, poor backlinks, domain authority, referring domains, and link quality metrics.",
-            icon: <IconLink />,
-        },
-        {
-            title: "Fix Action Plan",
-            description:
-                "Fix your issues with prioritized action plan as critical, warning, good.",
-            icon: <IconTool />,
-        },
-        {
-            title: "Bulk URL Analysis",
-            description:
-                "Analyze multiple URL's at once with our Pro plan.",
-            icon: <IconWorld />,
-        },
-    ];
+const features: FeatureData[] = [
+    {
+        title: "Deep On-Page SEO Analysis",
+        icon: <IconTerminal2 className="w-7 h-7" />,
+        whatItDoes:
+            "SEOzapp runs a comprehensive on-page audit across 25+ critical SEO factors including:",
+        bullets: [
+            "Meta titles & descriptions",
+            "Heading structure (H1–H6)",
+            "Internal & external links",
+            "Image optimization (alt text, size)",
+            "Content structure & readability",
+            "Schema markup & more",
+        ],
+        whyItMatters:
+            "Most websites don't fail at SEO because of strategy — they fail at execution basics. SEOzapp identifies:",
+        matterBullets: [
+            "Missing meta tags",
+            "Duplicate headings",
+            "Poor structure",
+            "Broken linking",
+        ],
+    },
+    {
+        title: "AI Engine Optimization (AEO)",
+        icon: <IconBrain className="w-7 h-7" />,
+        whatItDoes:
+            "SEOzapp analyzes how your content performs across AI search engines — ChatGPT, Perplexity, Gemini, and AI-powered search layers. It provides:",
+        bullets: [
+            "AI visibility score",
+            "AI-readiness insights",
+            "Suggestions to improve AI discoverability",
+        ],
+        whyItMatters:
+            "Search is no longer just Google. Your content now needs to rank in:",
+        matterBullets: [
+            "AI answers",
+            "LLM-generated summaries",
+            "Conversational search",
+            "Something most traditional tools ignore",
+        ],
+    },
+    {
+        title: "Backlink Analysis",
+        icon: <IconLink className="w-7 h-7" />,
+        whatItDoes: "SEOzapp provides a full backlink profile including:",
+        bullets: [
+            "New backlinks",
+            "Low-quality / toxic links",
+            "Referring domains",
+            "Domain authority insights",
+            "Link quality metrics",
+        ],
+        whyItMatters:
+            "Backlinks are still one of the strongest ranking factors. SEOzapp helps you:",
+        matterBullets: [
+            "Identify harmful links",
+            "Discover link opportunities",
+            "Understand authority gaps",
+            "All without a heavy enterprise tool",
+        ],
+    },
+    {
+        title: "Top Search Keywords Insights",
+        icon: <IconSearch className="w-7 h-7" />,
+        whatItDoes: "SEOzapp identifies:",
+        bullets: [
+            "Top ranking keywords for your page",
+            "Keyword volume",
+            "Keyword positioning",
+        ],
+        whyItMatters:
+            "You don't just need keywords — you need clarity on:",
+        matterBullets: [
+            "What you already rank for",
+            "Where you can improve",
+            "What to double down on",
+            "Optimize existing pages faster instead of guessing",
+        ],
+    },
+    {
+        title: "Speed & Performance Optimization",
+        icon: <IconFlame className="w-7 h-7" />,
+        whatItDoes: "SEOzapp analyzes your site's performance:",
+        bullets: [
+            "Page load time",
+            "TTFB (time to first byte)",
+            "Page size & request breakdown",
+            "Actionable performance fixes",
+        ],
+        whyItMatters: "Speed directly impacts:",
+        matterBullets: [
+            "SEO rankings",
+            "User experience",
+            "Conversions",
+            "Most sites lose traffic because of slow performance",
+        ],
+    },
+    {
+        title: "Bot Access & Crawlability Checks",
+        icon: <IconRobot className="w-7 h-7" />,
+        whatItDoes: "SEOzapp checks:",
+        bullets: [
+            "Whether search engines can access your page",
+            "Crawl issues",
+            "Indexing blockers",
+        ],
+        whyItMatters:
+            "If bots can't access your page, you don't rank — no matter how good your content is.",
+        matterBullets: [
+            "Ensures search-engine friendliness",
+            "Detects technical access barriers",
+        ],
+    },
+    {
+        title: "Security & Technical Health",
+        icon: <IconShieldCheck className="w-7 h-7" />,
+        whatItDoes: "SEOzapp scans for:",
+        bullets: [
+            "Security vulnerabilities",
+            "HTTPS/SSL issues",
+            "Technical SEO gaps",
+        ],
+        whyItMatters: "Security is a ranking signal. Also:",
+        matterBullets: [
+            "Insecure sites lose trust",
+            "Technical errors hurt indexing",
+        ],
+    },
+    {
+        title: "History Tracking",
+        icon: <IconHistory className="w-7 h-7" />,
+        whatItDoes: "SEOzapp lets you:",
+        bullets: ["Track past audits", "Monitor improvements over time"],
+        whyItMatters: "SEO is not one-time. You need:",
+        matterBullets: [
+            "Progress tracking",
+            "Before vs after comparison",
+        ],
+    },
+    {
+        title: "Bulk URL Analysis",
+        icon: <IconWorld className="w-7 h-7" />,
+        whatItDoes: "SEOzapp lets you:",
+        bullets: ["Analyze multiple URLs at once", "Scale SEO audits"],
+        whyItMatters:
+            "Instead of auditing pages one-by-one:",
+        matterBullets: [
+            "Scale SEO across your entire site",
+            "Audit all client pages in one go",
+        ],
+    },
+];
+
+function useScrollReveal() {
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    el.classList.add("feature-visible");
+                    observer.unobserve(el);
+                }
+            },
+            { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+        );
+
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
+    return ref;
+}
+
+function FeatureCard({ feature, index }: { feature: FeatureData; index: number }) {
+    const ref = useScrollReveal();
+    const isEven = index % 2 === 0;
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 relative z-10 py-10 max-w-7xl mx-auto">
-            {features.map((feature, index) => (
-                <Feature key={feature.title} {...feature} index={index} />
-            ))}
+        <div
+            ref={ref}
+            className="feature-card-wrapper"
+            style={{ transitionDelay: `${(index % 3) * 100}ms` }}
+        >
+            <div className={`feature-card ${isEven ? "feature-card--left" : "feature-card--right"}`}>
+                {/* Number badge */}
+                <div className="feature-number">
+                    {String(index + 1).padStart(2, "0")}
+                </div>
+
+                {/* Header */}
+                <div className="feature-header">
+                    <div className="feature-icon-wrap">
+                        {feature.icon}
+                    </div>
+                    <h3 className="feature-title">{feature.title}</h3>
+                </div>
+
+                {/* Content columns */}
+                <div className="feature-columns">
+                    {/* What it does */}
+                    <div className="feature-col">
+                        <div className="feature-col-label">
+                            <span className="feature-col-dot feature-col-dot--does" />
+                            What it does
+                        </div>
+                        <p className="feature-col-desc">{feature.whatItDoes}</p>
+                        <ul className="feature-bullet-list">
+                            {feature.bullets.map((b) => (
+                                <li key={b} className="feature-bullet">
+                                    <span className="feature-bullet-icon">›</span>
+                                    {b}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="feature-divider" />
+
+                    {/* Why it matters */}
+                    <div className="feature-col">
+                        <div className="feature-col-label">
+                            <span className="feature-col-dot feature-col-dot--matters" />
+                            Why it matters
+                        </div>
+                        <p className="feature-col-desc">{feature.whyItMatters}</p>
+                        <ul className="feature-bullet-list">
+                            {feature.matterBullets.map((b) => (
+                                <li key={b} className="feature-bullet feature-bullet--matters">
+                                    <span className="feature-bullet-check">✓</span>
+                                    {b}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
 
-const Feature = ({
-    title,
-    description,
-    icon,
-    index,
-}: {
-    title: string;
-    description: string;
-    icon: React.ReactNode;
-    index: number;
-}) => {
+export function FeaturesSection() {
     return (
-        <div
-            className={cn(
-                "flex flex-col lg:border-r py-10 relative group/feature border-border",
-                (index % 3 === 0) && "lg:border-l",
-                index < 6 && "lg:border-b"
-            )}
-        >
-            {index < 3 && (
-                <div className="absolute inset-0 h-full w-full bg-gradient-to-t from-accent/5 to-transparent pointer-events-none" />
-            )}
-            {index >= 6 && (
-                <div className="absolute inset-0 h-full w-full bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
-            )}
-            <div className="mb-4 relative z-10 px-10 text-foreground/60">
-                {icon}
-            </div>
-            <div className="text-lg font-bold mb-2 relative z-10 px-10">
-                <div className="absolute left-0 inset-y-0 h-6 w-1 rounded-tr-full rounded-br-full bg-accent" />
-                <span className="inline-block text-foreground">
-                    {title}
-                </span>
-            </div>
-            <p className="text-sm text-foreground/60 max-w-xs relative z-10 px-10">
-                {description}
-            </p>
+        <div className="features-container">
+            {features.map((feature, index) => (
+                <FeatureCard key={feature.title} feature={feature} index={index} />
+            ))}
         </div>
     );
-};
+}
