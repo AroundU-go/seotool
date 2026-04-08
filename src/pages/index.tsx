@@ -195,11 +195,11 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                            Everything You Need
+                            Everything You Need that moves the needle
                         </h2>
                         <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
                             A complete SEO toolkit that covers every aspect of modern search optimization,
-                            from traditional SEO to AI readiness.
+                            from traditional SEO to AI search optimization.
                         </p>
                     </div>
                     <FeaturesSection />
