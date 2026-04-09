@@ -168,7 +168,6 @@ export function generateFixGuidePdf(website: string, data: {
       body.push(['Total Requests', summary.requests.toString()]);
     }
 
-    if (body.length > 0) {
       autoTable(doc, {
         startY: yPos,
         head,
@@ -182,6 +181,57 @@ export function generateFixGuidePdf(website: string, data: {
           1: { cellWidth: 'auto' },
         },
       });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // Performance Suggestions
+    const suggestions = speedData.improve_page_performance as Array<{grade?: string, suggestion?: string, detail?: string}> | undefined;
+    if (suggestions && suggestions.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 35);
+      doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(40, 40, 40);
+      doc.text('Performance Suggestions', 14, yPos); yPos += 5;
+      
+      const suggBody = suggestions.map(s => [s.grade || '-', s.suggestion || '-', s.detail || '-']);
+      autoTable(doc, { startY: yPos, head: [['Grade', 'Suggestion', 'Detail']], body: suggBody, theme: 'grid', headStyles: { fillColor: [46, 204, 113] }, columnStyles: { 0: { cellWidth: 20 }, 1: { cellWidth: 50 }, 2: { cellWidth: 'auto' } }, styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' }, margin: { left: 14, right: 14 } });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // Connection Timings
+    const timings = (speedData.summary as any)?.main?.timings || (speedData.raw as any)?.timings;
+    if (timings && timings.total_time) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(40, 40, 40);
+      doc.text('Connection Timings', 14, yPos); yPos += 5;
+      
+      const tBody = [
+        ['DNS Lookup', `${((timings.namelookup_time || 0) * 1000).toFixed(1)} ms`],
+        ['Connect', `${((timings.connect_time || 0) * 1000).toFixed(1)} ms`],
+        ['TTFB (Start Transfer)', `${((timings.starttransfer_time || 0) * 1000).toFixed(1)} ms`],
+        ['Total Time', `${((timings.total_time || 0) * 1000).toFixed(1)} ms`]
+      ];
+      autoTable(doc, { startY: yPos, head: [['Phase', 'Duration']], body: tBody, theme: 'grid', headStyles: { fillColor: [46, 204, 113] }, styles: { fontSize: 8, cellPadding: 3 }, margin: { left: 14, right: 14 } });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // Weight by domain
+    const wDomain = speedData.content_size_by_domain as Array<{domain?: string, size_kb?: number, percent?: number}> | undefined;
+    if (wDomain && wDomain.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(40, 40, 40);
+      doc.text('Weight by Domain', 14, yPos); yPos += 5;
+      const dBody = wDomain.map(d => [d.domain || '-', `${d.size_kb} KB`, `${d.percent}%`]);
+      autoTable(doc, { startY: yPos, head: [['Domain', 'Size', '%']], body: dBody, theme: 'grid', headStyles: { fillColor: [46, 204, 113] }, styles: { fontSize: 8, cellPadding: 3 }, margin: { left: 14, right: 14 } });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // Requests by domain
+    const rDomain = speedData.requests_by_domain as Array<{domain?: string, requests?: number, percent?: number}> | undefined;
+    if (rDomain && rDomain.length > 0) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(40, 40, 40);
+      doc.text('Requests by Domain', 14, yPos); yPos += 5;
+      const dBody = rDomain.map(d => [d.domain || '-', String(d.requests || 0), `${d.percent}%`]);
+      autoTable(doc, { startY: yPos, head: [['Domain', 'Requests', '%']], body: dBody, theme: 'grid', headStyles: { fillColor: [46, 204, 113] }, styles: { fontSize: 8, cellPadding: 3 }, margin: { left: 14, right: 14 } });
       yPos = getTableEndY(doc, yPos);
     }
   }
@@ -255,6 +305,63 @@ export function generateFixGuidePdf(website: string, data: {
         }
       });
       yPos = getTableEndY(doc, yPos);
+    }
+    // Page basics
+    const basic = seoDataRaw?.basic as Record<string, any> | undefined;
+    if (basic) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      yPos = drawSectionHeading(doc, 'Page Basics', yPos);
+      const bBody = [
+        ['Requested URL', basic.requested_url || '-'],
+        ['Final URL', basic.final_url || '-'],
+        ['Title', basic.title || '-'],
+        ['HTTP Code', String(basic.http_code || '-')]
+      ];
+      autoTable(doc, { startY: yPos, head: [['Metric', 'Value']], body: bBody, theme: 'grid', headStyles: { fillColor: [52, 152, 219] }, columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } }, styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' }, margin: { left: 14, right: 14 } });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // Crawl Signals
+    const crawl = seoDataRaw?.crawl_signals as Record<string, any> | undefined;
+    if (crawl) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      yPos = drawSectionHeading(doc, 'Crawl Signals', yPos);
+      const cBody = [
+        ['Robots.txt', crawl.robots?.found ? 'Found' : 'Missing', `HTTP ${crawl.robots?.http_code || '-'}`],
+        ['Sitemap.xml', crawl.sitemap?.found ? 'Found' : 'Missing', `HTTP ${crawl.sitemap?.http_code || '-'}`],
+        ['llms.txt', crawl.llms_txt?.found ? 'Found' : 'Missing', `HTTP ${crawl.llms_txt?.http_code || '-'}`],
+        ['ai.txt', crawl.ai_txt?.found ? 'Found' : 'Missing', `HTTP ${crawl.ai_txt?.http_code || '-'}`]
+      ];
+      autoTable(doc, { startY: yPos, head: [['Signal', 'Status', 'Details']], body: cBody, theme: 'grid', headStyles: { fillColor: [52, 152, 219] }, styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' }, margin: { left: 14, right: 14 }, didParseCell: (d) => { if (d.section === 'body' && d.column.index === 1) { d.cell.styles.textColor = d.cell.raw === 'Found' ? '#27ae60' : '#e74c3c'; } } });
+      yPos = getTableEndY(doc, yPos);
+    }
+
+    // Security Headers & Actions
+    const sec = seoDataRaw?.security as Record<string, any> | undefined;
+    if (sec) {
+      yPos = checkPageBreak(doc, yPos, 60);
+      yPos = drawSectionHeading(doc, 'Security Profile', yPos);
+      
+      const sBody = [
+        ['HTTPS Configuration', sec.https ? 'Active' : 'Warning'],
+        ['HSTS Header', sec.hsts ? 'Active' : 'Warning'],
+        ['X-Frame-Options', sec.x_frame_options ? 'Active' : 'Warning'],
+        ['Content Security Policy', sec.content_security_policy ? 'Active' : 'Warning'],
+        ['Mixed Content', sec.mixed_content_found ? 'Warning (Found)' : 'Clear']
+      ];
+      
+      autoTable(doc, { startY: yPos, head: [['Check', 'Status']], body: sBody, theme: 'grid', headStyles: { fillColor: [155, 89, 182] }, columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } }, styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' }, margin: { left: 14, right: 14 }, didParseCell: (d) => { if (d.section === 'body' && d.column.index === 1) { d.cell.styles.textColor = (d.cell.raw as string).includes('Active') || d.cell.raw === 'Clear' ? '#27ae60' : '#e74c3c'; } } });
+      yPos = getTableEndY(doc, yPos);
+
+      // Security suggestions
+      if (Array.isArray(sec.suggestions) && sec.suggestions.length > 0) {
+        yPos = checkPageBreak(doc, yPos, 30);
+        doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(40, 40, 40);
+        doc.text('Security Actions', 14, yPos); yPos += 5;
+        const saBody = sec.suggestions.map(s => [s]);
+        autoTable(doc, { startY: yPos, head: [['Required Action']], body: saBody, theme: 'grid', headStyles: { fillColor: [155, 89, 182] }, styles: { fontSize: 8, cellPadding: 3, textColor: '#e74c3c' }, margin: { left: 14, right: 14 } });
+        yPos = getTableEndY(doc, yPos);
+      }
     }
   }
 
@@ -588,12 +695,45 @@ export function generateFixGuidePdf(website: string, data: {
     }
   }
 
+    // Links & Trust
+    const links = (seoDataRaw as any)?.links;
+    if (links) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(40, 40, 40);
+      doc.text('Link Health & AI Trust', 14, yPos); yPos += 5;
+      const lBody = [
+        ['Total Links', String(links.counts?.total || 0)],
+        ['Internal Links', String(links.counts?.internal || 0)],
+        ['External Links', String(links.counts?.external || 0)],
+        ['Empty Anchors', String(links.counts?.empty_text || 0)],
+      ];
+      autoTable(doc, { startY: yPos, head: [['Metric', 'Value']], body: lBody, theme: 'grid', headStyles: { fillColor: [155, 89, 182] }, styles: { fontSize: 8, cellPadding: 3 }, margin: { left: 14, right: 14 } });
+      yPos = getTableEndY(doc, yPos);
+    }
+    
+    // Structured Data
+    const sd = (seoDataRaw as any)?.structured_data;
+    if (sd) {
+      yPos = checkPageBreak(doc, yPos, 40);
+      doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(40, 40, 40);
+      doc.text('Structured Data (JSON-LD)', 14, yPos); yPos += 5;
+      const sdBody = [
+        ['Items Found', String(sd.jsonld_count || 0)],
+        ['Errors', String(sd.jsonld_errors || 0)],
+        ['Detected Types', (sd.detected_types && sd.detected_types.length > 0) ? sd.detected_types.join(', ') : 'None']
+      ];
+      autoTable(doc, { startY: yPos, head: [['Metric', 'Value']], body: sdBody, theme: 'grid', headStyles: { fillColor: [155, 89, 182] }, styles: { fontSize: 8, cellPadding: 3 }, margin: { left: 14, right: 14 }, didParseCell: (d) => { if (d.section === 'body' && d.column.index === 1 && d.row.index === 1 && d.cell.raw !== '0') { d.cell.styles.textColor = '#e74c3c'; } } });
+      yPos = getTableEndY(doc, yPos);
+    }
+
   // ── AI BOT CHECKER ──────────────────────────────────────────
   const aiBotData = data.aiBotChecker as Record<string, unknown>;
-  if (aiBotData) {
-    const bots = aiBotData.bots as Record<string, { allowed?: boolean; rule?: string }> | undefined;
-    const robotsFound = aiBotData.robots_found as boolean | undefined;
-    const aiBotsAllowed = aiBotData.ai_bots_allowed as boolean | undefined;
+  const globalAiBots = (seoDataRaw as any)?.crawl_signals?.robots?.ai_bots;
+
+  if (aiBotData || globalAiBots) {
+    const bots = globalAiBots || (aiBotData?.bots as Record<string, { allowed?: boolean; rule?: string }> | undefined);
+    const robotsFound = aiBotData?.robots_found ?? (seoDataRaw as any)?.crawl_signals?.robots?.found;
+    const aiBotsAllowed = aiBotData?.ai_bots_allowed;
 
     if (bots || robotsFound !== undefined) {
       yPos = checkPageBreak(doc, yPos, 50);
@@ -604,19 +744,36 @@ export function generateFixGuidePdf(website: string, data: {
       doc.setTextColor(60, 60, 60);
       doc.text(`robots.txt found: ${robotsFound ? 'Yes' : 'No'}`, 14, yPos);
       yPos += 7;
-      doc.text(
-        `AI bots allowed: ${aiBotsAllowed ? 'Yes' : aiBotsAllowed === false ? 'No' : 'Unknown'}`,
-        14,
-        yPos,
-      );
-      yPos += 10;
+      
+      if (aiBotsAllowed !== undefined) {
+          doc.text(
+            `AI bots allowed: ${aiBotsAllowed ? 'Yes' : aiBotsAllowed === false ? 'No' : 'Unknown'}`,
+            14,
+            yPos,
+          );
+          yPos += 10;
+      } else {
+          yPos += 3;
+      }
 
       if (bots && Object.keys(bots).length > 0) {
-        const botBody = Object.entries(bots).map(([name, info]) => [
-          name,
-          info.allowed ? 'Allowed' : 'Blocked',
-          info.rule || '-',
-        ]);
+        const botBody = Object.entries(bots).map(([name, info]) => {
+          let isAllowed = false;
+          let ruleStr = '-';
+          if (typeof info === 'string') {
+              isAllowed = !info.includes('disallow');
+              ruleStr = info;
+          } else if (info && typeof info === 'object') {
+              isAllowed = (info as any).allowed;
+              ruleStr = (info as any).rule || '-';
+          }
+          return [
+            name,
+            isAllowed ? 'Allowed' : 'Blocked',
+            ruleStr,
+          ];
+        });
+        
         autoTable(doc, {
           startY: yPos,
           head: [['Bot', 'Status', 'Rule']],
