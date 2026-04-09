@@ -438,9 +438,9 @@ export function generateFixGuidePdf(website: string, data: {
       yPos += 5;
 
       const blBody = backlinks.slice(0, 500).map((bl) => [
-        (bl.source_url as string) || '-',
-        (bl.anchor_text as string) || '-',
-        String(bl.domain_authority ?? '-'),
+        (bl.url_from as string || bl.source_url as string) || '-',
+        (bl.anchor as string || bl.anchor_text as string) || '-',
+        String(bl.domain_inlink_rank ?? bl.domain_authority ?? '-'),
         bl.nofollow ? 'nofollow' : 'dofollow'
       ]);
 
@@ -472,8 +472,8 @@ export function generateFixGuidePdf(website: string, data: {
       yPos += 5;
 
       const nlBody = newList.slice(0, 500).map((nl) => [
-        (nl.source_url as string) || '-',
-        (nl.anchor_text as string) || '-',
+        (nl.url_from as string || nl.source_url as string) || '-',
+        (nl.anchor as string || nl.anchor_text as string) || '-',
         nl.first_seen ? new Date(nl.first_seen as string).toLocaleDateString() : '-'
       ]);
 
@@ -504,8 +504,8 @@ export function generateFixGuidePdf(website: string, data: {
       yPos += 5;
 
       const plBody = poorList.slice(0, 500).map((pl) => [
-        (pl.source_url as string) || '-',
-        String(pl.spam_score ?? '-'),
+        (pl.url_from as string || pl.source_url as string) || '-',
+        String(pl.spam_score ?? pl.domain_inlink_rank ?? '-'),
         (pl.reason as string) || '-'
       ]);
 
