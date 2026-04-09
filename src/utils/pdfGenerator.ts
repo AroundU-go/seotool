@@ -168,6 +168,7 @@ export function generateFixGuidePdf(website: string, data: {
       body.push(['Total Requests', summary.requests.toString()]);
     }
 
+    if (body.length > 0) {
       autoTable(doc, {
         startY: yPos,
         head,
