@@ -1,5 +1,7 @@
 import { Check, Sparkles, Building2, Zap } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/router';
 
 interface PricingTier {
     name: string;
@@ -76,6 +78,20 @@ const tiers: PricingTier[] = [
 ];
 
 export function PricingSection() {
+    const { user } = useAuth();
+    const router = useRouter();
+    
+    const getCheckoutUrl = (baseHref: string | undefined) => {
+        if (!baseHref) return undefined;
+        if (baseHref.startsWith('http') && baseHref.includes('dodopayments')) {
+            if (!user?.id) {
+                return '/auth?return_to=/analyze';
+            }
+            return `${baseHref}&metadata_user_id=${user.id}`;
+        }
+        return baseHref;
+    };
+
     return (
         <section id="pricing" className="py-20 px-6 bg-background">
             <div className="max-w-6xl mx-auto">
@@ -151,7 +167,7 @@ export function PricingSection() {
                             {/* CTA */}
                             {tier.href?.startsWith('/') ? (
                                 <Link
-                                    href={tier.href}
+                                    href={getCheckoutUrl(tier.href) || tier.href || '#'}
                                     className={`
                                         block w-full py-3.5 rounded-full font-bold text-sm transition-all duration-300 text-center
                                         ${tier.highlight
@@ -163,8 +179,17 @@ export function PricingSection() {
                                     {tier.cta}
                                 </Link>
                             ) : tier.href ? (
-                                <a
-                                    href={tier.href}
+                                <button
+                                    onClick={() => {
+                                        const url = getCheckoutUrl(tier.href);
+                                        if (url) {
+                                            if (url.startsWith('/')) {
+                                                router.push(url);
+                                            } else {
+                                                window.location.href = url;
+                                            }
+                                        }
+                                    }}
                                     className={`
                                         block w-full py-3.5 rounded-full font-bold text-sm transition-all duration-300 text-center
                                         ${tier.highlight
@@ -174,7 +199,7 @@ export function PricingSection() {
                                     `}
                                 >
                                     {tier.cta}
-                                </a>
+                                </button>
                             ) : (
                                 <button
                                     className={`

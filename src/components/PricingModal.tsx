@@ -1,4 +1,6 @@
 import { Check, Sparkles, Building2, X } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/router';
 
 interface PricingModalProps {
     isOpen: boolean;
@@ -51,6 +53,20 @@ const paidTiers = [
 ];
 
 export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
+    const { user } = useAuth();
+    const router = useRouter();
+
+    const getCheckoutUrl = (baseHref: string | undefined) => {
+        if (!baseHref) return undefined;
+        if (baseHref.startsWith('http') && baseHref.includes('dodopayments')) {
+            if (!user?.id) {
+                return '/auth?return_to=/analyze';
+            }
+            return `${baseHref}&metadata_user_id=${user.id}`;
+        }
+        return baseHref;
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -138,8 +154,17 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                 </div>
 
                                 {/* CTA */}
-                                <a
-                                    href={tier.href}
+                                <button
+                                    onClick={() => {
+                                        const url = getCheckoutUrl(tier.href);
+                                        if (url) {
+                                            if (url.startsWith('/')) {
+                                                router.push(url);
+                                            } else {
+                                                window.location.href = url;
+                                            }
+                                        }
+                                    }}
                                     className={`
                                         block w-full py-3.5 rounded-full font-bold text-sm transition-all duration-300 text-center
                                         ${tier.highlight
@@ -149,7 +174,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                     `}
                                 >
                                     {tier.cta}
-                                </a>
+                                </button>
 
                                 {/* Divider */}
                                 <div className="border-t border-border my-5" />

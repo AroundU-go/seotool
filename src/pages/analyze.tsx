@@ -460,7 +460,11 @@ export default function SeoToolPage() {
 
                         <button
                             onClick={() => {
-                                window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+                                if (!user?.id) {
+                                    window.location.href = '/auth?return_to=/analyze';
+                                    return;
+                                }
+                                window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}&metadata_user_id=${user.id}`;
                             }}
                             className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                         >
@@ -499,7 +503,11 @@ export default function SeoToolPage() {
                             <button
                                 onClick={() => {
                                     setShowUpgradeModal(false);
-                                    window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+                                    if (!user?.id) {
+                                        window.location.href = '/auth?return_to=/analyze';
+                                        return;
+                                    }
+                                    window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}&metadata_user_id=${user.id}`;
                                 }}
                                 className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                             >
@@ -509,7 +517,11 @@ export default function SeoToolPage() {
                             <button
                                 onClick={() => {
                                     setShowUpgradeModal(false);
-                                    window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}`;
+                                    if (!user?.id) {
+                                        window.location.href = '/auth?return_to=/analyze';
+                                        return;
+                                    }
+                                    window.location.href = `https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=${encodeURIComponent(window.location.origin + '/analyze?payment=success')}&metadata_user_id=${user.id}`;
                                 }}
                                 className="w-full py-3.5 bg-white text-accent font-bold rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                             >

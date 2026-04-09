@@ -108,7 +108,9 @@ function extractPayloadFields(event: any) {
         (payload.line_items && payload.line_items[0]?.product_id) ||
         "";
 
-    return { payload, customerEmail, customerId, subscriptionId, productId };
+    const userId = payload.metadata?.user_id || "";
+
+    return { payload, customerEmail, customerId, subscriptionId, productId, userId };
 }
 
 // --- Mark user as Pro in profiles table ---
@@ -116,11 +118,12 @@ async function markUserAsPro(
     email: string,
     paymentType: "one_time" | "subscription",
     customerId?: string,
-    subscriptionId?: string
+    subscriptionId?: string,
+    userId?: string
 ) {
-    console.log(`Marking user as Pro: ${email}, paymentType: ${paymentType}`);
+    console.log(`Marking user as Pro: ${email}, userId: ${userId}, paymentType: ${paymentType}`);
 
-    const { data, error } = await supabase
+    let query = supabase
         .from("profiles")
         .update({
             is_pro: true,
@@ -129,9 +132,15 @@ async function markUserAsPro(
             subscription_id: subscriptionId || null,
             pro_since: new Date().toISOString(),
             pro_audit_count: 0, // Reset audit count on new payment
-        })
-        .eq("email", email)
-        .select();
+        });
+
+    if (userId) {
+        query = query.eq("id", userId);
+    } else {
+        query = query.eq("email", email);
+    }
+
+    const { data, error } = await query.select();
 
     if (error) {
         console.error("Error updating profile:", error);
@@ -150,12 +159,12 @@ async function markUserAsPro(
 // --- Domain handlers ---
 
 async function handleOneTimePayment(event: any) {
-    const { customerEmail, customerId, subscriptionId, productId } = extractPayloadFields(event);
-    console.log(`[Payment Event] email: ${customerEmail}, customer: ${customerId}, product: ${productId}`);
+    const { customerEmail, customerId, subscriptionId, productId, userId } = extractPayloadFields(event);
+    console.log(`[Payment Event] email: ${customerEmail}, customer: ${customerId}, product: ${productId}, userId: ${userId}`);
 
-    if (!customerEmail) {
-        console.warn("[Payment Event] No customer email found");
-        return { success: false, message: "No customer email in payload" };
+    if (!customerEmail && !userId) {
+        console.warn("[Payment Event] No customer email or userId found");
+        return { success: false, message: "No customer email or userId in payload" };
     }
 
     let actualPaymentType: "one_time" | "subscription" = "one_time";
@@ -169,48 +178,54 @@ async function handleOneTimePayment(event: any) {
         actualPaymentType = "subscription";
     }
 
-    const success = await markUserAsPro(customerEmail, actualPaymentType, customerId, subscriptionId);
+    const success = await markUserAsPro(customerEmail, actualPaymentType, customerId, subscriptionId, userId);
     return {
         success,
         message: success
-            ? `User ${customerEmail} marked as Pro (${actualPaymentType})`
-            : `Profile not found for ${customerEmail}`,
+            ? `User ${userId || customerEmail} marked as Pro (${actualPaymentType})`
+            : `Profile not found for ${userId || customerEmail}`,
     };
 }
 
 async function handleSubscriptionEvent(event: any, eventType: string) {
-    const { customerEmail, customerId, subscriptionId, productId } = extractPayloadFields(event);
-    console.log(`[Subscription: ${eventType}] email: ${customerEmail}, customer: ${customerId}, sub: ${subscriptionId}, product: ${productId}`);
+    const { customerEmail, customerId, subscriptionId, productId, userId } = extractPayloadFields(event);
+    console.log(`[Subscription: ${eventType}] email: ${customerEmail}, customer: ${customerId}, sub: ${subscriptionId}, product: ${productId}, userId: ${userId}`);
 
-    if (!customerEmail) {
-        console.warn("[Subscription] No customer email found");
-        return { success: false, message: "No customer email in payload" };
+    if (!customerEmail && !userId) {
+        console.warn("[Subscription] No customer email or userId found");
+        return { success: false, message: "No customer email or userId in payload" };
     }
 
     if (eventType.includes("cancel") || eventType.includes("expired") || eventType.includes("failed")) {
         console.log(`Downgrading user due to ${eventType}`);
-        const { error } = await supabase
-            .from("profiles")
-            .update({
-                is_pro: false,
-                payment_type: null,
-                subscription_id: null
-            })
-            .eq("email", customerEmail);
+        
+        let query = supabase.from("profiles").update({
+            is_pro: false,
+            payment_type: null,
+            subscription_id: null
+        });
+
+        if (userId) {
+            query = query.eq("id", userId);
+        } else {
+            query = query.eq("email", customerEmail);
+        }
+
+        const { error } = await query;
         
         if (error) {
             console.error(`Error downgrading:`, error);
         }
         
-        return { success: true, message: `User ${customerEmail} subscription cancelled or expired` };
+        return { success: true, message: `User ${userId || customerEmail} subscription cancelled or expired` };
     }
 
-    const success = await markUserAsPro(customerEmail, "subscription", customerId, subscriptionId);
+    const success = await markUserAsPro(customerEmail, "subscription", customerId, subscriptionId, userId);
     return {
         success,
         message: success
-            ? `User ${customerEmail} marked as Pro (subscription)`
-            : `Profile not found for ${customerEmail}`,
+            ? `User ${userId || customerEmail} marked as Pro (subscription)`
+            : `Profile not found for ${userId || customerEmail}`,
     };
 }
 
