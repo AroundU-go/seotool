@@ -4,6 +4,19 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TWFT8MWFHJ"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-TWFT8MWFHJ');
+            `
+          }}
+        />
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
         
