@@ -1,0 +1,199 @@
+Features-
+
+1. Deep On-Page SEO Analysis
+
+What it does:
+
+SEOzapp runs a comprehensive on-page audit across 25+ critical SEO factors including:
+
+meta titles & descriptions
+heading structure (H1–H6)
+internal & external links
+image optimization (alt text, size)
+content structure & readability
+schema markup
++more
+
+ It scans your page instantly and highlights issues.
+
+Why it matters:
+
+Most websites don’t fail at SEO because of strategy — they fail at execution basics.
+
+SEOzapp identifies:
+
+missing meta tags
+duplicate headings
+poor structure
+broken linking
+
+All of which directly impact rankings.
+
+--------------------------------------------------------
+2. AI Engine Optimization (AEO)
+
+What it does:
+
+SEOzapp analyzes how your content performs across AI search engines, including:
+
+ChatGPT
+Perplexity
+Gemini
+AI-powered search layers
+
+It provides:
+
+AI visibility score
+AI-readiness insights
+suggestions to improve AI discoverability
+
+Why it matters:
+
+Search is no longer just Google.
+
+Your content now needs to rank in:
+
+AI answers
+LLM-generated summaries
+conversational search
+
+SEOzapp helps you optimize for this new layer of search — something most traditional tools ignore
+
+--------------------------------------------------------------------
+3. Backlink Analysis
+
+What it does:
+
+SEOzapp provides:
+
+new backlinks
+low-quality / toxic links
+referring domains
+domain authority insights
+link quality metrics
+
+Why it matters:
+
+Backlinks are still one of the strongest ranking factors.
+
+SEOzapp helps you:
+
+identify harmful links
+discover link opportunities
+understand authority gaps
+
+All without needing a heavy enterprise tool.
+
+-----------------------------------------------------------------------------
+4. Top Search Keywords Insights
+
+What it does:
+
+SEOzapp identifies:
+
+top ranking keywords for your page
+keyword volume
+keyword positioning
+
+Why it matters:
+
+You don’t just need keywords — you need:
+
+what you already rank for
+where you can improve
+what to double down on
+
+This helps you optimize existing pages faster instead of guessing.
+
+---------------------------------------------------------------------------
+5. Speed & Performance Optimization
+
+What it does:
+
+SEOzapp analyzes:
+
+page load time
+TTFB (time to first byte)
+page size
+request breakdown
+
+And gives:
+actionable performance fixes
+
+Why it matters:
+
+Speed directly impacts:
+
+SEO rankings
+user experience
+conversions
+
+Most sites lose traffic because of slow performance — this fixes that.
+
+-----------------------------------------------------------------------------
+6. Bot Access & Crawlability Checks
+
+What it does:
+
+SEOzapp checks:
+
+whether search engines can access your page
+crawl issues
+indexing blockers
+
+Why it matters:
+
+If bots can’t access your page:
+you don’t rank — no matter how good your content is
+
+This feature ensures your site is search-engine friendly at a technical level.
+
+------------------------------------------------------------------------
+7. Security & Technical Health Checks
+
+What it does:
+
+SEOzapp scans for:
+
+security vulnerabilities
+HTTPS/SSL issues
+technical SEO gaps
+
+Why it matters:
+Security is a ranking signal.
+
+Also:
+
+insecure sites lose trust
+technical errors hurt indexing
+
+----------------------------------------------------------------------
+8. History Tracking
+
+What it does:
+
+track past audits
+monitor improvements over time
+
+Why it matters:
+
+SEO is not one-time.
+
+You need:
+
+progress tracking
+before vs after comparison
+
+----------------------------------------------------------------------
+
+9. Bulk URL Analysis
+
+What it does:
+
+analyze multiple URLs at once
+scale SEO audits
+
+Why it matters:
+
+Instead of auditing pages one-by-one:
+scale SEO across your entire site or clients

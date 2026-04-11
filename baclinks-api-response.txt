@@ -1,0 +1,198 @@
+Backlink Lists Api Response:
+
+{
+    "counts": {
+        "backlinks": {
+            "total": 43,
+            "doFollow": 19,
+            "fromHomePage": 0,
+            "doFollowFromHomePage": 0,
+            "text": 32,
+            "toHomePage": 25
+        },
+        "domains": {
+            "total": 29,
+            "doFollow": 17,
+            "fromHomePage": 0,
+            "toHomePage": 21
+        },
+        "ips": null,
+        "cBlocks": null,
+        "anchors": null,
+        "anchorUrls": null,
+        "topTLD": null,
+        "topCountry": null,
+        "topAnchorsByBacklinks": null,
+        "topAnchorsByDomains": null,
+        "topAnchorUrlsByBacklinks": null,
+        "topAnchorUrlsByDomains": null
+    },
+    "backlinks": [
+        {
+            "url_from": "https://webrankdirectory.com/most-visited-site-47/",
+            "url_to": "https://codeconia.com/",
+            "title": "most visited site 47 |",
+            "anchor": "codeconia.com",
+            "alt": "",
+            "nofollow": true,
+            "image": false,
+            "image_source": "",
+            "inlink_rank": 15,
+            "domain_inlink_rank": 71,
+            "first_seen": "2024-05-18",
+            "last_visited": "2024-12-09"
+        },
+        {
+            "url_from": "https://lamercedpuno.edu.pe/best-white-dark-hat-linkbuilding-for-your-website-322/",
+            "url_to": "https://codeconia.com/",
+            "title": "BEST WHITE/DARK HAT LINKBUILDING FOR YOUR WEBSITE! NO PREPAYMENTS! 100% TRUSTWORTHY! \u2013 La Merced Puno",
+            "anchor": "LINKS FOR codeconia.com TELEGRAM @happygrannypies",
+            "alt": "",
+            "nofollow": false,
+            "image": false,
+            "image_source": "",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 5,
+            "first_seen": "2024-08-29",
+            "last_visited": "2024-08-29"
+        },
+        {
+            "url_from": "https://www.tpsearchtool.com/images/79-mysql-join-3-tables-tutorial-table",
+            "url_to": "https://codeconia.com/wp-content/uploads/2022/10/HTML-CONTACT-FORM-TO-EMAIL.jpg",
+            "title": "How to join three tables in SQL query \u2013 MySQL Example - 79 Mysql Join 3 Tables Tutorial Table Images",
+            "anchor": "Join 3 Tables In Mysql In Single Query",
+            "alt": "",
+            "nofollow": true,
+            "image": true,
+            "image_source": "https://www.tpsearchtool.com/img/OIP.2oKrsZyx3Jg8DFZ3ciiyYQHaEK",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 47,
+            "first_seen": "2025-01-05",
+            "last_visited": "2025-01-05"
+        },
+        {
+            "url_from": "https://www.sitelike.org/similar/codeconia.com/",
+            "url_to": "https://www.codeconia.com/",
+            "title": "codeconia Alternatives - 50 Best Sites Like codeconia.com in 2025",
+            "anchor": "codeconia.com",
+            "alt": "",
+            "nofollow": true,
+            "image": true,
+            "image_source": "https://www.sitelike.org/images/external-link.jpg",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 75,
+            "first_seen": "2025-07-20",
+            "last_visited": "2025-07-20"
+        },
+        {
+            "url_from": "https://fashioment.com/02ea-5447/",
+            "url_to": "https://codeconia.com/",
+            "title": "02ea-5447 \u2013 fashioment",
+            "anchor": "Link",
+            "alt": "",
+            "nofollow": false,
+            "image": false,
+            "image_source": "",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 60,
+            "first_seen": "2025-06-29",
+            "last_visited": "2025-07-06"
+        },
+        {
+            "url_from": "http://jasimalikhan.blogspot.com/2023/",
+            "url_to": "https://codeconia.com/how-to-backup-and-download-database-using-php/",
+            "title": "Web Development: 2023",
+            "anchor": "https://codeconia.com/how-to-backup-and-download-database-using-php/",
+            "alt": "",
+            "nofollow": false,
+            "image": false,
+            "image_source": "",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 15,
+            "first_seen": "2025-06-01",
+            "last_visited": "2025-06-11"
+        },
+        {
+            "url_from": "https://kingladybeauty.com/best-white-dark-hat-linkbuilding-for-your-website-322/",
+            "url_to": "https://codeconia.com/",
+            "title": "BEST WHITE/DARK HAT LINKBUILDING FOR YOUR WEBSITE! NO PREPAYMENTS! 100% TRUSTWORTHY! | \u4eca\u82f1\u767e\u8ca8 / KING & LADY MATE Co., LTD.",
+            "anchor": "LINKS FOR codeconia.com TELEGRAM @happygrannypies",
+            "alt": "",
+            "nofollow": false,
+            "image": false,
+            "image_source": "",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 17,
+            "first_seen": "2025-05-04",
+            "last_visited": "2025-05-04"
+        }
+    ]
+}
+
+------------------------------------------------------------
+
+New Backlinks API Response:
+
+{
+    "backlinks": [
+        {
+            "url_from": "https://urls-shortener.eu/share/2421620",
+            "url_to": "https://codeconia.com/",
+            "title": "\u2764\ufe0f URL Shared \u2764\ufe0f",
+            "anchor": "codeconia.com",
+            "alt": "",
+            "nofollow": true,
+            "image": false,
+            "image_source": "",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 63,
+            "first_seen": "2025-07-25",
+            "last_visited": "2025-07-25"
+        },
+        {
+            "url_from": "https://chargers.alianzaestrategica.edu.pe/en/expo-calendar.html",
+            "url_to": "https://codeconia.com/wp-content/uploads/2022/09/How-to-split-numbers-from-a-string-using-PHP-12-1536x864.jpg",
+            "title": "Expo Calendar - calendar",
+            "anchor": "Adding Calendar Feature in React Native Expo SDK",
+            "alt": "",
+            "nofollow": false,
+            "image": true,
+            "image_source": "https://codeconia.com/wp-content/uploads/2022/09/How-to-split-numbers-from-a-string-using-PHP-12-1536x864.jpg",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 34,
+            "first_seen": "2025-07-23",
+            "last_visited": "2025-07-23"
+        },
+        {
+            "url_from": "https://chargers.alianzaestrategica.edu.pe/en/how-to-stop-form-from-refreshing-page.html",
+            "url_to": "https://codeconia.com/wp-content/uploads/2021/09/Javascript-1024x576.jpg",
+            "title": "How To Stop Form From Refreshing Page - form",
+            "anchor": "Submit Form Without Refreshing Page PHP and Javascript",
+            "alt": "",
+            "nofollow": false,
+            "image": true,
+            "image_source": "https://codeconia.com/wp-content/uploads/2021/09/Javascript-1024x576.jpg",
+            "inlink_rank": 0,
+            "domain_inlink_rank": 34,
+            "first_seen": "2025-07-23",
+            "last_visited": "2025-07-23"
+        }
+    ]
+}
+
+-------------------------------------------
+
+Poor Backlinks API Response:
+
+url_from, string, Source URL of the backlink
+url_to, string, Target URL on your domain
+title, string, Title of the referring page
+anchor, string, Anchor text used in the link
+alt, string, ALT text for image-based links
+nofollow, boolean, Whether the backlink is marked as nofollow
+image, boolean,	Indicates if the link is an image
+image_source, string, Image URL (if applicable)
+inlink_rank, int, Page-level inlink authority score (typically 0 for poor links)
+domain_inlink_rank, int, Domain authority score (0–100)
+first_seen, string, Date the backlink was first detected
+last_visited, string, Date the backlink was last confirmed active
