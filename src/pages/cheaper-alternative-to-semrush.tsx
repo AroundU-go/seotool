@@ -2,13 +2,14 @@ import React from 'react';
 import Head from 'next/head';
 import { NavBar } from '@/components/ui/NavBar';
 import { useRouter } from 'next/router';
+import { Home, Rocket, DollarSign } from 'lucide-react';
 
 export default function CheaperAlternativeToSemrush() {
   const router = useRouter();
   const navItems = [
-    { name: 'Home', url: '/#hero', icon: () => null, onClick: () => router.push('/#hero') },
-    { name: 'Features', url: '/#features', icon: () => null, onClick: () => router.push('/#features') },
-    { name: 'Pricing', url: '/#pricing', icon: () => null, onClick: () => router.push('/#pricing') }
+    { name: 'Home', url: '/#hero', icon: Home, onClick: () => router.push('/#hero') },
+    { name: 'Features', url: '/#features', icon: Rocket, onClick: () => router.push('/#features') },
+    { name: 'Pricing', url: '/#pricing', icon: DollarSign, onClick: () => router.push('/#pricing') }
   ];
 
   return (
