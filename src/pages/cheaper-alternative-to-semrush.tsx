@@ -16,7 +16,7 @@ export default function CheaperAlternativeToSemrush() {
     <div className="min-h-screen bg-background text-foreground font-sans">
       <Head>
         <title>Cheaper Alternative to Semrush: A Simpler SEO Tool for Founders</title>
-        <meta name="description" content="SEOZapp is a lightweight and affordable SEO tool built for founders who want actionable insights without complexity." />
+        <meta name="description" content="SEOzapp is a lightweight and affordable alternative to semrush/ahrefs. SEO tool built for founders and agencies who want actionable insights without complexity." />
       </Head>
 
       <NavBar items={navItems} activeTab="Blog" />
