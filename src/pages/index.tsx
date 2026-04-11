@@ -236,24 +236,7 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
                         })}
                     </div>
 
-                    {/* Video Demo Section */}
-                    <div className="w-full max-w-5xl mx-auto mt-20" style={{ position: 'relative', zIndex: 50 }}>
-                        <div className="relative rounded-2xl overflow-hidden border border-border/50 shadow-2xl shadow-accent/10 bg-card">
-                            <div className="aspect-video bg-muted w-full relative group">
-                                <video
-                                    className="w-full h-full object-cover absolute inset-0"
-                                    controls
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                >
-                                    <source src="/video/WhatsApp Video 2026-03-08 at 11.21.50 AM.mp4" type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        </div>
-                    </div>
+
 
                 </div>
             </section>
