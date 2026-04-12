@@ -79,7 +79,7 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
         { name: 'Features', url: '/#features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'How It Works', url: '/#how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'Pricing', url: '/#pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'Analyze', url: isLoggedIn ? '/analyze' : '/auth', icon: Search, onClick: () => router.push(isLoggedIn ? '/analyze' : '/auth') },
+        { name: 'FAQ', url: '/#faq', icon: MessageSquare, onClick: () => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' }) },
     ];
 
     const steps = [
@@ -115,9 +115,16 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
             {/* Navbar */}
             <NavBar items={navItems} activeTab={activeSection} />
 
-            {/* Theme Toggle - Fixed Top Right */}
-            <div className="fixed top-6 right-6 z-50 hidden md:block">
+            {/* Top Right Controls - Desktop */}
+            <div className="fixed top-6 right-6 z-50 hidden md:flex items-center gap-4">
                 <ThemeToggle />
+                <button
+                    onClick={() => router.push(isLoggedIn ? '/analyze' : '/auth')}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-accent text-accent-900 font-bold rounded-full shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-105"
+                >
+                    <Search className="w-4 h-4" />
+                    Analyze
+                </button>
             </div>
 
             {/* Hero Section */}
