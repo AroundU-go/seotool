@@ -28,19 +28,10 @@ export function ThemeToggle() {
     return (
         <button
             onClick={() => setIsDark(!isDark)}
-            className="relative flex items-center w-16 h-8 rounded-full border border-border bg-muted/60 backdrop-blur-sm transition-colors hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/30"
+            className="flex items-center justify-center p-2.5 rounded-full border border-border bg-background/80 backdrop-blur-md shadow-sm transition-colors hover:bg-muted hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/30 text-foreground/80 hover:text-foreground"
             aria-label="Toggle theme"
         >
-            <span className="absolute left-1.5 text-yellow-500 transition-opacity" style={{ opacity: isDark ? 0.3 : 1 }}>
-                <Sun size={16} />
-            </span>
-            <span className="absolute right-1.5 text-accent-300 transition-opacity" style={{ opacity: isDark ? 1 : 0.3 }}>
-                <Moon size={16} />
-            </span>
-            <span
-                className="absolute top-1 w-6 h-6 rounded-full bg-accent shadow-md shadow-accent/30 transition-transform duration-300 ease-in-out"
-                style={{ transform: isDark ? 'translateX(32px)' : 'translateX(2px)' }}
-            />
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
     );
 }
