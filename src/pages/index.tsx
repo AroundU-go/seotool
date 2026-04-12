@@ -135,7 +135,7 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
                     </h1>
 
                     <p className="text-lg md:text-xl text-foreground/60 max-w-2xl mx-auto mb-12 leading-relaxed">
-                        Comprehensive on-page analysis, AI readiness scoring, bot access checks, top search keywords, backlinks analysis and fix action plan — all in one tool.
+                        On-page analysis, AI engine optimization, backlink insights, keyword data, speed audits — all in one tool. Fix what matters. Rank everywhere.
                     </p>
                 </div>
 
