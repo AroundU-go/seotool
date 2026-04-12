@@ -200,7 +200,8 @@ export default function SeoToolPage() {
 
     useEffect(() => {
         if (router.query.analyzeUrl) {
-            handleAnalyze(router.query.analyzeUrl as string);
+            const cleanUrl = (router.query.analyzeUrl as string).trim().replace(/^https?:\/\//, '');
+            setInputUrl(cleanUrl);
         }
     }, [router.query]);
 
@@ -227,6 +228,9 @@ export default function SeoToolPage() {
                 setShowUpgradeModal(true);
                 return;
             }
+            
+            // Mark immediately to prevent race conditions from double clicks
+            markLocalAuditUsed();
         }
 
         // Enforce 2-audit limit for one-time Pro users
