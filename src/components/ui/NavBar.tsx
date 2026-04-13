@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LucideIcon, Menu, X } from "lucide-react";
+import { LucideIcon, Menu, X, Search, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -11,13 +11,19 @@ interface NavItem {
     onClick?: () => void;
 }
 
+interface ActionButton {
+    label: string;
+    onClick: () => void;
+}
+
 interface NavBarProps {
     items: NavItem[];
     className?: string;
     activeTab?: string;
+    actionButton?: ActionButton;
 }
 
-export function NavBar({ items, className, activeTab: controlledActiveTab }: NavBarProps) {
+export function NavBar({ items, className, activeTab: controlledActiveTab, actionButton }: NavBarProps) {
     const [internalActiveTab, setInternalActiveTab] = useState(items[0].name);
     const activeTab = controlledActiveTab ?? internalActiveTab;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -150,6 +156,22 @@ export function NavBar({ items, className, activeTab: controlledActiveTab }: Nav
                                         );
                                     })}
                                 </div>
+
+                                {actionButton && (
+                                    <div className="pt-4">
+                                        <button
+                                            onClick={() => {
+                                                setIsMenuOpen(false);
+                                                actionButton.onClick();
+                                            }}
+                                            className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-accent text-accent-900 font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300"
+                                        >
+                                            <Search className="w-4 h-4" />
+                                            {actionButton.label}
+                                            <ArrowRight className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                )}
 
                                 <div className="pt-6 border-t border-border mt-4">
                                     <div className="flex items-center justify-between px-4 py-3 bg-muted/50 rounded-xl">

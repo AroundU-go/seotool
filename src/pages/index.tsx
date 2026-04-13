@@ -113,7 +113,14 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
             </div>
 
             {/* Navbar */}
-            <NavBar items={navItems} activeTab={activeSection} />
+            <NavBar
+                items={navItems}
+                activeTab={activeSection}
+                actionButton={{
+                    label: 'Analyze',
+                    onClick: () => router.push(isLoggedIn ? '/analyze' : '/auth'),
+                }}
+            />
 
             {/* Top Right Controls - Desktop */}
             <div className="fixed top-6 right-6 z-50 hidden md:flex items-center gap-4">
