@@ -885,6 +885,8 @@ export default function SeoToolPage() {
                                                 icon={Link2}
                                                 title="Backlink Analysis"
                                                 description="Backlink profile overview, new & toxic links"
+                                                backgroundImageUrl="/backlinkblurred.jpeg"
+                                                cardClassName="min-h-[400px]"
                                                 onUpgradeClick={() => setShowPricingModal(true)}
                                             />
                                         </div>
