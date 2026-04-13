@@ -877,6 +877,8 @@ export default function SeoToolPage() {
                                                 icon={TrendingUp}
                                                 title="Top Search Keywords"
                                                 description="Keyword rankings and search volumes"
+                                                backgroundImageUrl="/topkeywordsbg.jpeg"
+                                                cardClassName="min-h-[400px]"
                                                 onUpgradeClick={() => setShowPricingModal(true)}
                                             />
                                             <DummyProCard 
