@@ -14,7 +14,15 @@ export default function AiBotCheckerCard({ data }: AiBotCheckerCardProps) {
   const details = d.details as string | undefined;
 
   // Some responses may include detailed bot info
-  const bots = d.bots as Record<string, { allowed?: boolean; rule?: string }> | undefined;
+  let bots = d.bots as Record<string, { allowed?: boolean; rule?: string }> | undefined;
+  
+  if (!bots && d.ai_access) {
+    const aiAccess = d.ai_access as Record<string, boolean>;
+    bots = {};
+    for (const [key, value] of Object.entries(aiAccess)) {
+      bots[key] = { allowed: value };
+    }
+  }
 
   return (
     <div className="py-6 font-sans antialiased text-gray-900 max-w-5xl mx-auto space-y-6">
