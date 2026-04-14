@@ -50,7 +50,7 @@ const features: FeatureData[] = [
             "SEOzapp analyzes how your content performs across AI search engines — ChatGPT, Perplexity, Gemini, and AI-powered search layers. It provides:",
         bullets: [
             "AI visibility score",
-            "AI Bot crawl"
+            "AI Bot crawl",
             "AI-readiness insights",
             "Suggestions to improve AI discoverability",
         ],
