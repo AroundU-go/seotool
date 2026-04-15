@@ -1,57 +1,48 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import DodoPayments from 'dodopayments';
-
-const DODO_API_KEY = process.env.DODO_PAYMENTS_API_KEY || '';
-const DODO_ENV = process.env.DODO_PAYMENTS_ENVIRONMENT || 'test_mode';
-
-import { PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION } from '@/services/checkoutService';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
     try {
         const { product_id, user_id, email, name, return_url } = req.body;
 
         if (!product_id || !user_id) {
-            return res.status(400).json({ error: 'Missing required fields: product_id, user_id' });
-        }
-
-        if (!DODO_API_KEY) {
-            return res.status(500).json({ error: 'DODO_PAYMENTS_API_KEY not configured' });
+            return res.status(400).json({ error: 'product_id and user_id are required' });
         }
 
         const client = new DodoPayments({
-            bearerToken: DODO_API_KEY,
-            environment: DODO_ENV as any,
+            bearerToken: process.env.DODO_PAYMENTS_API_KEY || '',
+            environment: 'test_mode',
         });
 
-        // Prepare customer object only if we have details
-        const customerObj = (email || name) ? {
-            ...(email ? { email } : {}),
-            ...(name ? { name } : {})
-        } : undefined;
+        const redirectUrl = return_url || `https://seozapp.com/analyze?payment=success`;
 
-        // Use unified Checkout Session API for both subscriptions and one-time payments
+        const customerObj: any = {};
+        if (email) customerObj.email = email;
+        if (name) customerObj.name = name;
+
         const sessionPayload: any = {
             product_cart: [{ product_id, quantity: 1 }],
             metadata: { user_id },
             return_url: redirectUrl,
         };
-        if (customerObj) sessionPayload.customer = customerObj;
+        if (Object.keys(customerObj).length > 0) {
+            sessionPayload.customer = customerObj;
+        }
 
         const session = await client.checkoutSessions.create(sessionPayload);
 
         return res.status(200).json({
-            checkout_url: (session as any).checkout_url || (session as any).payment_link,
+            checkout_url: (session as any).checkout_url,
             session_id: (session as any).session_id,
         });
     } catch (error: any) {
         console.error('[/api/checkout] Error:', error);
         return res.status(500).json({
-            error: error?.message || 'Failed to create checkout',
-            details: error?.response?.data || undefined,
+            error: error.message || 'Internal Server Error',
         });
     }
 }

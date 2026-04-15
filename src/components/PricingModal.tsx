@@ -66,7 +66,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
         }
         setCheckoutLoading(productId);
         try {
-            await redirectToCheckout(productId, user.id, user.email || '', user.user_metadata?.full_name || '');
+            await redirectToCheckout(productId, user.id, user.email || '');
         } catch (err) {
             console.error('[PricingModal] Checkout error:', err);
         } finally {
