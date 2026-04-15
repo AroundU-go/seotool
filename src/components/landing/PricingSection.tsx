@@ -4,8 +4,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-const PRODUCT_ONE_TIME = 'pdt_0NYskaXuWvqB7pOJJAWHR';
-const PRODUCT_SUBSCRIPTION = 'pdt_0NYsnZquqsrqDi9SW9pHT';
+const PRODUCT_ONE_TIME = process.env.NEXT_PUBLIC_DODO_PRODUCT_ONE_TIME || 'pdt_0NYskaXuWvqB7pOJJAWHR';
+const PRODUCT_SUBSCRIPTION = process.env.NEXT_PUBLIC_DODO_PRODUCT_SUBSCRIPTION || 'pdt_0NYsnZquqsrqDi9SW9pHT';
 
 interface PricingTier {
     name: string;
@@ -95,8 +95,9 @@ export function PricingSection() {
 
         setCheckoutLoading(productId);
         try {
+            const domain = process.env.NEXT_PUBLIC_DODO_ENVIRONMENT === 'live' ? 'checkout.dodopayments.com' : 'test.checkout.dodopayments.com';
             const redirectUrl = `https://seozapp.com/analyze?payment=success`;
-            const checkoutUrl = `https://test.checkout.dodopayments.com/buy/${productId}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
+            const checkoutUrl = `https://${domain}/buy/${productId}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
             window.location.href = checkoutUrl;
         } catch (err) {
             console.error('[PricingSection] Checkout error:', err);
