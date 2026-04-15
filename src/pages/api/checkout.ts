@@ -13,9 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: 'product_id and user_id are required' });
         }
 
+        // Use test_mode ONLY if explicitly configured, otherwise live_mode.
+        const isTestMode = process.env.DODO_PAYMENTS_API_KEY?.startsWith('test_');
+        
         const client = new DodoPayments({
             bearerToken: process.env.DODO_PAYMENTS_API_KEY || '',
-            environment: 'test_mode',
+            environment: isTestMode ? 'test_mode' : 'live_mode',
         });
 
         const redirectUrl = return_url || `https://seozapp.com/analyze?payment=success`;
