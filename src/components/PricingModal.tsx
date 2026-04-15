@@ -1,6 +1,8 @@
 import { Check, Sparkles, Building2, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { redirectToCheckout, PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION } from '@/services/checkoutService';
 
 interface PricingModalProps {
     isOpen: boolean;
@@ -26,7 +28,7 @@ const paidTiers = [
         ],
         icon: <Sparkles className="w-6 h-6" />,
         cta: 'Get One-Time — $5',
-        href: 'https://checkout.dodopayments.com/buy/pdt_0NaHBvNNtTNxDUEQ1BblK?quantity=1&redirect_url=https%3A%2F%2Fseozapp.com%2Fanalyze%3Fpayment%3Dsuccess',
+        productId: PRODUCT_ONE_TIME,
     },
     {
         name: 'Pro',
@@ -48,23 +50,28 @@ const paidTiers = [
         icon: <Building2 className="w-6 h-6" />,
         badge: 'Most Popular',
         cta: 'Upgrade to Pro',
-        href: 'https://checkout.dodopayments.com/buy/pdt_0NYlhH0CqhFDHJIr5v82N?quantity=1&redirect_url=https%3A%2F%2Fseozapp.com%2Fanalyze%3Fpayment%3Dsuccess',
+        productId: PRODUCT_SUBSCRIPTION,
     },
 ];
 
 export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
     const { user } = useAuth();
     const router = useRouter();
+    const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
-    const getCheckoutUrl = (baseHref: string | undefined) => {
-        if (!baseHref) return undefined;
-        if (baseHref.startsWith('http') && baseHref.includes('dodopayments')) {
-            if (!user?.id) {
-                return '/auth?return_to=/analyze';
-            }
-            return `${baseHref}&metadata_user_id=${user.id}`;
+    const handleCheckout = async (productId: string) => {
+        if (!user?.id) {
+            router.push('/auth?return_to=/analyze');
+            return;
         }
-        return baseHref;
+        setCheckoutLoading(productId);
+        try {
+            await redirectToCheckout(productId, user.id, user.email || '', user.user_metadata?.full_name || '');
+        } catch (err) {
+            console.error('[PricingModal] Checkout error:', err);
+        } finally {
+            setCheckoutLoading(null);
+        }
     };
 
     if (!isOpen) return null;
@@ -155,25 +162,18 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
 
                                 {/* CTA */}
                                 <button
-                                    onClick={() => {
-                                        const url = getCheckoutUrl(tier.href);
-                                        if (url) {
-                                            if (url.startsWith('/')) {
-                                                router.push(url);
-                                            } else {
-                                                window.location.href = url;
-                                            }
-                                        }
-                                    }}
+                                    onClick={() => handleCheckout(tier.productId)}
+                                    disabled={checkoutLoading === tier.productId}
                                     className={`
                                         block w-full py-3.5 rounded-full font-bold text-sm transition-all duration-300 text-center
                                         ${tier.highlight
                                             ? 'bg-accent text-accent-900 shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:scale-[1.02]'
                                             : 'bg-card border border-border text-foreground hover:border-accent/50 hover:text-accent'
                                         }
+                                        ${checkoutLoading === tier.productId ? 'opacity-70 cursor-wait' : ''}
                                     `}
                                 >
-                                    {tier.cta}
+                                    {checkoutLoading === tier.productId ? 'Loading...' : tier.cta}
                                 </button>
 
                                 {/* Divider */}

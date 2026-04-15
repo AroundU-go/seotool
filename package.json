@@ -15,6 +15,7 @@
     "@tabler/icons-react": "^3.36.1",
     "axios": "^1.13.5",
     "clsx": "^2.1.1",
+    "dodopayments": "^2.28.0",
     "framer-motion": "^12.34.0",
     "jspdf": "^4.2.0",
     "jspdf-autotable": "^5.0.7",
