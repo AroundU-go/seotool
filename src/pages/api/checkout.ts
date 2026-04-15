@@ -30,20 +30,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const isSubscription = product_id === PRODUCT_SUBSCRIPTION;
         const redirectUrl = return_url || 'https://seozapp.com/analyze?payment=success';
 
+        // Prepare customer object only if we have details
+        const customerObj = (email || name) ? {
+            ...(email ? { email } : {}),
+            ...(name ? { name } : {})
+        } : undefined;
+
         if (isSubscription) {
             // Create subscription via Dodo API
-            const subscription = await client.subscriptions.create({
+            const subscriptionPayload: any = {
                 product_id,
-                customer: {
-                    email: email || '',
-                    name: name || '',
-                },
-                metadata: {
-                    user_id,
-                },
+                metadata: { user_id },
                 return_url: redirectUrl,
                 quantity: 1,
-            } as any);
+            };
+            if (customerObj) subscriptionPayload.customer = customerObj;
+
+            const subscription = await client.subscriptions.create(subscriptionPayload);
 
             return res.status(200).json({
                 checkout_url: (subscription as any).payment_link || (subscription as any).checkout_url,
@@ -51,18 +54,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
         } else {
             // Create one-time payment via Dodo API
-            const payment = await client.payments.create({
+            const paymentPayload: any = {
                 product_cart: [{ product_id, quantity: 1 }],
-                customer: {
-                    email: email || '',
-                    name: name || '',
-                },
-                metadata: {
-                    user_id,
-                },
+                metadata: { user_id },
                 payment_link: true,
                 return_url: redirectUrl,
-            } as any);
+            };
+            if (customerObj) paymentPayload.customer = customerObj;
+
+            const payment = await client.payments.create(paymentPayload);
 
             return res.status(200).json({
                 checkout_url: (payment as any).payment_link || (payment as any).checkout_url,
