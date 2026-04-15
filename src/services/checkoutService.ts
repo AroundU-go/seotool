@@ -1,14 +1,14 @@
 export const getProductId = (type: 'one_time' | 'subscription') => {
-    const env = process.env.NEXT_PUBLIC_DODO_PAYMENTS_ENVIRONMENT || process.env.DODO_PAYMENTS_ENVIRONMENT || 'live_mode';
-    
+    const env = process.env.NEXT_PUBLIC_DODO_PAYMENTS_ENVIRONMENT || process.env.DODO_PAYMENTS_ENVIRONMENT || 'test_mode';
+
     if (type === 'one_time') {
-        return process.env.NEXT_PUBLIC_DODO_PRODUCT_ONE_TIME || 
-               process.env.DODO_PRODUCT_ONE_TIME || 
-               (env === 'test_mode' ? 'pdt_0NYskaXuWvqB7pOJJAWHR' : 'pdt_0NaHBvNNtTNxDUEQ1BblK');
+        return process.env.NEXT_PUBLIC_DODO_PRODUCT_ONE_TIME ||
+            process.env.DODO_PRODUCT_ONE_TIME ||
+            (env === 'test_mode' ? 'pdt_0NYskaXuWvqB7pOJJAWHR' : 'pdt_0NaHBvNNtTNxDUEQ1BblK');
     } else {
-        return process.env.NEXT_PUBLIC_DODO_PRODUCT_SUBSCRIPTION || 
-               process.env.DODO_PRODUCT_SUBSCRIPTION || 
-               (env === 'test_mode' ? 'pdt_0NYsnZquqsrqDi9SW9pHT' : 'pdt_0NYlhH0CqhFDHJIr5v82N');
+        return process.env.NEXT_PUBLIC_DODO_PRODUCT_SUBSCRIPTION ||
+            process.env.DODO_PRODUCT_SUBSCRIPTION ||
+            (env === 'test_mode' ? 'pdt_0NYsnZquqsrqDi9SW9pHT' : 'pdt_0NYlhH0CqhFDHJIr5v82N');
     }
 };
 
@@ -87,4 +87,3 @@ export async function redirectToCheckout(
     window.location.href = baseUrl;
 }
 
-export { PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION };

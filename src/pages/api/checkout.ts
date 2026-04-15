@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import DodoPayments from 'dodopayments';
 
 const DODO_API_KEY = process.env.DODO_PAYMENTS_API_KEY || '';
-const DODO_ENV = process.env.DODO_PAYMENTS_ENVIRONMENT || 'live_mode';
+const DODO_ENV = process.env.DODO_PAYMENTS_ENVIRONMENT || 'test_mode';
 
 import { PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION } from '@/services/checkoutService';
 
