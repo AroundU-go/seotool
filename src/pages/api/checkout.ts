@@ -27,48 +27,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             environment: DODO_ENV as any,
         });
 
-        const isSubscription = product_id === PRODUCT_SUBSCRIPTION;
-        const redirectUrl = return_url || 'https://seozapp.com/analyze?payment=success';
-
         // Prepare customer object only if we have details
         const customerObj = (email || name) ? {
             ...(email ? { email } : {}),
             ...(name ? { name } : {})
         } : undefined;
 
-        if (isSubscription) {
-            // Create subscription via Dodo API
-            const subscriptionPayload: any = {
-                product_id,
-                metadata: { user_id },
-                return_url: redirectUrl,
-                quantity: 1,
-            };
-            if (customerObj) subscriptionPayload.customer = customerObj;
+        // Use unified Checkout Session API for both subscriptions and one-time payments
+        const sessionPayload: any = {
+            product_cart: [{ product_id, quantity: 1 }],
+            metadata: { user_id },
+            return_url: redirectUrl,
+        };
+        if (customerObj) sessionPayload.customer = customerObj;
 
-            const subscription = await client.subscriptions.create(subscriptionPayload);
+        const session = await client.checkoutSessions.create(sessionPayload);
 
-            return res.status(200).json({
-                checkout_url: (subscription as any).payment_link || (subscription as any).checkout_url,
-                subscription_id: (subscription as any).subscription_id,
-            });
-        } else {
-            // Create one-time payment via Dodo API
-            const paymentPayload: any = {
-                product_cart: [{ product_id, quantity: 1 }],
-                metadata: { user_id },
-                payment_link: true,
-                return_url: redirectUrl,
-            };
-            if (customerObj) paymentPayload.customer = customerObj;
-
-            const payment = await client.payments.create(paymentPayload);
-
-            return res.status(200).json({
-                checkout_url: (payment as any).payment_link || (payment as any).checkout_url,
-                payment_id: (payment as any).payment_id,
-            });
-        }
+        return res.status(200).json({
+            checkout_url: (session as any).checkout_url || (session as any).payment_link,
+            session_id: (session as any).session_id,
+        });
     } catch (error: any) {
         console.error('[/api/checkout] Error:', error);
         return res.status(500).json({
