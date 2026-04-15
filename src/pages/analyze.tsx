@@ -208,7 +208,27 @@ export default function SeoToolPage() {
             const cleanUrl = (router.query.analyzeUrl as string).trim().replace(/^https?:\/\//, '');
             setInputUrl(cleanUrl);
         }
-    }, [router.query]);
+
+        if (router.query.payment === 'success') {
+            console.log('[Payment] Success detected, refreshing Pro status...');
+            setShowProActivated(true);
+            
+            // Poll for webhook confirmation up to ~10 seconds
+            let attempts = 0;
+            const pollPro = setInterval(async () => {
+                await refreshProStatus();
+                attempts++;
+                if (attempts > 5) clearInterval(pollPro);
+            }, 2000);
+            
+            // Clean up the URL to prevent re-triggering
+            const url = new URL(window.location.href);
+            url.searchParams.delete('payment');
+            window.history.replaceState({}, '', url.pathname + url.search);
+
+            return () => clearInterval(pollPro);
+        }
+    }, [router.query, refreshProStatus]);
 
     // ... imports
 
