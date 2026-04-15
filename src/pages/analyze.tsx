@@ -493,9 +493,8 @@ export default function SeoToolPage() {
                                     window.location.href = '/auth?return_to=/analyze';
                                     return;
                                 }
-                                const domain = process.env.NEXT_PUBLIC_DODO_ENVIRONMENT === 'live' ? 'checkout.dodopayments.com' : 'test.checkout.dodopayments.com';
                                 const redirectUrl = `https://seozapp.com/analyze?payment=success`;
-                                const checkoutUrl = `https://${domain}/buy/${PRODUCT_SUBSCRIPTION}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
+                                const checkoutUrl = `https://checkout.dodopayments.com/buy/${PRODUCT_SUBSCRIPTION}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
                                 window.location.href = checkoutUrl;
                             }}
                             className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
@@ -539,9 +538,8 @@ export default function SeoToolPage() {
                                         window.location.href = '/auth?return_to=/analyze';
                                         return;
                                     }
-                                    const domain = process.env.NEXT_PUBLIC_DODO_ENVIRONMENT === 'live' ? 'checkout.dodopayments.com' : 'test.checkout.dodopayments.com';
                                     const redirectUrl = `https://seozapp.com/analyze?payment=success`;
-                                    const checkoutUrl = `https://${domain}/buy/${PRODUCT_ONE_TIME}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
+                                    const checkoutUrl = `https://checkout.dodopayments.com/buy/${PRODUCT_ONE_TIME}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
                                     window.location.href = checkoutUrl;
                                 }}
                                 className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
@@ -556,9 +554,8 @@ export default function SeoToolPage() {
                                         window.location.href = '/auth?return_to=/analyze';
                                         return;
                                     }
-                                    const domain = process.env.NEXT_PUBLIC_DODO_ENVIRONMENT === 'live' ? 'checkout.dodopayments.com' : 'test.checkout.dodopayments.com';
                                     const redirectUrl = `https://seozapp.com/analyze?payment=success`;
-                                    const checkoutUrl = `https://${domain}/buy/${PRODUCT_SUBSCRIPTION}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
+                                    const checkoutUrl = `https://checkout.dodopayments.com/buy/${PRODUCT_SUBSCRIPTION}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
                                     window.location.href = checkoutUrl;
                                 }}
                                 className="w-full py-3.5 bg-white text-accent font-bold rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
