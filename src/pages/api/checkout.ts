@@ -4,9 +4,7 @@ import DodoPayments from 'dodopayments';
 const DODO_API_KEY = process.env.DODO_PAYMENTS_API_KEY || '';
 const DODO_ENV = process.env.DODO_PAYMENTS_ENVIRONMENT || 'live_mode';
 
-// Product IDs
-const PRODUCT_ONE_TIME = 'pdt_0NaHBvNNtTNxDUEQ1BblK';
-const PRODUCT_SUBSCRIPTION = 'pdt_0NYlhH0CqhFDHJIr5v82N';
+import { PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION } from '@/services/checkoutService';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {

@@ -8,9 +8,7 @@ const webhookSecret = process.env.DODO_PAYMENTS_WEBHOOK_SECRET || '';
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-// Product IDs
-const PRODUCT_ONE_TIME = 'pdt_0NaHBvNNtTNxDUEQ1BblK';
-const PRODUCT_SUBSCRIPTION = 'pdt_0NYlhH0CqhFDHJIr5v82N';
+import { PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION } from '@/services/checkoutService';
 
 // Disable body parsing — we need the raw body for signature verification
 export const config = {

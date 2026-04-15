@@ -1,6 +1,19 @@
-// Product IDs
-const PRODUCT_ONE_TIME = 'pdt_0NaHBvNNtTNxDUEQ1BblK';
-const PRODUCT_SUBSCRIPTION = 'pdt_0NYlhH0CqhFDHJIr5v82N';
+export const getProductId = (type: 'one_time' | 'subscription') => {
+    const env = process.env.NEXT_PUBLIC_DODO_PAYMENTS_ENVIRONMENT || process.env.DODO_PAYMENTS_ENVIRONMENT || 'live_mode';
+    
+    if (type === 'one_time') {
+        return process.env.NEXT_PUBLIC_DODO_PRODUCT_ONE_TIME || 
+               process.env.DODO_PRODUCT_ONE_TIME || 
+               (env === 'test_mode' ? 'pdt_0NYskaXuWvqB7pOJJAWHR' : 'pdt_0NaHBvNNtTNxDUEQ1BblK');
+    } else {
+        return process.env.NEXT_PUBLIC_DODO_PRODUCT_SUBSCRIPTION || 
+               process.env.DODO_PRODUCT_SUBSCRIPTION || 
+               (env === 'test_mode' ? 'pdt_0NYsnZquqsrqDi9SW9pHT' : 'pdt_0NYlhH0CqhFDHJIr5v82N');
+    }
+};
+
+export const PRODUCT_ONE_TIME = getProductId('one_time');
+export const PRODUCT_SUBSCRIPTION = getProductId('subscription');
 
 export interface CheckoutRequest {
     productId: string;
