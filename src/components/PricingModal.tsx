@@ -67,11 +67,6 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
             return;
         }
 
-        if (productId === 'pdt_0NYsnZquqsrqDi9SW9pHT') {
-            console.log('Subscription flow pending instructions');
-            return;
-        }
-
         setCheckoutLoading(productId);
         try {
             const redirectUrl = `https://seozapp.com/analyze?payment=success`;

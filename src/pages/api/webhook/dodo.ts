@@ -58,10 +58,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         console.log(`[Webhook] Processing event ${eventType} for user ${userId}`);
 
-        if (eventType === 'payment.succeeded' || eventType === 'subscription.active') {
-            // Check if subscription or one-time via product id or eventtype
-            // According to Dodo, one-time items trigger 'payment.succeeded'. Subscriptions might trigger 'subscription.active'.
-            const isSub = eventType === 'subscription.active' || (event.data as any)?.subscription_id;
+        if (eventType === 'payment.succeeded' || eventType === 'subscription.active' || eventType === 'subscription.renewed') {
+            const isSub = eventType === 'subscription.active' || eventType === 'subscription.renewed' || (event.data as any)?.subscription_id;
             
             const paymentType = isSub ? 'subscription' : 'one_time';
             
@@ -82,6 +80,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             console.log(`[Webhook] Successfully updated profile for user ${userId} to ${paymentType}`);
+            return res.status(200).json({ received: true });
+        }
+
+        if (eventType === 'subscription.on_hold' || eventType === 'subscription.cancelled' || eventType === 'subscription.failed') {
+            const { error: profileError } = await supabaseAdmin
+                .from('profiles')
+                .update({
+                    is_pro: false,
+                    payment_type: null
+                })
+                .eq('id', userId);
+
+            if (profileError) {
+                console.error(`[Webhook] Error revoking profile for user ${userId}:`, profileError);
+                return res.status(500).json({ error: 'Database error' });
+            }
+
+            console.log(`[Webhook] Successfully revoked profile for user ${userId} on ${eventType}`);
+            return res.status(200).json({ received: true });
         }
 
         return res.status(200).json({ received: true });
