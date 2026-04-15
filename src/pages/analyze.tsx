@@ -8,7 +8,10 @@ import TopKeywordsCard from '../components/TopKeywordsCard';
 import BacklinksCard from '../components/BacklinksCard';
 import { DummyProCard } from '../components/DummyProCard';
 import PricingModal from '../components/PricingModal';
-import { redirectToCheckout, PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION } from '../services/checkoutService';
+
+const PRODUCT_ONE_TIME = 'pdt_0NYskaXuWvqB7pOJJAWHR';
+const PRODUCT_SUBSCRIPTION = 'pdt_0NYsnZquqsrqDi9SW9pHT';
+
 import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks, fetchRapidApiData } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
 import { saveAnalysis, getUserAnalysesByEmailOrId, getAnalysisCountByEmail, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
@@ -470,7 +473,7 @@ export default function SeoToolPage() {
                                     window.location.href = '/auth?return_to=/analyze';
                                     return;
                                 }
-                                redirectToCheckout(PRODUCT_SUBSCRIPTION, user.id, user.email || '');
+                                console.log('Subscription flow pending instructions');
                             }}
                             className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                         >
@@ -513,7 +516,9 @@ export default function SeoToolPage() {
                                         window.location.href = '/auth?return_to=/analyze';
                                         return;
                                     }
-                                    redirectToCheckout(PRODUCT_ONE_TIME, user.id, user.email || '');
+                                    const redirectUrl = `https://seozapp.com/analyze?payment=success`;
+                                    const checkoutUrl = `https://test.checkout.dodopayments.com/buy/${PRODUCT_ONE_TIME}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
+                                    window.location.href = checkoutUrl;
                                 }}
                                 className="w-full py-3.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                             >
@@ -527,7 +532,7 @@ export default function SeoToolPage() {
                                         window.location.href = '/auth?return_to=/analyze';
                                         return;
                                     }
-                                    redirectToCheckout(PRODUCT_SUBSCRIPTION, user.id, user.email || '');
+                                    console.log('Subscription flow pending instructions');
                                 }}
                                 className="w-full py-3.5 bg-white text-accent font-bold rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                             >

@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { redirectToCheckout, PRODUCT_ONE_TIME, PRODUCT_SUBSCRIPTION } from '@/services/checkoutService';
+
+const PRODUCT_ONE_TIME = 'pdt_0NYskaXuWvqB7pOJJAWHR';
+const PRODUCT_SUBSCRIPTION = 'pdt_0NYsnZquqsrqDi9SW9pHT';
 
 interface PricingTier {
     name: string;
@@ -90,12 +92,19 @@ export function PricingSection() {
             router.push('/auth?return_to=/analyze');
             return;
         }
+
+        if (productId === 'pdt_0NYsnZquqsrqDi9SW9pHT') {
+            console.log('Subscription flow pending instructions');
+            return;
+        }
+
         setCheckoutLoading(productId);
         try {
-            await redirectToCheckout(productId, user.id, user.email || '');
+            const redirectUrl = `https://seozapp.com/analyze?payment=success`;
+            const checkoutUrl = `https://test.checkout.dodopayments.com/buy/${productId}?quantity=1&redirect_url=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(user.email || '')}&disableEmail=true&metadata_user_id=${encodeURIComponent(user.id)}`;
+            window.location.href = checkoutUrl;
         } catch (err) {
             console.error('[PricingSection] Checkout error:', err);
-        } finally {
             setCheckoutLoading(null);
         }
     };
