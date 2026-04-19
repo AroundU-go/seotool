@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, ArrowRight, CheckCircle, ChevronDown } from 'lucide-react';
+import { Lock, CheckCircle } from 'lucide-react';
 import SpeedAuditDashboard from './SpeedAuditDashboard';
 
 interface SeoDashboardProps {
@@ -47,19 +47,7 @@ export default function SeoDashboard({ results, website, hasProAccess = false, o
         return (severityWeight[b.severity?.toLowerCase()] || 0) - (severityWeight[a.severity?.toLowerCase()] || 0);
     });
 
-    const isPremiumIssue = (severity: string) => ['critical', 'error', 'high'].includes(severity?.toLowerCase());
-    const isWarningIssue = (severity: string) => ['warning', 'medium'].includes(severity?.toLowerCase());
 
-    const goodFindings = findings.filter((f: any) => !isPremiumIssue(f.severity) && !isWarningIssue(f.severity));
-    const warningFindings = findings.filter((f: any) => isWarningIssue(f.severity));
-    const criticalFindings = findings.filter((f: any) => isPremiumIssue(f.severity));
-
-    const freeVisibleWarnings = warningFindings.slice(0, 1);
-    const visibleFindingsForFree = [...goodFindings, ...freeVisibleWarnings];
-    const hiddenFindings = [...warningFindings.slice(1), ...criticalFindings];
-
-    const visibleFindings = hasProAccess ? findings : visibleFindingsForFree;
-    const blurredFindings = hasProAccess ? [] : hiddenFindings;
 
     const overallScore = seoSummary.overall_score || 0;
     const aiScore = aiVisibility?.score || 0;
@@ -165,13 +153,17 @@ export default function SeoDashboard({ results, website, hasProAccess = false, o
             <div className="mb-6">
                 <div className="section-header">
                     <span>Priority issues</span>
-                    <span className="free-badge">free — {visibleFindings.length} of {findings.length} shown</span>
+                    {hasProAccess ? (
+                        <span className="pro-badge">pro — {findings.length} issues</span>
+                    ) : (
+                        <span className="free-badge">free — {findings.length} issues</span>
+                    )}
                 </div>
                 
                 {findings.length > 0 ? (
                     <div className="panel bg-[#F9FAFB]">
                         <div className="flex flex-col gap-0">
-                            {visibleFindings.map((f: any, idx: number) => {
+                            {findings.map((f: any, idx: number) => {
                                 const isWarn = f.severity === 'warning' || f.severity === 'high' || f.severity === 'medium';
                                 const isCrit = f.severity === 'critical' || f.severity === 'error';
                                 const iconClass = isWarn ? 'bg-[#FAEEDA] text-[#854F0B]' : isCrit ? 'bg-[#FEE2E2] text-[#991B1B]' : 'bg-[#EAF3DE] text-[#3B6D11]';
@@ -191,7 +183,7 @@ export default function SeoDashboard({ results, website, hasProAccess = false, o
                                                 </div>
                                             )}
                                         </div>
-                                        {!hasProAccess && (isWarn || isCrit) ? (
+                                        {!hasProAccess && f.fix ? (
                                             <button onClick={handleUpgrade} className="text-[11px] px-2.5 py-1.5 rounded-md border border-[#E5E7EB] bg-transparent text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap">
                                                 🔒 How to fix &rarr;
                                             </button>
@@ -199,58 +191,6 @@ export default function SeoDashboard({ results, website, hasProAccess = false, o
                                     </div>
                                 );
                             })}
-                            
-                            {blurredFindings.length > 0 && (
-                                <div className="mt-3 pt-3 border-t border-[#E5E7EB] relative">
-                                    <div className="pro-blur-inner space-y-0">
-                                        {blurredFindings.map((f: any, idx: number) => {
-                                            const isWarn = f.severity === 'warning' || f.severity === 'high' || f.severity === 'medium';
-                                            const isCrit = f.severity === 'critical' || f.severity === 'error';
-                                            const iconClass = isWarn ? 'bg-[#FAEEDA] text-[#854F0B]' : isCrit ? 'bg-[#FEE2E2] text-[#991B1B]' : 'bg-[#EAF3DE] text-[#3B6D11]';
-                                            const iconChar = (isWarn || isCrit) ? '!' : '✓';
-                                            
-                                            return (
-                                            <div key={`blur-${idx}`} className="flex items-start gap-3 py-3 border-b border-[#E5E7EB] last:border-none last:pb-0">
-                                                 <div className={`w-5 h-5 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center text-[10px] font-bold ${iconClass}`}>
-                                                     {iconChar}
-                                                 </div>
-                                                 <div className="flex-1">
-                                                     <div className="text-[13px] text-gray-900">{f.issue}</div>
-                                                     <div className="text-[11px] text-gray-500 mt-1 capitalize">hidden · {f.severity}</div>
-                                                     {f.fix && (
-                                                         <div className="mt-2 text-[12px] text-gray-600 bg-white p-2 rounded border border-[#E5E7EB]">
-                                                             <span className="font-semibold mr-1">Fix:</span>{f.fix}
-                                                         </div>
-                                                     )}
-                                                 </div>
-                                                 {!hasProAccess && (isWarn || isCrit) ? (
-                                                     <button onClick={handleUpgrade} className="text-[11px] px-2.5 py-1.5 rounded-md border border-[#E5E7EB] bg-transparent text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap">
-                                                         🔒 How to fix &rarr;
-                                                     </button>
-                                                 ) : null}
-                                            </div>
-                                        )})}
-                                    </div>
-                                    <div className="absolute inset-0 z-10 flex items-center justify-center p-6">
-                                        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 sm:p-6 md:p-8 max-w-xs sm:max-w-sm md:max-w-md w-full text-center shadow-2xl shadow-red-900/10 backdrop-blur-sm bg-white/60">
-                                            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-                                                <Lock className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-red-600" />
-                                            </div>
-                                            <h4 className="text-base sm:text-lg md:text-xl font-bold text-red-900 mb-1 sm:mb-2">Critical issues found</h4>
-                                            
-                                            <p className="text-red-700 mb-4 sm:mb-6 text-xs sm:text-sm">
-                                                We've detected {blurredFindings.length} critical or warning SEO issues on your website. Upgrade to view them and get detailed fixes.
-                                            </p>
-                                            <button
-                                                onClick={handleUpgrade}
-                                                className="inline-flex items-center justify-center gap-2 w-full py-2.5 sm:py-3 bg-red-600 text-white text-sm sm:text-base font-bold rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
-                                            >
-                                                Upgrade to View <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     </div>
                 ) : (
