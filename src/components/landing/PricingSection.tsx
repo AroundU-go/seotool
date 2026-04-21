@@ -60,7 +60,7 @@ const tiers: PricingTier[] = [
     },
     {
         name: 'Pro',
-        price: '$19',
+        price: '$29',
         period: '/month',
         description: 'For growth-focused teams and agencies who need unlimited power.',
         quota: 'Unlimited audits',
