@@ -1,0 +1,43 @@
+API REQUEST:
+
+
+curl -X GET "https://vebapi.com/api/seo/referraldomains?website=codeconia.com&rows=100" \
+    -H "X-API-KEY: 0f1cdf58-eb35-4f8b-bc26-744cdff9dcfd" \
+    -H "Content-Type: application/json"
+
+
+API RESPONSE:
+
+
+{
+    "referrers": [
+        {
+            "refdomain": "quabr.com",
+            "backlinks": 4,
+            "dofollow_backlinks": 0,
+            "first_seen": "2021-12-14",
+            "domain_inlink_rank": 31
+        },
+        {
+            "refdomain": "www.tpsearchtool.com",
+            "backlinks": 4,
+            "dofollow_backlinks": 0,
+            "first_seen": "2022-11-12",
+            "domain_inlink_rank": 47
+        },
+        {
+            "refdomain": "alestat.com",
+            "backlinks": 4,
+            "dofollow_backlinks": 0,
+            "first_seen": "2021-07-13",
+            "domain_inlink_rank": 61
+        },
+        {
+            "refdomain": "dev.to",
+            "backlinks": 2,
+            "dofollow_backlinks": 2,
+            "first_seen": "2021-09-22",
+            "domain_inlink_rank": 91
+        }
+    ]
+}

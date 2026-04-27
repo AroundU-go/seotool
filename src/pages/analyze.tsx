@@ -166,8 +166,12 @@ export default function SeoToolPage() {
                 // Continue with local data only
             }
 
-            // Merge with local history, dedup by id to avoid duplicates
+            // Merge with local history, dedup to avoid duplicates.
+            // Each analysis is saved to both localStorage (id=local_<ts>) and
+            // Supabase (id=UUID), so we must also deduplicate by website +
+            // created_at proximity — not just by id.
             const localData = getLocalHistory();
+            // Put remote records first so they are preferred over local copies
             const allRecords = [...remoteData, ...localData];
 
             // Sort all by date descending
@@ -175,16 +179,27 @@ export default function SeoToolPage() {
                 new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
             );
 
-            // Deduplicate by id only (keep all analyses, even for same website)
             const seenIds = new Set<string>();
+            // Track website+timestamp combos to catch local/remote dupes
+            const seenWebsiteTimestamps: { website: string; time: number }[] = [];
             const merged: SeoAnalysisRecord[] = [];
 
             for (const r of allRecords) {
                 const recordId = r.id || `${r.website}_${r.created_at}`;
-                if (!seenIds.has(recordId)) {
-                    seenIds.add(recordId);
-                    merged.push(r);
-                }
+                // Skip exact id duplicates
+                if (seenIds.has(recordId)) continue;
+
+                // Check if a record for the same website was already added
+                // within a 10-second window (same analysis saved to both stores)
+                const rTime = new Date(r.created_at || 0).getTime();
+                const isDupeByContent = seenWebsiteTimestamps.some(
+                    (s) => s.website === r.website && Math.abs(s.time - rTime) < 10000
+                );
+                if (isDupeByContent) continue;
+
+                seenIds.add(recordId);
+                seenWebsiteTimestamps.push({ website: r.website, time: rTime });
+                merged.push(r);
             }
 
             console.log('[History] Total merged records:', merged.length);
