@@ -110,8 +110,11 @@ export interface TopKeywordsResult {
 
 const VEBAPI_KEY = process.env.NEXT_PUBLIC_VEBAPI_KEY || '';
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const callVebApi = async <T,>(endpoint: string, website: string): Promise<T> => {
-  const cleanWebsite = website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  // Strip any spaces from the URL (user may accidentally paste with spaces)
+  const cleanWebsite = website.replace(/\s+/g, '').replace(/^https?:\/\//, '').replace(/\/$/, '');
   const url = `https://vebapi.com/api/${endpoint}?website=${encodeURIComponent(cleanWebsite)}`;
 
   console.log('[VebAPI] Calling:', url, 'Key present:', !!VEBAPI_KEY);
@@ -146,6 +149,8 @@ const callVebApi = async <T,>(endpoint: string, website: string): Promise<T> => 
 };
 
 export async function analyzeSeo(website: string): Promise<SeoAnalysisResult> {
+  // Add a small delay before the on-page SEO call to reduce 500 errors from VebAPI
+  await delay(500);
   return callVebApi<SeoAnalysisResult>("seo/analyze/v2", website);
 }
 
@@ -263,7 +268,7 @@ export interface RapidApiDataResult {
 
 export async function fetchRapidApiData(website: string): Promise<RapidApiDataResult> {
   // Website might not have https:// so we add it safely for the URL param
-  const cleanWebsite = website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const cleanWebsite = website.replace(/\s+/g, '').replace(/^https?:\/\//, '').replace(/\/$/, '');
   const targetUrl = `https://${cleanWebsite}`;
 
   const url = `https://seo-analyzer8.p.rapidapi.com/analyze?url=${encodeURIComponent(targetUrl)}`;

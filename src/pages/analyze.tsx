@@ -220,7 +220,7 @@ export default function SeoToolPage() {
 
     useEffect(() => {
         if (router.query.analyzeUrl) {
-            const cleanUrl = (router.query.analyzeUrl as string).trim().replace(/^https?:\/\//, '');
+            const cleanUrl = (router.query.analyzeUrl as string).replace(/\s+/g, '').replace(/^https?:\/\//, '');
             setInputUrl(cleanUrl);
         }
 
@@ -793,7 +793,7 @@ export default function SeoToolPage() {
                         <div className="flex flex-col items-center mb-8">
                             {!hasResults && !loading && (
                                 <form
-                                    onSubmit={(e) => { e.preventDefault(); if (inputUrl.trim()) { const cleanUrl = inputUrl.trim().replace(/^https?:\/\//, ''); handleAnalyze(cleanUrl); } }}
+                                    onSubmit={(e) => { e.preventDefault(); if (inputUrl.trim()) { const cleanUrl = inputUrl.replace(/\s+/g, '').replace(/^https?:\/\//, ''); handleAnalyze(cleanUrl); } }}
                                     className="w-full max-w-3xl flex flex-col sm:flex-row items-center bg-white/80 backdrop-blur-md border border-white/50 rounded-3xl sm:rounded-full p-2 shadow-[0_15px_40px_-10px_rgba(117,221,255,0.4)] transition-all duration-300 gap-2 sm:gap-0"
                                 >
                                     <div className="hidden sm:flex items-center pl-4 pr-1 text-gray-400">
@@ -804,7 +804,7 @@ export default function SeoToolPage() {
                                         <input
                                             type="text"
                                             value={inputUrl}
-                                            onChange={(e) => setInputUrl(e.target.value)}
+                                            onChange={(e) => setInputUrl(e.target.value.replace(/\s+/g, ''))}
                                             placeholder="Enter website URL (e.g., example.com)"
                                             className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0 text-base md:text-lg min-w-0 pl-12 sm:pl-2 pr-4 py-4 sm:py-3"
                                             disabled={loading}

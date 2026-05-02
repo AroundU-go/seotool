@@ -92,13 +92,15 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
     const handleAnalyzeClick = (e: React.FormEvent) => {
         e.preventDefault();
         if (!url.trim()) return;
+        // Strip spaces from the URL to prevent malformed requests
+        const cleanUrl = url.replace(/\s+/g, '').trim();
         
         if (isLoggedIn) {
             // Already logged in — go directly to analyze with the URL
-            router.push({ pathname: '/analyze', query: { analyzeUrl: url.trim() } });
+            router.push({ pathname: '/analyze', query: { analyzeUrl: cleanUrl } });
         } else {
             // Store the URL so AuthCallback can redirect to /analyze with it
-            localStorage.setItem('pending_analyze_url', url.trim());
+            localStorage.setItem('pending_analyze_url', cleanUrl);
             router.push('/auth');
         }
     };
@@ -167,7 +169,7 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
                             <input
                                 type="text"
                                 value={url}
-                                onChange={(e) => setUrl(e.target.value)}
+                                onChange={(e) => setUrl(e.target.value.replace(/\s+/g, ''))}
                                 placeholder="Enter website URL (e.g., example.com)"
                                 className="w-full bg-transparent border-none text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-0 text-base md:text-lg min-w-0 pl-12 sm:pl-2 pr-4 py-4 sm:py-3"
                             />
