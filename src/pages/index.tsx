@@ -146,7 +146,7 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
                 {/* Hero Content */}
                 <div className="relative text-center px-4 max-w-5xl mx-auto" style={{ zIndex: 10 }}>
                     <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mb-8 whitespace-normal md:whitespace-nowrap">
-                        <span className="block text-foreground">Turn your SEO issues into</span>
+                        <span className="block text-foreground">Turn your SEO and AEO issues into</span>
                         <span className="block text-gradient mt-1 xl:mt-3 text-5xl sm:text-6xl md:text-7xl lg:text-8xl">Real Traffic</span>
                     </h1>
 
