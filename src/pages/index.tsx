@@ -185,7 +185,6 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
                     </form>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-6">
                         <span className="flex items-center gap-2 text-sm font-semibold text-foreground/60"><Check className="w-4 h-4 text-[#10B981] stroke-[3]" /> 1 free audit</span>
-                        <span className="flex items-center gap-2 text-sm font-semibold text-foreground/60"><Check className="w-4 h-4 text-[#10B981] stroke-[3]" /> No credit card required</span>
                         <span className="flex items-center gap-2 text-sm font-semibold text-foreground/60"><Check className="w-4 h-4 text-[#10B981] stroke-[3]" /> 7-day free trial</span>
                     </div>
                 </div>
