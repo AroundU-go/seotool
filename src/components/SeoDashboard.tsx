@@ -185,7 +185,7 @@ export default function SeoDashboard({ results, website, hasProAccess = false, o
                                         </div>
                                         {!hasProAccess && f.fix ? (
                                             <button onClick={handleUpgrade} className="text-[11px] px-2.5 py-1.5 rounded-md border border-[#E5E7EB] bg-transparent text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap">
-                                                🔒 How to fix &rarr;
+                                                How to fix &rarr;
                                             </button>
                                         ) : null}
                                     </div>
