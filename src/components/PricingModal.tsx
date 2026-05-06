@@ -39,6 +39,7 @@ const paidTiers = [
         description: 'For growth-focused teams and agencies who need unlimited power.',
         quota: 'Unlimited audits',
         features: [
+            '7-day free trial',
             'Everything in One-Time',
             'Email alerts',
             'AEO & GEO optimization',
@@ -51,7 +52,7 @@ const paidTiers = [
         highlight: true,
         icon: <Building2 className="w-6 h-6" />,
         badge: 'Most Popular',
-        cta: 'Upgrade to Pro',
+        cta: 'Start 7-Day Free Trial',
         productId: PRODUCT_SUBSCRIPTION,
     },
 ];
