@@ -287,45 +287,57 @@ export default function SeoToolPage() {
         setActiveTab('dashboard'); // Ensure we switch back to dashboard
 
         try {
-            // Admin gets everything
-            // Pro ($5 one-time) gets: on-page, speed, AI bot checker, top keywords
-            // Free users get only SEO Analysis & Speed
-            const promises = [
-                analyzeSeo(url),
-                checkLoadingSpeed(url),
-                fetchRapidApiData(url),
-            ];
+            // ── Sequential API calls ──────────────────────────────────
+            // Call APIs one-by-one to avoid overwhelming VebAPI servers (causes 502 errors).
+            // Each call waits for the previous one to finish before starting.
+
+            // Helper: call an async fn and return { status, value/reason } like Promise.allSettled
+            const callSafe = async <T,>(fn: () => Promise<T>, label: string): Promise<{ status: 'fulfilled'; value: T } | { status: 'rejected'; reason: any }> => {
+                try {
+                    const value = await fn();
+                    console.log(`[Analysis] ${label}: OK`);
+                    return { status: 'fulfilled', value };
+                } catch (reason) {
+                    console.error(`[Analysis] ${label}: FAILED`, reason);
+                    return { status: 'rejected', reason };
+                }
+            };
+
+            // 1. SEO Analysis
+            const seoData = await callSafe(() => analyzeSeo(url), 'SEO Data');
+
+            // 2. Loading Speed
+            const speedData = await callSafe(() => checkLoadingSpeed(url), 'Speed Data');
+
+            // 3. RapidAPI Data
+            const rapidApiDataRes = await callSafe(() => fetchRapidApiData(url), 'RapidAPI Data');
+
+            // Pro-only APIs (sequential, one after another)
+            let aiBotData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
+            let topKwData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
+            let aiVisData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
+            let backlinkDataRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
+            let newBacklinksRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
+            let poorBacklinksRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
 
             if (hasProAccess) {
-                promises.push(checkAiBots(url));        // idx 3
-                promises.push(checkTopKeywords(url));   // idx 4
-                promises.push(checkAiVisibility(url));  // idx 5 — all pro users
-                promises.push(getBacklinkData(url));    // idx 6
-                promises.push(getNewBacklinks(url));    // idx 7
-                promises.push(getPoorBacklinks(url));   // idx 8
-            }
+                // 4. AI Bot Checker
+                aiBotData = await callSafe(() => checkAiBots(url), 'AI Bot');
 
-            const results = await Promise.allSettled(promises);
+                // 5. Top Keywords
+                topKwData = await callSafe(() => checkTopKeywords(url), 'Top Keywords');
 
-            // Destructure results — indices are fixed since all pro APIs are always requested together
-            const seoData = results[0];
-            const speedData = results[1];
-            const rapidApiDataRes = results[2];
-            const aiBotData = hasProAccess ? results[3] : { status: 'rejected' as const, reason: 'Not requested' };
-            const topKwData = hasProAccess ? results[4] : { status: 'rejected' as const, reason: 'Not requested' };
-            const aiVisData = hasProAccess ? results[5] : { status: 'rejected' as const, reason: 'Not requested' };
-            const backlinkDataRes = hasProAccess ? results[6] : { status: 'rejected' as const, reason: 'Not requested' };
-            const newBacklinksRes = hasProAccess ? results[7] : { status: 'rejected' as const, reason: 'Not requested' };
-            const poorBacklinksRes = hasProAccess ? results[8] : { status: 'rejected' as const, reason: 'Not requested' };
+                // 6. AI Visibility
+                aiVisData = await callSafe(() => checkAiVisibility(url), 'AI Visibility');
 
-            // Debug: log detailed status for each API call
-            console.log('[Analysis] SEO Data:', seoData.status, seoData.status === 'rejected' ? (seoData as any).reason : 'OK');
-            console.log('[Analysis] Speed Data:', speedData.status, speedData.status === 'rejected' ? (speedData as any).reason : 'OK');
-            console.log('[Analysis] RapidAPI Data:', rapidApiDataRes.status, rapidApiDataRes.status === 'rejected' ? (rapidApiDataRes as any).reason : 'OK');
-            if (hasProAccess) {
-                console.log('[Analysis] AI Bot:', aiBotData.status, aiBotData.status === 'rejected' ? (aiBotData as any).reason : 'OK');
-                console.log('[Analysis] Top Keywords:', topKwData.status, topKwData.status === 'rejected' ? (topKwData as any).reason : 'OK');
-                console.log('[Analysis] AI Visibility:', aiVisData.status, aiVisData.status === 'rejected' ? (aiVisData as any).reason : 'OK');
+                // 7. Backlink Data
+                backlinkDataRes = await callSafe(() => getBacklinkData(url), 'Backlink Data');
+
+                // 8. New Backlinks
+                newBacklinksRes = await callSafe(() => getNewBacklinks(url), 'New Backlinks');
+
+                // 9. Poor Backlinks
+                poorBacklinksRes = await callSafe(() => getPoorBacklinks(url), 'Poor Backlinks');
             }
 
             const newResults = {
