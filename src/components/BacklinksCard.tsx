@@ -1,28 +1,32 @@
-import { Link2, ExternalLink, AlertTriangle, TrendingUp, ShieldAlert } from 'lucide-react';
+import { Link2, ExternalLink, AlertTriangle, TrendingUp, ShieldAlert, Globe } from 'lucide-react';
 
 interface BacklinksCardProps {
     backlinkData: unknown;
     newBacklinks: unknown;
     poorBacklinks: unknown;
+    referringDomains: unknown;
 }
 
-export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklinks }: BacklinksCardProps) {
+export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklinks, referringDomains }: BacklinksCardProps) {
     const bd = backlinkData as Record<string, unknown> | null;
     const nb = newBacklinks as Record<string, unknown> | null;
     const pb = poorBacklinks as Record<string, unknown> | null;
+    const rd = referringDomains as Record<string, unknown> | null;
 
-    if (!bd && !nb && !pb) return null;
+    if (!bd && !nb && !pb && !rd) return null;
 
     const backlinks = (bd?.backlinks || bd?.data || []) as Array<Record<string, unknown>>;
     const counts = bd?.counts as any;
     const totalBacklinks = (counts?.backlinks?.total ?? bd?.total_backlinks ?? bd?.total ?? backlinks.length ?? 0) as number;
-    const referringDomains = (counts?.domains?.total ?? bd?.referring_domains ?? bd?.ref_domains ?? 0) as number;
+    const referringDomainsCount = (counts?.domains?.total ?? bd?.referring_domains ?? bd?.ref_domains ?? 0) as number;
 
     const newList = (nb?.new_backlinks || nb?.data || []) as Array<Record<string, unknown>>;
     const newTotal = (nb?.total ?? newList.length ?? 0) as number;
 
     const poorList = (pb?.poor_backlinks || pb?.data || []) as Array<Record<string, unknown>>;
     const poorTotal = (pb?.total ?? poorList.length ?? 0) as number;
+
+    const referrerList = (rd?.referrers || []) as Array<Record<string, unknown>>;
 
     const truncateUrl = (url?: string, max = 45) => {
         if (!url) return '-';
@@ -62,11 +66,11 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                 </div>
             </div>
 
-            {referringDomains > 0 && (
+            {referringDomainsCount > 0 && (
                 <div className="mb-6">
                     <div className="panel flex items-center justify-between">
                         <span className="text-sm text-gray-600 font-medium">Referring Domains</span>
-                        <span className="text-lg font-bold text-gray-900">{referringDomains}</span>
+                        <span className="text-lg font-bold text-gray-900">{referringDomainsCount}</span>
                     </div>
                 </div>
             )}
@@ -172,6 +176,57 @@ export default function BacklinksCard({ backlinkData, newBacklinks, poorBacklink
                                     )}
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Referring Domains */}
+            {referrerList.length > 0 && (
+                <div className="mb-6">
+                    <div className="section-header">
+                        <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5" /> Referring Domains ({referrerList.length})</span>
+                    </div>
+                    <div className="panel p-0 overflow-hidden pt-4 pb-2">
+                        <div className="overflow-auto px-2 max-h-[600px]">
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="border-b border-gray-100 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider sticky top-0 bg-[#F9FAFB] shadow-sm">
+                                        <th className="px-4 py-2">Domain</th>
+                                        <th className="px-4 py-2">Backlinks</th>
+                                        <th className="px-4 py-2">Dofollow</th>
+                                        <th className="px-4 py-2">Domain Rank</th>
+                                        <th className="px-4 py-2">First Seen</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {referrerList.map((ref, i) => (
+                                        <tr key={i} className="hover:bg-gray-50/50 transition-colors">
+                                            <td className="px-4 py-3 text-indigo-600 max-w-[200px]">
+                                                <a href={`https://${ref.refdomain as string}`} target="_blank" rel="noreferrer" className="hover:underline font-medium" title={ref.refdomain as string}>
+                                                    {truncateUrl(ref.refdomain as string, 40)}
+                                                </a>
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-700 font-medium">{String(ref.backlinks ?? '-')}</td>
+                                            <td className="px-4 py-3">
+                                                <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                                    (ref.dofollow_backlinks as number) > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
+                                                }`}>
+                                                    {String(ref.dofollow_backlinks ?? 0)}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium text-xs">
+                                                    {String(ref.domain_inlink_rank ?? '-')}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-500 text-xs">
+                                                {ref.first_seen ? new Date(String(ref.first_seen)).toLocaleDateString() : '-'}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

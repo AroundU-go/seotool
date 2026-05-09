@@ -228,6 +228,54 @@ export async function getPoorBacklinks(website: string): Promise<PoorBacklinksRe
   return callVebApi<PoorBacklinksResult>("seo/poorbacklinks", website);
 }
 
+// ─── Referring Domains API call ─────────────────────────────
+
+export interface ReferringDomainsResult {
+  referrers?: Array<{
+    refdomain?: string;
+    backlinks?: number;
+    dofollow_backlinks?: number;
+    first_seen?: string;
+    domain_inlink_rank?: number;
+    [key: string]: unknown;
+  }>;
+  [key: string]: unknown;
+}
+
+export async function getReferringDomains(website: string): Promise<ReferringDomainsResult> {
+  const cleanWebsite = website.replace(/\s+/g, '').replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const url = `https://vebapi.com/api/seo/referraldomains?website=${encodeURIComponent(cleanWebsite)}&rows=100`;
+
+  console.log('[VebAPI] Calling:', url, 'Key present:', !!VEBAPI_KEY);
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'X-API-KEY': VEBAPI_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => '');
+      let errorData: any = {};
+      try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
+      console.error(`[VebAPI] Error ${response.status} for referraldomains:`, errorData);
+      throw new Error(errorData.error || errorData.message || `VebAPI referraldomains failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('[VebAPI] Success for referraldomains');
+    return data;
+  } catch (err: any) {
+    if (err.message?.includes('VebAPI')) {
+      throw err;
+    }
+    console.error(`[VebAPI] Network/fetch error for referraldomains:`, err.message || err);
+    throw new Error(`VebAPI referraldomains: ${err.message || 'Network error'}`);
+  }
+}
+
 // ─── Direct API call to RapidAPI ────────────────────────────
 
 export interface RapidApiDataResult {

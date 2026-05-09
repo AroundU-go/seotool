@@ -12,7 +12,7 @@ import PricingModal from '../components/PricingModal';
 const PRODUCT_ONE_TIME = process.env.NEXT_PUBLIC_DODO_PRODUCT_ONE_TIME || 'pdt_0NYskaXuWvqB7pOJJAWHR';
 const PRODUCT_SUBSCRIPTION = process.env.NEXT_PUBLIC_DODO_PRODUCT_SUBSCRIPTION || 'pdt_0NYsnZquqsrqDi9SW9pHT';
 
-import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks, fetchRapidApiData } from '../services/seoApi';
+import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks, getReferringDomains, fetchRapidApiData } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
 import { saveAnalysis, getUserAnalysesByEmailOrId, getAnalysisCountByEmail, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
@@ -100,6 +100,7 @@ export default function SeoToolPage() {
         backlinkData: any;
         newBacklinks: any;
         poorBacklinks: any;
+        referringDomains: any;
         rapidApiData: any;
     }>({
         seoAnalysis: null,
@@ -110,6 +111,7 @@ export default function SeoToolPage() {
         backlinkData: null,
         newBacklinks: null,
         poorBacklinks: null,
+        referringDomains: null,
         rapidApiData: null,
     });
 
@@ -283,7 +285,7 @@ export default function SeoToolPage() {
         setLoading(true);
         setError(null);
         setWebsite(url);
-        setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null, rapidApiData: null });
+        setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null, referringDomains: null, rapidApiData: null });
         setActiveTab('dashboard'); // Ensure we switch back to dashboard
 
         try {
@@ -319,6 +321,7 @@ export default function SeoToolPage() {
             let backlinkDataRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
             let newBacklinksRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
             let poorBacklinksRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
+            let referringDomainsRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
 
             if (hasProAccess) {
                 // 4. AI Bot Checker
@@ -338,6 +341,9 @@ export default function SeoToolPage() {
 
                 // 9. Poor Backlinks
                 poorBacklinksRes = await callSafe(() => getPoorBacklinks(url), 'Poor Backlinks');
+
+                // 10. Referring Domains
+                referringDomainsRes = await callSafe(() => getReferringDomains(url), 'Referring Domains');
             }
 
             const newResults = {
@@ -350,6 +356,7 @@ export default function SeoToolPage() {
                 backlinkData: backlinkDataRes.status === 'fulfilled' ? (backlinkDataRes as any).value : null,
                 newBacklinks: newBacklinksRes.status === 'fulfilled' ? (newBacklinksRes as any).value : null,
                 poorBacklinks: poorBacklinksRes.status === 'fulfilled' ? (poorBacklinksRes as any).value : null,
+                referringDomains: referringDomainsRes.status === 'fulfilled' ? (referringDomainsRes as any).value : null,
             };
 
             console.log('[Analysis] Final Results:', {
@@ -466,6 +473,7 @@ export default function SeoToolPage() {
             backlinkData: record.backlink_data || null,
             newBacklinks: record.new_backlinks_data || null,
             poorBacklinks: record.poor_backlinks_data || null,
+            referringDomains: (record as any).referring_domains_data || null,
             rapidApiData: record.rapid_api_data || null,
         });
         setActiveTab('dashboard');
@@ -868,7 +876,7 @@ export default function SeoToolPage() {
                                 <div className="max-w-7xl mx-auto mb-8 flex items-center justify-between">
                                     <button
                                         onClick={() => {
-                                            setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null, rapidApiData: null });
+                                            setResults({ seoAnalysis: null, aiVisibility: null, aiBotChecker: null, loadingSpeed: null, topKeywords: null, backlinkData: null, newBacklinks: null, poorBacklinks: null, referringDomains: null, rapidApiData: null });
                                             setWebsite('');
                                             setError(null);
                                         }}
@@ -910,12 +918,13 @@ export default function SeoToolPage() {
                                         </CardErrorBoundary>
                                     )}
 
-                                    {hasProAccess && (results.backlinkData || results.newBacklinks || results.poorBacklinks) && (
+                                    {hasProAccess && (results.backlinkData || results.newBacklinks || results.poorBacklinks || results.referringDomains) && (
                                         <CardErrorBoundary name="Backlinks">
                                             <BacklinksCard
                                                 backlinkData={results.backlinkData}
                                                 newBacklinks={results.newBacklinks}
                                                 poorBacklinks={results.poorBacklinks}
+                                                referringDomains={results.referringDomains}
                                             />
                                         </CardErrorBoundary>
                                     )}
