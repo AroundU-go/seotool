@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Download, AlertCircle, Search, ArrowLeft, LogOut, Lock, ArrowRight, History, LayoutDashboard, Menu, X, ChevronRight, Crown, CheckCircle2, Brain, TrendingUp, Link2, Globe, Loader2 } from 'lucide-react';
+import { Download, AlertCircle, Search, ArrowLeft, LogOut, Lock, ArrowRight, History, LayoutDashboard, Menu, X, ChevronRight, Crown, CheckCircle2, Brain, TrendingUp, Link2, Globe, Loader2, Sparkles } from 'lucide-react';
 import SeoDashboard from '../components/SeoDashboard';
 import AiVisibilityCard from '../components/AiVisibilityCard';
 import AiBotCheckerCard from '../components/AiBotCheckerCard';
@@ -666,17 +666,38 @@ export default function SeoToolPage() {
                                 {isMenuOpen ? <X className="w-6 h-6 text-gray-600" /> : <Menu className="w-6 h-6 text-gray-600" />}
                             </button>
 
-                            {/* Dropdown Menu */}
-                            {isMenuOpen && (
-                                <div className="absolute top-12 right-0 w-64 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/50 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
-                                    <div className="px-4 py-3 border-b border-gray-100 mb-2">
-                                        <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Signed in as</p>
-                                        <p className="text-sm font-semibold text-gray-900 truncate">{displayEmail}</p>
-                                    </div>
+                            {/* Backdrop overlay */}
+                            <div
+                                className={`fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                                onClick={() => setIsMenuOpen(false)}
+                            />
 
+                            {/* Slide-in Sidebar Menu */}
+                            <div
+                                className={`fixed top-0 right-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl border-l border-white/50 z-50 flex flex-col transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                            >
+                                {/* Sidebar Header */}
+                                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                                    <span className="font-bold text-gray-900 text-sm tracking-wide uppercase">Menu</span>
+                                    <button
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                                    >
+                                        <X className="w-5 h-5 text-gray-500" />
+                                    </button>
+                                </div>
+
+                                {/* User Info */}
+                                <div className="px-5 py-4 border-b border-gray-100">
+                                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Signed in as</p>
+                                    <p className="text-sm font-semibold text-gray-900 truncate mt-0.5">{displayEmail}</p>
+                                </div>
+
+                                {/* Nav Links */}
+                                <nav className="flex-1 py-3 overflow-y-auto">
                                     <button
                                         onClick={() => { setActiveTab('dashboard'); setIsMenuOpen(false); }}
-                                        className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors ${activeTab === 'dashboard' ? 'text-accent font-medium' : 'text-gray-600'}`}
+                                        className={`w-full text-left px-5 py-3 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors ${activeTab === 'dashboard' ? 'text-accent font-medium bg-accent/5' : 'text-gray-600'}`}
                                     >
                                         <LayoutDashboard className="w-4 h-4" />
                                         Dashboard
@@ -688,31 +709,40 @@ export default function SeoToolPage() {
                                             setIsMenuOpen(false);
                                             fetchHistory();
                                         }}
-                                        className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors ${activeTab === 'history' ? 'text-accent font-medium' : 'text-gray-600'}`}
+                                        className={`w-full text-left px-5 py-3 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors ${activeTab === 'history' ? 'text-accent font-medium bg-accent/5' : 'text-gray-600'}`}
                                     >
                                         <History className="w-4 h-4" />
                                         History
                                     </button>
 
                                     <button
+                                        onClick={() => alert('Keyword Suggestions coming soon!')}
+                                        className="w-full text-left px-5 py-3 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors text-gray-600"
+                                    >
+                                        <Sparkles className="w-4 h-4" />
+                                        Keyword Suggestions
+                                    </button>
+
+                                    <button
                                         onClick={() => alert('Bulk Analysis coming soon!')}
-                                        className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors text-gray-600"
+                                        className="w-full text-left px-5 py-3 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors text-gray-600"
                                     >
                                         <Search className="w-4 h-4" />
                                         Bulk Analysis
                                     </button>
+                                </nav>
 
-                                    <div className="border-t border-gray-100 my-2 pt-2">
-                                        <button
-                                            onClick={onSignOut}
-                                            className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-red-50 text-red-600 transition-colors"
-                                        >
-                                            <LogOut className="w-4 h-4" />
-                                            Sign Out
-                                        </button>
-                                    </div>
+                                {/* Sign Out at bottom */}
+                                <div className="border-t border-gray-100 p-3 mt-auto">
+                                    <button
+                                        onClick={onSignOut}
+                                        className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-red-50 text-red-600 transition-colors rounded-lg"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        Sign Out
+                                    </button>
                                 </div>
-                            )}
+                            </div>
                         </>
                     )}
                 </div>
