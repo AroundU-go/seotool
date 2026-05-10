@@ -1,0 +1,52 @@
+API REQUEST:
+
+
+curl -X GET "https://vebapi.com/api/seo/keywordresearch?keyword=email marketing&country=us" \
+    -H "X-API-KEY: 07ec2024-4635-4a71-9c14-d189c541e80a" \
+    -H "Content-Type: application/json"
+
+
+API RESPONSE:
+
+[
+    {
+        "text": "email marketing jobs",
+        "cpc": "8.00",
+        "vol": 4900,
+        "v": 4900,
+        "competition": "Medium",
+        "score": "1.60"
+    },
+    {
+        "text": "email marketing tools",
+        "cpc": "8.40",
+        "vol": 4655,
+        "v": 4655,
+        "competition": "Medium",
+        "score": "1.68"
+    },
+    {
+        "text": "email marketing platforms",
+        "cpc": "10.00",
+        "vol": 3920,
+        "v": 3920,
+        "competition": "Medium",
+        "score": "2.00"
+    },
+    {
+        "text": "email marketing manager",
+        "cpc": "9.20",
+        "vol": 4214,
+        "v": 4214,
+        "competition": "Medium",
+        "score": "1.84"
+    },
+    {
+        "text": "email marketing campaign",
+        "cpc": "9.60",
+        "vol": 4067,
+        "v": 4067,
+        "competition": "Medium",
+        "score": "1.92"
+    }
+]

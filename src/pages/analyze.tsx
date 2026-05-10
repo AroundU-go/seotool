@@ -719,7 +719,7 @@ export default function SeoToolPage() {
                     </button>
 
                     <button
-                        onClick={() => alert('Keyword Suggestions coming soon!')}
+                        onClick={() => { setIsMenuOpen(false); router.push('/keyword-suggestions'); }}
                         className="w-full text-left px-5 py-3 text-sm flex items-center gap-3 hover:bg-gray-50 transition-colors text-gray-600"
                     >
                         <Sparkles className="w-4 h-4" />

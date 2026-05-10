@@ -342,3 +342,47 @@ export async function fetchRapidApiData(website: string): Promise<RapidApiDataRe
   }
 }
 
+// ─── Keyword Suggestions API call ───────────────────────────
+
+export interface KeywordSuggestion {
+  text: string;
+  cpc: string;
+  vol: number;
+  v: number;
+  competition: string;
+  score: string;
+}
+
+export async function getKeywordSuggestions(keyword: string, country: string = 'us'): Promise<KeywordSuggestion[]> {
+  const cleanKeyword = keyword.trim();
+  const url = `https://vebapi.com/api/seo/keywordresearch?keyword=${encodeURIComponent(cleanKeyword)}&country=${encodeURIComponent(country)}`;
+
+  console.log('[VebAPI] Calling:', url, 'Key present:', !!VEBAPI_KEY);
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'X-API-KEY': VEBAPI_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => '');
+      let errorData: any = {};
+      try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
+      console.error(`[VebAPI] Error ${response.status} for keywordresearch:`, errorData);
+      throw new Error(errorData.error || errorData.message || `VebAPI keywordresearch failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('[VebAPI] Success for keywordresearch');
+    return data;
+  } catch (err: any) {
+    if (err.message?.includes('VebAPI')) {
+      throw err;
+    }
+    console.error(`[VebAPI] Network/fetch error for keywordresearch:`, err.message || err);
+    throw new Error(`VebAPI keywordresearch: ${err.message || 'Network error'}`);
+  }
+}
