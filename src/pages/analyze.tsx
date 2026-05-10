@@ -486,7 +486,7 @@ export default function SeoToolPage() {
     const [inputUrl, setInputUrl] = useState('');
 
     return (
-        <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #F4FCFF 0%, #daf3ff 40%, #b8e8ff 100%)' }}>
+        <div className="min-h-screen relative overflow-x-hidden" style={{ background: 'linear-gradient(180deg, #F4FCFF 0%, #daf3ff 40%, #b8e8ff 100%)' }}>
             {/* ── Background Effects ── */}
             {/* Radial glow behind hero */}
             <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full opacity-50" style={{ background: 'radial-gradient(circle, rgba(117,221,255,0.35) 0%, rgba(117,221,255,0.10) 50%, transparent 75%)' }} />
@@ -674,7 +674,8 @@ export default function SeoToolPage() {
 
                             {/* Slide-in Sidebar Menu */}
                             <div
-                                className={`fixed top-0 right-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl border-l border-white/50 z-50 flex flex-col transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                                style={{ height: '100vh' }}
+                                className={`fixed top-0 right-0 w-72 bg-white/95 backdrop-blur-xl shadow-2xl border-l border-white/50 z-50 flex flex-col transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
                             >
                                 {/* Sidebar Header */}
                                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
