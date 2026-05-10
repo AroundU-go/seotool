@@ -634,7 +634,7 @@ export default function SeoToolPage() {
             )}
 
             {/* Top Bar — transparent, matching landing page glass style */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/30 bg-white/60 backdrop-blur-md sticky top-0 z-[45]">
+            <div className={`flex items-center justify-between px-6 py-4 border-b border-white/30 backdrop-blur-md sticky top-0 z-[45] transition-colors duration-300 ${isMenuOpen ? 'bg-white' : 'bg-white/60'}`}>
                 <button
                     onClick={() => router.push('/')}
                     className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
