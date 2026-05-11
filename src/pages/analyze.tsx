@@ -452,8 +452,7 @@ export default function SeoToolPage() {
 
     const handleDownloadGuide = () => {
         if (!hasProAccess) {
-            setUpgradeModalSource('download_report');
-            setShowUpgradeModal(true);
+            setShowPricingModal(true);
             return;
         }
         
