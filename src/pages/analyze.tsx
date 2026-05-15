@@ -304,27 +304,29 @@ export default function SeoToolPage() {
                 }
             };
 
-            // 1. First run the on-page API (SEO Analysis) and RapidAPI
-            const [seoData, rapidApiDataRes] = await Promise.all([
-                callSafe(() => analyzeSeo(url), 'SEO Data'),
-                callSafe(() => fetchRapidApiData(url), 'RapidAPI Data')
-            ]);
+            // 1. First run the on-page API (SEO Analysis)
+            const seoData = await callSafe(() => analyzeSeo(url), 'SEO Data');
 
-            // Variables for the remaining 8 VebAPI calls are handled in batches
+            // Variables for the remaining API calls
             const fallback = { status: 'rejected' as const, reason: 'Not requested' };
 
-            // 2. Run the remaining 8 VebAPI calls in 2 batches of 4 calls each
-            
-            // Batch 1: speedData (always), aiBot, topKw, aiVis (if pro)
-            const [speedData, aiBotData, topKwData, aiVisData] = await Promise.all([
+            // 2. Run all the other API calls parallely
+            const [
+                rapidApiDataRes,
+                speedData,
+                aiBotData,
+                topKwData,
+                aiVisData,
+                backlinkDataRes,
+                newBacklinksRes,
+                poorBacklinksRes,
+                referringDomainsRes
+            ] = await Promise.all([
+                callSafe(() => fetchRapidApiData(url), 'RapidAPI Data'),
                 callSafe(() => checkLoadingSpeed(url), 'Speed Data'),
                 hasProAccess ? callSafe(() => checkAiBots(url), 'AI Bot') : Promise.resolve(fallback),
                 hasProAccess ? callSafe(() => checkTopKeywords(url), 'Top Keywords') : Promise.resolve(fallback),
-                hasProAccess ? callSafe(() => checkAiVisibility(url), 'AI Visibility') : Promise.resolve(fallback)
-            ]);
-
-            // Batch 2: backlinkData, newBacklinks, poorBacklinks, referringDomains (if pro)
-            const [backlinkDataRes, newBacklinksRes, poorBacklinksRes, referringDomainsRes] = await Promise.all([
+                hasProAccess ? callSafe(() => checkAiVisibility(url), 'AI Visibility') : Promise.resolve(fallback),
                 hasProAccess ? callSafe(() => getBacklinkData(url), 'Backlink Data') : Promise.resolve(fallback),
                 hasProAccess ? callSafe(() => getNewBacklinks(url), 'New Backlinks') : Promise.resolve(fallback),
                 hasProAccess ? callSafe(() => getPoorBacklinks(url), 'Poor Backlinks') : Promise.resolve(fallback),
