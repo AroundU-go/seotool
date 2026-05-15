@@ -289,9 +289,8 @@ export default function SeoToolPage() {
         setActiveTab('dashboard'); // Ensure we switch back to dashboard
 
         try {
-            // ── Sequential API calls ──────────────────────────────────
-            // Call APIs one-by-one to avoid overwhelming VebAPI servers (causes 502 errors).
-            // Each call waits for the previous one to finish before starting.
+            // ── Batched API calls ──────────────────────────────────
+            // Call APIs in batches to balance performance and stability.
 
             // Helper: call an async fn and return { status, value/reason } like Promise.allSettled
             const callSafe = async <T,>(fn: () => Promise<T>, label: string): Promise<{ status: 'fulfilled'; value: T } | { status: 'rejected'; reason: any }> => {
@@ -305,16 +304,14 @@ export default function SeoToolPage() {
                 }
             };
 
-            // 1. SEO Analysis
-            const seoData = await callSafe(() => analyzeSeo(url), 'SEO Data');
+            // 1. First run the on-page API (SEO Analysis) and RapidAPI
+            const [seoData, rapidApiDataRes] = await Promise.all([
+                callSafe(() => analyzeSeo(url), 'SEO Data'),
+                callSafe(() => fetchRapidApiData(url), 'RapidAPI Data')
+            ]);
 
-            // 2. Loading Speed
-            const speedData = await callSafe(() => checkLoadingSpeed(url), 'Speed Data');
-
-            // 3. RapidAPI Data
-            const rapidApiDataRes = await callSafe(() => fetchRapidApiData(url), 'RapidAPI Data');
-
-            // Pro-only APIs (sequential, one after another)
+            // Variables for the remaining 8 VebAPI calls
+            let speedData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
             let aiBotData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
             let topKwData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
             let aiVisData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
@@ -323,28 +320,30 @@ export default function SeoToolPage() {
             let poorBacklinksRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
             let referringDomainsRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
 
+            // 2. Run the remaining 8 VebAPI calls in 2 batches of 4 calls each
+            
+            // Batch 1: speedData (always), aiBot, topKw, aiVis (if pro)
+            const batch1Promises = [];
+            batch1Promises.push(callSafe(() => checkLoadingSpeed(url), 'Speed Data').then(res => speedData = res));
+
             if (hasProAccess) {
-                // 4. AI Bot Checker
-                aiBotData = await callSafe(() => checkAiBots(url), 'AI Bot');
-
-                // 5. Top Keywords
-                topKwData = await callSafe(() => checkTopKeywords(url), 'Top Keywords');
-
-                // 6. AI Visibility
-                aiVisData = await callSafe(() => checkAiVisibility(url), 'AI Visibility');
-
-                // 7. Backlink Data
-                backlinkDataRes = await callSafe(() => getBacklinkData(url), 'Backlink Data');
-
-                // 8. New Backlinks
-                newBacklinksRes = await callSafe(() => getNewBacklinks(url), 'New Backlinks');
-
-                // 9. Poor Backlinks
-                poorBacklinksRes = await callSafe(() => getPoorBacklinks(url), 'Poor Backlinks');
-
-                // 10. Referring Domains
-                referringDomainsRes = await callSafe(() => getReferringDomains(url), 'Referring Domains');
+                batch1Promises.push(callSafe(() => checkAiBots(url), 'AI Bot').then(res => aiBotData = res));
+                batch1Promises.push(callSafe(() => checkTopKeywords(url), 'Top Keywords').then(res => topKwData = res));
+                batch1Promises.push(callSafe(() => checkAiVisibility(url), 'AI Visibility').then(res => aiVisData = res));
             }
+
+            await Promise.all(batch1Promises);
+
+            // Batch 2: backlinkData, newBacklinks, poorBacklinks, referringDomains (if pro)
+            const batch2Promises = [];
+            if (hasProAccess) {
+                batch2Promises.push(callSafe(() => getBacklinkData(url), 'Backlink Data').then(res => backlinkDataRes = res));
+                batch2Promises.push(callSafe(() => getNewBacklinks(url), 'New Backlinks').then(res => newBacklinksRes = res));
+                batch2Promises.push(callSafe(() => getPoorBacklinks(url), 'Poor Backlinks').then(res => poorBacklinksRes = res));
+                batch2Promises.push(callSafe(() => getReferringDomains(url), 'Referring Domains').then(res => referringDomainsRes = res));
+            }
+
+            await Promise.all(batch2Promises);
 
             const newResults = {
                 seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
