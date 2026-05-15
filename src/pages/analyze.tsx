@@ -310,40 +310,26 @@ export default function SeoToolPage() {
                 callSafe(() => fetchRapidApiData(url), 'RapidAPI Data')
             ]);
 
-            // Variables for the remaining 8 VebAPI calls
-            let speedData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
-            let aiBotData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
-            let topKwData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
-            let aiVisData: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
-            let backlinkDataRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
-            let newBacklinksRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
-            let poorBacklinksRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
-            let referringDomainsRes: Awaited<ReturnType<typeof callSafe>> = { status: 'rejected', reason: 'Not requested' };
+            // Variables for the remaining 8 VebAPI calls are handled in batches
+            const fallback = { status: 'rejected' as const, reason: 'Not requested' };
 
             // 2. Run the remaining 8 VebAPI calls in 2 batches of 4 calls each
             
             // Batch 1: speedData (always), aiBot, topKw, aiVis (if pro)
-            const batch1Promises = [];
-            batch1Promises.push(callSafe(() => checkLoadingSpeed(url), 'Speed Data').then(res => speedData = res));
-
-            if (hasProAccess) {
-                batch1Promises.push(callSafe(() => checkAiBots(url), 'AI Bot').then(res => aiBotData = res));
-                batch1Promises.push(callSafe(() => checkTopKeywords(url), 'Top Keywords').then(res => topKwData = res));
-                batch1Promises.push(callSafe(() => checkAiVisibility(url), 'AI Visibility').then(res => aiVisData = res));
-            }
-
-            await Promise.all(batch1Promises);
+            const [speedData, aiBotData, topKwData, aiVisData] = await Promise.all([
+                callSafe(() => checkLoadingSpeed(url), 'Speed Data'),
+                hasProAccess ? callSafe(() => checkAiBots(url), 'AI Bot') : Promise.resolve(fallback),
+                hasProAccess ? callSafe(() => checkTopKeywords(url), 'Top Keywords') : Promise.resolve(fallback),
+                hasProAccess ? callSafe(() => checkAiVisibility(url), 'AI Visibility') : Promise.resolve(fallback)
+            ]);
 
             // Batch 2: backlinkData, newBacklinks, poorBacklinks, referringDomains (if pro)
-            const batch2Promises = [];
-            if (hasProAccess) {
-                batch2Promises.push(callSafe(() => getBacklinkData(url), 'Backlink Data').then(res => backlinkDataRes = res));
-                batch2Promises.push(callSafe(() => getNewBacklinks(url), 'New Backlinks').then(res => newBacklinksRes = res));
-                batch2Promises.push(callSafe(() => getPoorBacklinks(url), 'Poor Backlinks').then(res => poorBacklinksRes = res));
-                batch2Promises.push(callSafe(() => getReferringDomains(url), 'Referring Domains').then(res => referringDomainsRes = res));
-            }
-
-            await Promise.all(batch2Promises);
+            const [backlinkDataRes, newBacklinksRes, poorBacklinksRes, referringDomainsRes] = await Promise.all([
+                hasProAccess ? callSafe(() => getBacklinkData(url), 'Backlink Data') : Promise.resolve(fallback),
+                hasProAccess ? callSafe(() => getNewBacklinks(url), 'New Backlinks') : Promise.resolve(fallback),
+                hasProAccess ? callSafe(() => getPoorBacklinks(url), 'Poor Backlinks') : Promise.resolve(fallback),
+                hasProAccess ? callSafe(() => getReferringDomains(url), 'Referring Domains') : Promise.resolve(fallback)
+            ]);
 
             const newResults = {
                 seoAnalysis: seoData.status === 'fulfilled' ? seoData.value : null,
