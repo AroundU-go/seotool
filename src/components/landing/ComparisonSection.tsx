@@ -16,7 +16,7 @@ export function ComparisonSection() {
                     {/* Card 1: SEOzapp */}
                     <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30 rounded-2xl p-10 text-center flex flex-col justify-center items-center transition-transform duration-300 shadow-sm">
                         <div className="mb-3">
-                            <span className="text-4xl md:text-5xl font-black text-blue-500">$29/mo</span>
+                            <span className="text-4xl md:text-5xl font-black text-blue-500">$25/mo</span>
                         </div>
                         <p className="text-base font-medium text-foreground/70 mb-2">AI Suite Monthly</p>
                         <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">SEOzapp</p>
