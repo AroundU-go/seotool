@@ -581,7 +581,7 @@ export default function SeoToolPage() {
                                 }}
                                 className="w-full py-3.5 bg-white text-accent font-bold rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
                             >
-                                Pro Subscription — $19/mo
+                                Pro Subscription — $25/mo
                                 <ArrowRight className="w-5 h-5" />
                             </button>
                         </div>
