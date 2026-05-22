@@ -33,11 +33,6 @@ export default function KeywordSuggestionsPage() {
         e.preventDefault();
         if (!keyword.trim()) return;
 
-        if (!hasProAccess) {
-            setShowPricingModal(true);
-            return;
-        }
-
         setLoading(true);
         setError(null);
         setResults(null);
@@ -73,12 +68,56 @@ export default function KeywordSuggestionsPage() {
         { code: 'gb', name: 'United Kingdom' },
         { code: 'ca', name: 'Canada' },
         { code: 'au', name: 'Australia' },
+        { code: 'in', name: 'India' },
         { code: 'de', name: 'Germany' },
         { code: 'fr', name: 'France' },
-        { code: 'in', name: 'India' },
         { code: 'br', name: 'Brazil' },
         { code: 'es', name: 'Spain' },
         { code: 'it', name: 'Italy' },
+        { code: 'nl', name: 'Netherlands' },
+        { code: 'jp', name: 'Japan' },
+        { code: 'kr', name: 'South Korea' },
+        { code: 'mx', name: 'Mexico' },
+        { code: 'ar', name: 'Argentina' },
+        { code: 'cl', name: 'Chile' },
+        { code: 'co', name: 'Colombia' },
+        { code: 'pe', name: 'Peru' },
+        { code: 'se', name: 'Sweden' },
+        { code: 'no', name: 'Norway' },
+        { code: 'dk', name: 'Denmark' },
+        { code: 'fi', name: 'Finland' },
+        { code: 'pl', name: 'Poland' },
+        { code: 'pt', name: 'Portugal' },
+        { code: 'be', name: 'Belgium' },
+        { code: 'at', name: 'Austria' },
+        { code: 'ch', name: 'Switzerland' },
+        { code: 'ie', name: 'Ireland' },
+        { code: 'nz', name: 'New Zealand' },
+        { code: 'za', name: 'South Africa' },
+        { code: 'sg', name: 'Singapore' },
+        { code: 'my', name: 'Malaysia' },
+        { code: 'ph', name: 'Philippines' },
+        { code: 'id', name: 'Indonesia' },
+        { code: 'th', name: 'Thailand' },
+        { code: 'vn', name: 'Vietnam' },
+        { code: 'tr', name: 'Turkey' },
+        { code: 'ru', name: 'Russia' },
+        { code: 'ua', name: 'Ukraine' },
+        { code: 'cz', name: 'Czech Republic' },
+        { code: 'ro', name: 'Romania' },
+        { code: 'hu', name: 'Hungary' },
+        { code: 'gr', name: 'Greece' },
+        { code: 'il', name: 'Israel' },
+        { code: 'ae', name: 'United Arab Emirates' },
+        { code: 'sa', name: 'Saudi Arabia' },
+        { code: 'eg', name: 'Egypt' },
+        { code: 'ng', name: 'Nigeria' },
+        { code: 'ke', name: 'Kenya' },
+        { code: 'pk', name: 'Pakistan' },
+        { code: 'bd', name: 'Bangladesh' },
+        { code: 'tw', name: 'Taiwan' },
+        { code: 'hk', name: 'Hong Kong' },
+        { code: 'cn', name: 'China' },
     ];
 
     return (
@@ -205,12 +244,7 @@ export default function KeywordSuggestionsPage() {
                             <p className="text-lg text-gray-500 max-w-xl mx-auto">
                                 Discover high-value keywords with search volume, CPC, and competition data
                             </p>
-                            {!hasProAccess && (
-                                <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-full text-sm text-amber-700 font-medium">
-                                    <Lock className="w-4 h-4" />
-                                    Pro feature — upgrade to access
-                                </div>
-                            )}
+
                         </div>
 
                         {/* Search Form */}
@@ -233,7 +267,7 @@ export default function KeywordSuggestionsPage() {
                                 <select
                                     value={country}
                                     onChange={(e) => setCountry(e.target.value)}
-                                    className="px-3 py-2 rounded-xl sm:rounded-full bg-gray-50 border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent/30 mr-2 cursor-pointer"
+                                    className="px-3 py-2 rounded-xl sm:rounded-full bg-gray-50 border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent/30 mr-2 cursor-pointer min-w-[160px]"
                                     disabled={loading}
                                 >
                                     {countries.map((c) => (
