@@ -34,12 +34,11 @@ const paidTiers = [
     },
     {
         name: 'Pro',
-        price: '$25',
+        price: '$29',
         period: '/month',
         description: 'For growth-focused teams and agencies who need unlimited power.',
         quota: 'Unlimited audits',
         features: [
-            '7-day free trial',
             'Everything in One-Time',
             'Email alerts',
             'AEO & GEO optimization',
@@ -52,7 +51,7 @@ const paidTiers = [
         highlight: true,
         icon: <Building2 className="w-6 h-6" />,
         badge: 'Most Popular',
-        cta: 'Start 7-Day Free Trial',
+        cta: 'Upgrade to Pro',
         productId: PRODUCT_SUBSCRIPTION,
     },
 ];
