@@ -855,6 +855,24 @@ export default function SeoToolPage() {
                                         )}
                                     </button>
                                 </form>
+
+                                {/* Quick access buttons */}
+                                <div className="flex flex-col sm:flex-row items-center gap-3 mt-5 w-full max-w-3xl">
+                                    <button
+                                        onClick={() => { setActiveTab('history'); fetchHistory(); }}
+                                        className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 bg-white/70 backdrop-blur-sm text-gray-600 hover:border-accent/40 hover:text-accent transition-all duration-200 text-sm font-semibold w-full sm:w-auto"
+                                    >
+                                        <History className="w-4 h-4" />
+                                        History
+                                    </button>
+                                    <button
+                                        onClick={() => router.push('/keyword-suggestions')}
+                                        className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 bg-white/70 backdrop-blur-sm text-gray-600 hover:border-accent/40 hover:text-accent transition-all duration-200 text-sm font-semibold w-full sm:w-auto"
+                                    >
+                                        <Sparkles className="w-4 h-4" />
+                                        Keyword Suggestions
+                                    </button>
+                                </div>
                             )}
 
                             {error && (
