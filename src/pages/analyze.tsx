@@ -825,6 +825,7 @@ export default function SeoToolPage() {
 
                         <div className="flex flex-col items-center mb-8">
                             {!hasResults && !loading && (
+                                <>
                                 <form
                                     onSubmit={(e) => { e.preventDefault(); if (inputUrl.trim()) { const cleanUrl = inputUrl.replace(/\s+/g, '').replace(/^https?:\/\//, ''); handleAnalyze(cleanUrl); } }}
                                     className="w-full max-w-3xl flex flex-col sm:flex-row items-center bg-white/80 backdrop-blur-md border border-white/50 rounded-3xl sm:rounded-full p-2 shadow-[0_15px_40px_-10px_rgba(117,221,255,0.4)] transition-all duration-300 gap-2 sm:gap-0"
@@ -873,6 +874,7 @@ export default function SeoToolPage() {
                                         Keyword Suggestions
                                     </button>
                                 </div>
+                                </>
                             )}
 
                             {error && (
