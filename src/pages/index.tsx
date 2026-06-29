@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown, Check, Globe } from 'lucide-react';
+import { Home, Rocket, Search, Star, MessageSquare, Zap, BarChart3, Share2, ClipboardPaste, DollarSign, ArrowRight, ChevronDown, Check, Globe, BookOpen } from 'lucide-react';
 
 import { NavBar } from '@/components/ui/NavBar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -79,7 +79,7 @@ export default function LandingPage({ initialSection }: { initialSection?: strin
         { name: 'Features', url: '/#features', icon: Rocket, onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'How It Works', url: '/#how-it-works', icon: Zap, onClick: () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }) },
         { name: 'Pricing', url: '/#pricing', icon: DollarSign, onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
-        { name: 'FAQ', url: '/#faq', icon: MessageSquare, onClick: () => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' }) },
+        { name: 'Blog', url: '/blogs', icon: BookOpen, onClick: () => router.push('/blogs') },
     ];
 
     const steps = [
