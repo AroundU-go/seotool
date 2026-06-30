@@ -1,0 +1,130 @@
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { ArrowLeft, Calendar, ArrowRight, BookOpen, GitCompareArrows } from 'lucide-react';
+import { getPublishedBlogsByCategory, BlogRecord } from '@/services/supabaseClient';
+
+export default function BlogPage() {
+    const router = useRouter();
+    const [blogs, setBlogs] = useState<BlogRecord[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getPublishedBlogsByCategory('blog').then(data => {
+            setBlogs(data);
+            setLoading(false);
+        });
+    }, []);
+
+    return (
+        <>
+            <Head>
+                <title>SEO & AEO Blog — Tips, Guides & Industry Updates | SEOzapp</title>
+                <meta name="description" content="Expert SEO and AEO insights, actionable tips, and industry updates to help you rank higher on Google and AI search engines." />
+                <meta name="robots" content="index, follow" />
+                <link rel="canonical" href="https://www.seozapp.com/blog" />
+                <meta property="og:title" content="SEO & AEO Blog — Tips, Guides & Industry Updates | SEOzapp" />
+                <meta property="og:description" content="Expert SEO and AEO insights, actionable tips, and industry updates to help you rank higher on Google and AI search engines." />
+                <meta property="og:url" content="https://www.seozapp.com/blog" />
+                <meta property="og:type" content="website" />
+            </Head>
+            <div className="min-h-screen bg-[#f8f9fe]">
+                {/* Top Bar */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-40">
+                    <button
+                        onClick={() => router.push('/')}
+                        className="flex items-center gap-2 text-gray-500 hover:text-accent transition-colors font-medium"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        <h6 className="hidden sm:inline font-inherit m-0 p-0 text-base">Back</h6>
+                    </button>
+                    <h2 className="m-0 p-0 flex items-center">
+                        <a href="https://seozapp.com" className="font-black text-xl tracking-tight text-gray-900">
+                            SEO<span className="text-accent">zapp</span>
+                        </a>
+                    </h2>
+                    <div className="w-8" />
+                </div>
+
+                <div className="container mx-auto px-4 py-12 max-w-4xl">
+                    <div className="text-center mb-8">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 rounded-2xl mb-4">
+                            <BookOpen className="w-8 h-8 text-accent" />
+                        </div>
+                        <h1 className="text-4xl font-bold text-gray-900 mb-3">Blog</h1>
+                        <h2 className="text-gray-500 text-lg font-normal m-0">SEO insights, tips, and industry updates</h2>
+                    </div>
+
+                    {/* Tab Buttons */}
+                    <div className="flex items-center justify-center gap-3 mb-10">
+                        <button
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-accent text-white shadow-lg shadow-accent/25"
+                        >
+                            <BookOpen className="w-4 h-4" />
+                            Blog
+                        </button>
+                        <button
+                            onClick={() => router.push('/alternatives')}
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-white text-gray-600 border border-gray-200 hover:border-accent/30 hover:text-accent hover:shadow-md"
+                        >
+                            <GitCompareArrows className="w-4 h-4" />
+                            Alternatives
+                        </button>
+                    </div>
+
+                    {loading ? (
+                        <div className="text-center py-16">
+                            <div className="w-8 h-8 border-3 border-accent/30 border-t-accent rounded-full animate-spin mx-auto mb-4" />
+                            <h5 className="text-gray-500 font-normal m-0">Loading articles...</h5>
+                        </div>
+                    ) : blogs.length > 0 ? (
+                        <div className="space-y-6">
+                            <h2 className="sr-only">Latest SEO Articles and Guides</h2>
+                            {blogs.map((blog) => (
+                                <Link
+                                    key={blog.id}
+                                    href={`/blog/${blog.slug}`}
+                                    className="block bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-accent/20 transition-all group"
+                                >
+                                    <div className="flex flex-col sm:flex-row items-start gap-6">
+                                        {blog.image_url && (
+                                            <div className="w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+                                                <img 
+                                                    src={blog.image_url} 
+                                                    alt={blog.title} 
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                />
+                                            </div>
+                                        )}
+                                        <div className="flex-1 min-w-0 flex flex-col justify-center h-full pt-1">
+                                            <div className="flex items-start justify-between gap-4 mb-2">
+                                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-accent transition-colors line-clamp-2 m-0">
+                                                    {blog.title}
+                                                </h3>
+                                                <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-accent transition-colors flex-shrink-0 mt-1 hidden sm:block" />
+                                            </div>
+                                            <h4 className="text-gray-500 text-sm mb-4 line-clamp-2 font-normal m-0">{blog.excerpt}</h4>
+                                            <div className="flex items-center gap-3 text-xs text-gray-400 mt-auto">
+                                                <h5 className="flex items-center gap-1 font-normal m-0 text-inherit text-xs">
+                                                    <Calendar className="w-3 h-3" />
+                                                    {new Date(blog.created_at || '').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 border-dashed">
+                            <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                            <h3 className="text-lg font-medium text-gray-900 m-0 mb-2">No articles yet</h3>
+                            <h4 className="text-gray-500 font-normal m-0">Check back soon for SEO insights and tips.</h4>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </>
+    );
+}

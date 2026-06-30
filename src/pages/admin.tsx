@@ -11,9 +11,10 @@ interface BlogForm {
     content: string;
     image_url?: string;
     published: boolean;
+    category: 'blog' | 'alternative';
 }
 
-const emptyForm: BlogForm = { title: '', slug: '', excerpt: '', content: '', image_url: '', published: false };
+const emptyForm: BlogForm = { title: '', slug: '', excerpt: '', content: '', image_url: '', published: false, category: 'blog' };
 
 export default function AdminPage() {
     const router = useRouter();
@@ -25,6 +26,7 @@ export default function AdminPage() {
     const [form, setForm] = useState<BlogForm>(emptyForm);
     const [saving, setSaving] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [filterCategory, setFilterCategory] = useState<'all' | 'blog' | 'alternative'>('all');
 
     const handleInsertLink = () => {
         const url = prompt('Enter link URL (e.g., https://example.com):');
@@ -103,6 +105,7 @@ export default function AdminPage() {
             content: blog.content,
             image_url: blog.image_url || '',
             published: blog.published,
+            category: (blog.category as 'blog' | 'alternative') || 'blog',
         });
         setEditingId(blog.id!);
         setShowForm(true);
@@ -141,8 +144,8 @@ export default function AdminPage() {
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Blog Manager</h1>
-                        <p className="text-sm sm:text-base text-gray-500 mt-1">Create and manage blog posts</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Content Manager</h1>
+                        <p className="text-sm sm:text-base text-gray-500 mt-1">Create and manage blog posts & alternatives</p>
                     </div>
                     {!showForm && (
                         <button
@@ -154,6 +157,25 @@ export default function AdminPage() {
                         </button>
                     )}
                 </div>
+
+                {/* Filter Tabs */}
+                {!showForm && (
+                    <div className="flex items-center gap-2 mb-6">
+                        {(['all', 'blog', 'alternative'] as const).map((cat) => (
+                            <button
+                                key={cat}
+                                onClick={() => setFilterCategory(cat)}
+                                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                                    filterCategory === cat
+                                        ? 'bg-accent text-white shadow-md'
+                                        : 'bg-white text-gray-500 border border-gray-200 hover:border-accent/30 hover:text-accent'
+                                }`}
+                            >
+                                {cat === 'all' ? 'All' : cat === 'blog' ? 'Blog' : 'Alternatives'}
+                            </button>
+                        ))}
+                    </div>
+                )}
 
                 {/* Blog Form */}
                 {showForm && (
@@ -240,6 +262,30 @@ export default function AdminPage() {
                                     {form.published ? 'Published' : 'Draft'}
                                 </button>
                             </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setForm(prev => ({ ...prev, category: 'blog' }))}
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${form.category === 'blog' ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                                    >
+                                        Blog
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setForm(prev => ({ ...prev, category: 'alternative' }))}
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${form.category === 'alternative' ? 'bg-purple-100 text-purple-700 ring-2 ring-purple-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                                    >
+                                        Alternative
+                                    </button>
+                                </div>
+                                {form.category === 'alternative' && (
+                                    <p className="text-xs text-gray-400 mt-2">
+                                        💡 SEO tip: Use title format like &quot;Best [product-name] alternative for SEO and AEO&quot;
+                                    </p>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6 pt-6 border-t border-gray-100">
@@ -269,7 +315,7 @@ export default function AdminPage() {
                     </div>
                 ) : blogs.length > 0 ? (
                     <div className="space-y-3">
-                        {blogs.map(blog => (
+                        {blogs.filter(b => filterCategory === 'all' || b.category === filterCategory).map(blog => (
                             <div key={blog.id} className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -277,8 +323,11 @@ export default function AdminPage() {
                                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${blog.published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                                             {blog.published ? 'Published' : 'Draft'}
                                         </span>
+                                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${blog.category === 'alternative' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                                            {blog.category === 'alternative' ? 'Alternative' : 'Blog'}
+                                        </span>
                                     </div>
-                                    <p className="text-xs sm:text-sm text-gray-400 truncate">/blogs/{blog.slug}</p>
+                                    <p className="text-xs sm:text-sm text-gray-400 truncate">/{blog.category === 'alternative' ? 'alternatives' : 'blog'}/{blog.slug}</p>
                                 </div>
                                 <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 self-end sm:self-center">
                                     <button

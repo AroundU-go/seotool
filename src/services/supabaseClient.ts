@@ -462,6 +462,7 @@ export interface BlogRecord {
   published: boolean;
   image_url?: string;
   author_email: string;
+  category?: 'blog' | 'alternative';
   created_at?: string;
   updated_at?: string;
 }
@@ -554,4 +555,20 @@ export async function deleteBlog(id: string): Promise<boolean> {
     return false;
   }
   return true;
+}
+
+export async function getPublishedBlogsByCategory(category: 'blog' | 'alternative'): Promise<BlogRecord[]> {
+  if (!isSupabaseConfigured) return [];
+  const { data, error } = await supabase
+    .from('blogs')
+    .select('*')
+    .eq('published', true)
+    .eq('category', category)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[getPublishedBlogsByCategory] Error:', error.message);
+    return [];
+  }
+  return data || [];
 }
