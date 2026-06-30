@@ -1,8 +1,0 @@
-# robots.txt for SEOzapp
-User-agent: *
-Allow: /
-Disallow: /auth/callback
-Disallow: /admin
-
-# Sitemap
-Sitemap: https://seozapp.com/sitemap.xml
