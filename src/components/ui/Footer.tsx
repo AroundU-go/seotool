@@ -78,7 +78,10 @@ export function Footer() {
                                             href={`/alternatives/${alt.slug}`}
                                             className="text-sm text-foreground/60 hover:text-accent transition-colors"
                                         >
-                                            {alt.title}
+                                            {(() => {
+                                                const match = alt.title.match(/best\s+(\S+)/i);
+                                                return match ? `vs ${match[1]}` : alt.title;
+                                            })()}
                                         </a>
                                     </li>
                                 ))
