@@ -30,12 +30,6 @@ function generateSiteMap(
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>${SITE_URL}/analyze</loc>
-        <lastmod>${now}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
         <loc>${SITE_URL}/contact</loc>
         <lastmod>${now}</lastmod>
         <changefreq>monthly</changefreq>
