@@ -27,7 +27,7 @@ export default function Document() {
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://seozapp.com/" />
-        <meta property="og:title" content="SEOzapp: One-Click SEO Fixer — Free SEO Audit Tool" />
+        <meta property="og:title" content="SEOzapp: Full stack SEO Audit Tool" />
         <meta property="og:description"
           content="Analyze 20+ on-page SEO factors instantly. AI readiness scores, keyword insights, backlink analysis, and a prioritized fix action plan — all in one click." />
         <meta property="og:site_name" content="SEOzapp" />
@@ -36,7 +36,7 @@ export default function Document() {
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@ItsUddipan" />
-        <meta name="twitter:title" content="SEOzapp: One-Click SEO Fixer — Free SEO Audit Tool" />
+        <meta name="twitter:title" content="SEOzapp: Full stack SEO Audit Tool" />
         <meta name="twitter:description"
           content="Analyze 25+ on-page SEO factors instantly. AI readiness scores, keyword insights, backlink analysis, and a prioritized fix action plan." />
         <meta name="twitter:image" content="https://seozapp.com/favicon.jpg" />
