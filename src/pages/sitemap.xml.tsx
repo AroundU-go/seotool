@@ -54,6 +54,12 @@ function generateSiteMap(
         <priority>0.7</priority>
     </url>
     <url>
+        <loc>${SITE_URL}/Best-SEO-Agency-Software-in-2026</loc>
+        <lastmod>${now}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
         <loc>${SITE_URL}/keyword-suggestions</loc>
         <lastmod>${now}</lastmod>
         <changefreq>monthly</changefreq>
