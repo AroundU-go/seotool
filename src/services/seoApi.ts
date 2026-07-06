@@ -149,6 +149,8 @@ const callVebApi = async <T,>(endpoint: string, website: string): Promise<T> => 
 };
 
 export async function analyzeSeo(website: string): Promise<SeoAnalysisResult> {
+  // Add a small delay before the on-page SEO call to reduce 500 errors from VebAPI
+  await delay(500);
   return callVebApi<SeoAnalysisResult>("seo/analyze/v2", website);
 }
 

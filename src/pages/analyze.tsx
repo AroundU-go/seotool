@@ -289,8 +289,8 @@ export default function SeoToolPage() {
         setActiveTab('dashboard'); // Ensure we switch back to dashboard
 
         try {
-            // ── Parallel API calls ──────────────────────────────────
-            // Fire all API calls simultaneously for maximum performance.
+            // ── Batched API calls ──────────────────────────────────
+            // Call APIs in batches to balance performance and stability.
 
             // Helper: call an async fn and return { status, value/reason } like Promise.allSettled
             const callSafe = async <T,>(fn: () => Promise<T>, label: string): Promise<{ status: 'fulfilled'; value: T } | { status: 'rejected'; reason: any }> => {
@@ -304,11 +304,14 @@ export default function SeoToolPage() {
                 }
             };
 
-            // Run ALL API calls in parallel at the same time
+            // 1. First run the on-page API (SEO Analysis)
+            const seoData = await callSafe(() => analyzeSeo(url), 'SEO Data');
+
+            // Variables for the remaining API calls
             const fallback = { status: 'rejected' as const, reason: 'Not requested' };
 
+            // 2. Run all the other API calls parallely
             const [
-                seoData,
                 rapidApiDataRes,
                 speedData,
                 aiBotData,
@@ -319,7 +322,6 @@ export default function SeoToolPage() {
                 poorBacklinksRes,
                 referringDomainsRes
             ] = await Promise.all([
-                callSafe(() => analyzeSeo(url), 'SEO Data'),
                 callSafe(() => fetchRapidApiData(url), 'RapidAPI Data'),
                 callSafe(() => checkLoadingSpeed(url), 'Speed Data'),
                 hasProAccess ? callSafe(() => checkAiBots(url), 'AI Bot') : Promise.resolve(fallback),
