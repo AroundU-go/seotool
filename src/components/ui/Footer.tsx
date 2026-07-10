@@ -67,6 +67,9 @@ export function Footer() {
                             <li>
                                 <a href="/Best-SEO-Agency-Software-in-2026" className="text-sm text-foreground/60 hover:text-accent transition-colors">Best SEO Agency Software in 2026</a>
                             </li>
+                            <li>
+                                <a href="/seo-audit-tool-for-agencies-2026" className="text-sm text-foreground/60 hover:text-accent transition-colors">SEO Audit Tool for Agencies</a>
+                            </li>
                         </ul>
                     </div>
 
