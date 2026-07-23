@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
         return res.status(200).json(data);
     } catch (error) {
-        console.error('VebAPI proxy error:', error);
-        return res.status(500).json({ error: 'Failed to fetch from VebAPI' });
+        console.error('API proxy error:', error);
+        return res.status(500).json({ error: 'Failed to fetch analysis data' });
     }
 }

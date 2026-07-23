@@ -12,7 +12,7 @@ import PricingModal from '../components/PricingModal';
 const PRODUCT_ONE_TIME = process.env.NEXT_PUBLIC_DODO_PRODUCT_ONE_TIME || 'pdt_0NYskaXuWvqB7pOJJAWHR';
 const PRODUCT_SUBSCRIPTION = process.env.NEXT_PUBLIC_DODO_PRODUCT_SUBSCRIPTION || 'pdt_0NYsnZquqsrqDi9SW9pHT';
 
-import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks, getReferringDomains, fetchRapidApiData } from '../services/seoApi';
+import { analyzeSeo, checkAiVisibility, checkAiBots, checkLoadingSpeed, checkTopKeywords, getBacklinkData, getNewBacklinks, getPoorBacklinks, getReferringDomains, fetchRapidApiData, cleanErrorMessage } from '../services/seoApi';
 import { generateFixGuidePdf } from '../utils/pdfGenerator';
 import { saveAnalysis, getUserAnalysesByEmailOrId, getAnalysisCountByEmail, incrementProAuditCount, SeoAnalysisRecord } from '../services/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
@@ -37,7 +37,7 @@ class CardErrorBoundary extends Component<{ children: ReactNode; name: string },
                     </div>
                     <p className="text-sm text-red-500 mb-2">Please report this issue.</p>
                     <pre className="text-xs bg-red-100 p-2 rounded text-red-800 overflow-auto max-h-40">
-                        {this.state.error?.message}
+                        {cleanErrorMessage(this.state.error?.message)}
                         {'\n'}
                         {this.state.error?.stack}
                     </pre>
@@ -365,7 +365,7 @@ export default function SeoToolPage() {
                 const seoError = seoData.status === 'rejected' ? String((seoData as any).reason?.message || (seoData as any).reason || 'Unknown error') : null;
                 const speedError = speedData.status === 'rejected' ? String((speedData as any).reason?.message || (speedData as any).reason || 'Unknown error') : null;
                 console.error('[Analysis] All APIs failed. SEO:', seoError, 'Speed:', speedError);
-                setError(`Failed to analyze website. ${seoError || 'API error'}. Please check the URL and try again.`);
+                setError(cleanErrorMessage(`Failed to analyze website. ${seoError || 'API error'}. Please check the URL and try again.`));
             } else {
                 // At least some data came through — show partial results with a warning if needed
                 if (seoData.status === 'rejected' || speedData.status === 'rejected') {
@@ -431,7 +431,7 @@ export default function SeoToolPage() {
                 }).catch(err => console.error('[SeoToolPage] Save error:', err));
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+            setError(cleanErrorMessage(err instanceof Error ? err.message : 'An unexpected error occurred'));
         } finally {
             setLoading(false);
         }
@@ -880,7 +880,7 @@ export default function SeoToolPage() {
                             {error && (
                                 <div className="mt-6 max-w-3xl w-full bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
                                     <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                                    <p className="text-red-800">{error}</p>
+                                    <p className="text-red-800">{cleanErrorMessage(error)}</p>
                                 </div>
                             )}
                         </div>

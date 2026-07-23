@@ -112,6 +112,15 @@ const VEBAPI_KEY = process.env.NEXT_PUBLIC_VEBAPI_KEY || '';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+export function cleanErrorMessage(msg?: string | null): string {
+  if (!msg) return 'An error occurred during analysis';
+  let cleaned = String(msg);
+  cleaned = cleaned.replace(/vebapi\.com/gi, 'SEO Service');
+  cleaned = cleaned.replace(/vebapi/gi, 'SEO API');
+  cleaned = cleaned.replace(/VebAPI/g, 'SEO API');
+  return cleaned;
+}
+
 const callVebApi = async <T,>(endpoint: string, website: string): Promise<T> => {
   // Strip any spaces from the URL (user may accidentally paste with spaces)
   const cleanWebsite = website.replace(/\s+/g, '').replace(/^https?:\/\//, '').replace(/\/$/, '');
@@ -132,19 +141,16 @@ const callVebApi = async <T,>(endpoint: string, website: string): Promise<T> => 
       let errorData: any = {};
       try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
       console.error(`[VebAPI] Error ${response.status} for ${endpoint}:`, errorData);
-      throw new Error(errorData.error || errorData.message || `VebAPI ${endpoint} failed with status ${response.status}`);
+      const rawMsg = errorData.error || errorData.message || `API endpoint failed with status ${response.status}`;
+      throw new Error(cleanErrorMessage(rawMsg));
     }
 
     const data = await response.json();
     console.log('[VebAPI] Success for', endpoint);
     return data;
   } catch (err: any) {
-    // Distinguish between network errors and API errors
-    if (err.message?.includes('VebAPI')) {
-      throw err; // Already formatted
-    }
     console.error(`[VebAPI] Network/fetch error for ${endpoint}:`, err.message || err);
-    throw new Error(`VebAPI ${endpoint}: ${err.message || 'Network error'}`);
+    throw new Error(cleanErrorMessage(err.message || 'Network error'));
   }
 };
 
@@ -261,18 +267,16 @@ export async function getReferringDomains(website: string): Promise<ReferringDom
       let errorData: any = {};
       try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
       console.error(`[VebAPI] Error ${response.status} for referraldomains:`, errorData);
-      throw new Error(errorData.error || errorData.message || `VebAPI referraldomains failed with status ${response.status}`);
+      const rawMsg = errorData.error || errorData.message || `Referral domains request failed with status ${response.status}`;
+      throw new Error(cleanErrorMessage(rawMsg));
     }
 
     const data = await response.json();
     console.log('[VebAPI] Success for referraldomains');
     return data;
   } catch (err: any) {
-    if (err.message?.includes('VebAPI')) {
-      throw err;
-    }
     console.error(`[VebAPI] Network/fetch error for referraldomains:`, err.message || err);
-    throw new Error(`VebAPI referraldomains: ${err.message || 'Network error'}`);
+    throw new Error(cleanErrorMessage(err.message || 'Network error'));
   }
 }
 
@@ -372,17 +376,15 @@ export async function getKeywordSuggestions(keyword: string, country: string = '
       let errorData: any = {};
       try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
       console.error(`[VebAPI] Error ${response.status} for keywordresearch:`, errorData);
-      throw new Error(errorData.error || errorData.message || `VebAPI keywordresearch failed with status ${response.status}`);
+      const rawMsg = errorData.error || errorData.message || `Keyword research failed with status ${response.status}`;
+      throw new Error(cleanErrorMessage(rawMsg));
     }
 
     const data = await response.json();
     console.log('[VebAPI] Success for keywordresearch');
     return data;
   } catch (err: any) {
-    if (err.message?.includes('VebAPI')) {
-      throw err;
-    }
     console.error(`[VebAPI] Network/fetch error for keywordresearch:`, err.message || err);
-    throw new Error(`VebAPI keywordresearch: ${err.message || 'Network error'}`);
+    throw new Error(cleanErrorMessage(err.message || 'Network error'));
   }
 }

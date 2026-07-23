@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { ArrowLeft, Crown, Menu, X, LayoutDashboard, History, Sparkles, Search, LogOut, Lock, Loader2, AlertCircle, TrendingUp, DollarSign, BarChart3, Target } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { getKeywordSuggestions, KeywordSuggestion } from '../services/seoApi';
+import { getKeywordSuggestions, KeywordSuggestion, cleanErrorMessage } from '../services/seoApi';
 import PricingModal from '../components/PricingModal';
 
 export default function KeywordSuggestionsPage() {
@@ -42,7 +42,7 @@ export default function KeywordSuggestionsPage() {
             const data = await getKeywordSuggestions(keyword.trim(), country);
             setResults(data);
         } catch (err: any) {
-            setError(err.message || 'Failed to fetch keyword suggestions');
+            setError(cleanErrorMessage(err.message || 'Failed to fetch keyword suggestions'));
         } finally {
             setLoading(false);
         }
@@ -292,7 +292,7 @@ export default function KeywordSuggestionsPage() {
                         {error && (
                             <div className="mb-8 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
                                 <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                                <p className="text-red-800">{error}</p>
+                                <p className="text-red-800">{cleanErrorMessage(error)}</p>
                             </div>
                         )}
 
