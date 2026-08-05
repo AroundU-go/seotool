@@ -18,7 +18,9 @@ export default function Document() {
           }}
         />
         <meta charSet="UTF-8" />
-        <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+        <link rel="icon" type="image/jpeg" href="/seozapp-logo.jpeg" />
+        <link rel="shortcut icon" href="/seozapp-logo.jpeg" />
+        <link rel="apple-touch-icon" href="/seozapp-logo.jpeg" />
         
         <meta name="description"
           content="SEOzapp analyzes 25+ on-page SEO factors instantly. Get AI readiness scores, keyword insights, backlink analysis, and a prioritized fix action plan — all in one click." />

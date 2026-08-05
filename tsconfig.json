@@ -19,5 +19,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "supabase"]
+  "exclude": ["node_modules", "supabase", "**/supabase/**", "seozapp-v2", "**/seozapp-v2/**"]
 }
