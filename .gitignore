@@ -21,7 +21,8 @@ next-env.d.ts
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.tsbuildinfo
+seozapp-v2/
 .env
 dodo-supabase-subscription-starter/
 supabase/.temp/

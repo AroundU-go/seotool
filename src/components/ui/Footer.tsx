@@ -33,6 +33,9 @@ export function Footer() {
                                 <a href="/blog" className="text-sm text-foreground/60 hover:text-accent transition-colors">Blog</a>
                             </li>
                             <li>
+                                <a href="/affiliates" className="text-sm text-foreground/60 hover:text-accent transition-colors">Affiliate Program</a>
+                            </li>
+                            <li>
                                 <a href="https://x.com/ItsUddipan" target="_blank" rel="noopener noreferrer" className="text-sm text-foreground/60 hover:text-accent transition-colors">Contact</a>
                             </li>
                         </ul>

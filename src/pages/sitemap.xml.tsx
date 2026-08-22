@@ -36,6 +36,12 @@ function generateSiteMap(
         <priority>0.4</priority>
     </url>
     <url>
+        <loc>${SITE_URL}/affiliates</loc>
+        <lastmod>${now}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
         <loc>${SITE_URL}/best-free-website-audit-tools</loc>
         <lastmod>${now}</lastmod>
         <changefreq>monthly</changefreq>
