@@ -462,9 +462,29 @@ export interface BlogRecord {
   published: boolean;
   image_url?: string;
   author_email: string;
-  category?: 'blog' | 'alternative';
+  author_name?: string;
+  category?: 'blog' | 'alternative' | 'guide' | 'case-study' | 'comparison';
+  meta_title?: string;
+  meta_description?: string;
+  tags?: string[] | string;
+  read_time?: string;
+  featured?: boolean;
+  views_count?: number;
   created_at?: string;
   updated_at?: string;
+}
+
+/**
+ * Filter out undefined values to prevent Supabase payload errors
+ */
+function sanitizeBlogPayload(payload: Record<string, any>) {
+  const clean: Record<string, any> = {};
+  for (const [key, value] of Object.entries(payload)) {
+    if (value !== undefined) {
+      clean[key] = value;
+    }
+  }
+  return clean;
 }
 
 export async function getPublishedBlogs(): Promise<BlogRecord[]> {
@@ -514,33 +534,90 @@ export async function getAllBlogs(): Promise<BlogRecord[]> {
 
 export async function createBlog(blog: Omit<BlogRecord, 'id' | 'created_at' | 'updated_at'>): Promise<BlogRecord | null> {
   if (!isSupabaseConfigured) return null;
+  const cleanPayload = sanitizeBlogPayload(blog);
+
+  // First try inserting with all fields
   const { data, error } = await supabase
     .from('blogs')
-    .insert([blog])
+    .insert([cleanPayload])
     .select()
     .maybeSingle();
 
-  if (error) {
-    console.error('[createBlog] Error:', error.message);
+  if (!error) {
+    return data;
+  }
+
+  console.warn('[createBlog] Standard insert failed:', error.message, '— retrying with basic columns');
+
+  // Fallback: If table does not yet have optional columns like meta_title, tags, etc.
+  const fallbackPayload: Record<string, any> = {
+    title: blog.title,
+    slug: blog.slug,
+    excerpt: blog.excerpt || '',
+    content: blog.content || '',
+    published: !!blog.published,
+    author_email: blog.author_email || 'go.aroundu@gmail.com',
+  };
+  if (blog.image_url) fallbackPayload.image_url = blog.image_url;
+  if (blog.category) fallbackPayload.category = blog.category;
+
+  const { data: retryData, error: retryError } = await supabase
+    .from('blogs')
+    .insert([fallbackPayload])
+    .select()
+    .maybeSingle();
+
+  if (retryError) {
+    console.error('[createBlog] Retry also failed:', retryError.message);
     return null;
   }
-  return data;
+  return retryData;
 }
 
 export async function updateBlog(id: string, updates: Partial<BlogRecord>): Promise<BlogRecord | null> {
   if (!isSupabaseConfigured) return null;
+  const cleanPayload = sanitizeBlogPayload({
+    ...updates,
+    updated_at: new Date().toISOString()
+  });
+
   const { data, error } = await supabase
     .from('blogs')
-    .update({ ...updates, updated_at: new Date().toISOString() })
+    .update(cleanPayload)
     .eq('id', id)
     .select()
     .maybeSingle();
 
-  if (error) {
-    console.error('[updateBlog] Error:', error.message);
+  if (!error) {
+    return data;
+  }
+
+  console.warn('[updateBlog] Standard update failed:', error.message, '— retrying with basic columns');
+
+  // Fallback: strip extra columns if column error occurs
+  const fallbackPayload: Record<string, any> = {
+    updated_at: new Date().toISOString(),
+  };
+  if (updates.title !== undefined) fallbackPayload.title = updates.title;
+  if (updates.slug !== undefined) fallbackPayload.slug = updates.slug;
+  if (updates.excerpt !== undefined) fallbackPayload.excerpt = updates.excerpt;
+  if (updates.content !== undefined) fallbackPayload.content = updates.content;
+  if (updates.published !== undefined) fallbackPayload.published = updates.published;
+  if (updates.image_url !== undefined) fallbackPayload.image_url = updates.image_url;
+  if (updates.category !== undefined) fallbackPayload.category = updates.category;
+
+  const { data: retryData, error: retryError } = await supabase
+    .from('blogs')
+    .update(fallbackPayload)
+    .eq('id', id)
+    .select()
+    .maybeSingle();
+
+  if (retryError) {
+    console.error('[updateBlog] Retry also failed:', retryError.message);
     return null;
   }
-  return data;
+  return retryData;
 }
 
 export async function deleteBlog(id: string): Promise<boolean> {
@@ -557,7 +634,37 @@ export async function deleteBlog(id: string): Promise<boolean> {
   return true;
 }
 
-export async function getPublishedBlogsByCategory(category: 'blog' | 'alternative'): Promise<BlogRecord[]> {
+export async function duplicateBlog(id: string): Promise<BlogRecord | null> {
+  if (!isSupabaseConfigured) return null;
+  const { data: original, error: fetchErr } = await supabase
+    .from('blogs')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (fetchErr || !original) {
+    console.error('[duplicateBlog] Could not fetch original:', fetchErr?.message);
+    return null;
+  }
+
+  const timestamp = Date.now().toString().slice(-4);
+  const newSlug = `${original.slug}-copy-${timestamp}`;
+  const newTitle = `${original.title} (Copy)`;
+
+  const duplicateData: Omit<BlogRecord, 'id' | 'created_at' | 'updated_at'> = {
+    ...original,
+    title: newTitle,
+    slug: newSlug,
+    published: false, // Always save duplicate as draft
+  };
+  delete (duplicateData as any).id;
+  delete (duplicateData as any).created_at;
+  delete (duplicateData as any).updated_at;
+
+  return await createBlog(duplicateData);
+}
+
+export async function getPublishedBlogsByCategory(category: 'blog' | 'alternative' | 'guide' | 'case-study' | 'comparison'): Promise<BlogRecord[]> {
   if (!isSupabaseConfigured) return [];
   const { data, error } = await supabase
     .from('blogs')

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { ArrowLeft, Plus, Edit2, Trash2, Eye, EyeOff, Save, X, BookOpen, Link2 } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, Eye, EyeOff, Save, X, BookOpen, Link2, Sparkles } from 'lucide-react';
 import { getAllBlogs, createBlog, updateBlog, deleteBlog, BlogRecord } from '@/services/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -142,20 +142,43 @@ export default function AdminPage() {
 
             <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-4xl">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Content Manager</h1>
                         <p className="text-sm sm:text-base text-gray-500 mt-1">Create and manage blog posts & alternatives</p>
                     </div>
-                    {!showForm && (
+                    <div className="flex items-center gap-2">
                         <button
-                            onClick={handleNewPost}
-                            className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-accent text-white font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all hover:scale-[1.02]"
+                            onClick={() => router.push('/blog-admin')}
+                            className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 bg-gray-900 text-white font-bold rounded-xl shadow-md hover:bg-black transition-all hover:scale-[1.02] text-sm"
                         >
-                            <Plus className="w-5 h-5" />
-                            New Post
+                            <Sparkles className="w-4 h-4 text-accent" />
+                            Open Blog Studio 2.0
                         </button>
-                    )}
+                        {!showForm && (
+                            <button
+                                onClick={handleNewPost}
+                                className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-accent text-accent-900 font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all hover:scale-[1.02]"
+                            >
+                                <Plus className="w-5 h-5" />
+                                New Post
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* Banner introducing Blog Studio */}
+                <div className="bg-gradient-to-r from-accent/10 via-blue-50 to-purple-50 border border-accent/20 rounded-2xl p-4 mb-6 flex items-center justify-between gap-4">
+                    <div>
+                        <p className="font-bold text-sm text-gray-900">🚀 Looking for the full Blog Writing &amp; SEO Studio?</p>
+                        <p className="text-xs text-gray-600">Features live split-screen preview, SEO score auditor, keyword density, table generators, and callouts.</p>
+                    </div>
+                    <button
+                        onClick={() => router.push('/blog-admin')}
+                        className="shrink-0 px-4 py-2 bg-accent text-accent-900 font-extrabold text-xs rounded-xl shadow-sm hover:scale-105 transition-all"
+                    >
+                        Go to /blog-admin →
+                    </button>
                 </div>
 
                 {/* Filter Tabs */}

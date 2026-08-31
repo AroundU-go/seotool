@@ -123,9 +123,9 @@ export default function AlternativePostPage() {
                         )}
                     </div>
 
-                    <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                    <div className="bg-white rounded-2xl p-6 sm:p-10 border border-gray-100 shadow-sm">
                         <div 
-                            className="prose prose-gray max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed [&>a]:text-accent [&>a]:hover:underline"
+                            className="blog-prose max-w-none text-gray-700 leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: blog.content }}
                         />
                     </div>
