@@ -97,6 +97,7 @@ export default function Document() {
         />
 
         <meta name="google-site-verification" content="uBshYfQXK7hscynxU-zz5T1gn8UKwkH4CYno4lrX2O4" />
+        <meta name="ory-verify" content="orynth-a7076e980f864403b57844b5851c1b65" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </Head>
       <body className="antialiased font-sans text-foreground bg-background">
